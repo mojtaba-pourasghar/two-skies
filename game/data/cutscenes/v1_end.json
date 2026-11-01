@@ -1,0 +1,40 @@
+{
+  "id": "v1_end",
+  "shots": [
+    {
+      "code": "ن",
+      "transition_in": "white",
+      "duration": 4.0,
+      "effects": [],
+      "sound": [
+        {
+          "tag": "music",
+          "id": "music_story"
+        }
+      ],
+      "lines": [
+        {
+          "key": "v1_end_01",
+          "speaker": "kairo",
+          "blip": "kairo"
+        }
+      ],
+      "choice": null
+    },
+    {
+      "code": "ج",
+      "transition_in": "dissolve",
+      "duration": 4.0,
+      "effects": [],
+      "sound": [],
+      "lines": [
+        {
+          "key": "v1_end_02",
+          "speaker": "",
+          "blip": ""
+        }
+      ],
+      "choice": null
+    }
+  ]
+}

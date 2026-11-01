@@ -1,0 +1,25 @@
+{
+  "id": "c1_title",
+  "shots": [
+    {
+      "code": "ج",
+      "transition_in": "black",
+      "duration": 3.0,
+      "effects": [],
+      "sound": [
+        {
+          "tag": "music",
+          "id": "music_story"
+        }
+      ],
+      "lines": [
+        {
+          "key": "c1_title",
+          "speaker": "",
+          "blip": ""
+        }
+      ],
+      "choice": null
+    }
+  ]
+}

@@ -24,6 +24,7 @@ Billing="*res://autoload/billing.gd"
 NetService="*res://autoload/net_service.gd"
 SceneRouter="*res://autoload/scene_router.gd"
 EventBus="*res://autoload/event_bus.gd"
+Cutscene="*res://autoload/cutscene.gd"
 
 [display]
 

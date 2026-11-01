@@ -60,6 +60,7 @@ func default_save() -> Dictionary:
 		"adaptive_counter": 0,
 		"pillars": {},
 		"ending": null,
+		"cutscenes_seen": [],
 	}
 
 

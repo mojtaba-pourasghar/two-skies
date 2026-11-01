@@ -57,8 +57,27 @@ func _ready() -> void:
 		return
 	_spawn_actors()
 	_enter_room(String(level.get("start_room", "r1")), "", -1)
+	await _play_intro_cutscene()
 	EventBus.level_started.emit(String(level.get("id", "?")))
 	Audio.play_music(String(level.get("music", "music_home")))
+
+
+## مقدمهٔ داستانی و عنوان فصل فقط یک بار، پیش از مرحلهٔ ۱ (سند ۰۵).
+## در مدت صحنه کنترل از بازیکن گرفته می‌شود (§۱۸).
+func _play_intro_cutscene() -> void:
+	if String(level.get("id", "")) != "ch1_l1":
+		return
+	if "c1_intro" in GameState.data.get("cutscenes_seen", []):
+		return
+	kairo.enter_cutscene()
+	if ilara != null:
+		ilara.enter_cutscene()
+	await Cutscene.play("c1_intro")
+	await Cutscene.play("c1_title")
+	kairo.exit_cutscene()
+	if ilara != null:
+		ilara.exit_cutscene()
+	elapsed = 0.0
 
 
 func _load(path: String) -> bool:
@@ -309,6 +328,9 @@ func _on_exit_reached() -> void:
 	SceneRouter.last_result = result
 	Audio.play_sfx("level_complete")
 	await get_tree().create_timer(0.6).timeout
+	# مرحلهٔ ۳ آخرین مرحلهٔ نسخهٔ ۱ است؛ صحنهٔ «پایان نسخهٔ اول» (سند ۰۵)
+	if String(level.get("id", "")) == "ch1_l3":
+		await Cutscene.play("v1_end")
 	SceneRouter.goto("result", false)
 
 

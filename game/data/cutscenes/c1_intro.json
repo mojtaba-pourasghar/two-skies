@@ -1,0 +1,74 @@
+{
+  "id": "c1_intro",
+  "shots": [
+    {
+      "code": "ن",
+      "transition_in": "black",
+      "duration": 4.0,
+      "effects": [],
+      "sound": [
+        {
+          "tag": "music",
+          "id": "music_story"
+        },
+        {
+          "tag": "ambient",
+          "id": "wind"
+        }
+      ],
+      "lines": [
+        {
+          "key": "c1_intro_01",
+          "speaker": "",
+          "blip": ""
+        }
+      ],
+      "choice": null
+    },
+    {
+      "code": "ک",
+      "transition_in": "dissolve",
+      "duration": 5.0,
+      "effects": [],
+      "sound": [],
+      "lines": [
+        {
+          "key": "c1_intro_02",
+          "speaker": "kairo",
+          "blip": "kairo"
+        }
+      ],
+      "choice": null
+    },
+    {
+      "code": "ک",
+      "transition_in": "cut",
+      "duration": 5.0,
+      "effects": [],
+      "sound": [],
+      "lines": [
+        {
+          "key": "c1_intro_03",
+          "speaker": "ilara",
+          "blip": "ilara"
+        }
+      ],
+      "choice": null
+    },
+    {
+      "code": "ج",
+      "transition_in": "cut",
+      "duration": 5.0,
+      "effects": [],
+      "sound": [],
+      "lines": [
+        {
+          "key": "c1_intro_04",
+          "speaker": "kairo",
+          "blip": "kairo"
+        }
+      ],
+      "choice": null
+    }
+  ]
+}

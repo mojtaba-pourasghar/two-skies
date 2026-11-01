@@ -20,6 +20,7 @@ TESTS=(
   "res://tools/tests/test_companion.tscn"
   "res://tools/tests/test_solvable.tscn"
   "res://tools/tests/test_save_ui.tscn"
+  "res://tools/tests/test_cutscene_audio.tscn"
 )
 
 fail=0
