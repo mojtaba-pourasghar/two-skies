@@ -9,11 +9,10 @@ func _ready() -> void:
 	print("  برد افقی پرش: %.1f px (%.2f کاشی)" % [
 		KairoConst.jump_range_px(), KairoConst.jump_range_px() / float(KairoConst.TILE)])
 
-	if OS.has_feature("editor") and ResourceLoader.exists(SceneRouter.SCENES["sandbox"]):
-		# گام ۱: منوها هنوز ساخته نشده‌اند، پس مستقیم به اتاق آزمایش می‌رویم.
-		SceneRouter.goto("sandbox", false)
+	# ابزارهای هر مرحله طبق §۶ باز می‌شوند: دیوارپرش و هک در م۲، دش در م۳.
+	# تا وقتی منوی اصلی و نقشهٔ فصل ساخته نشده‌اند (گام ۵)، مستقیم مرحلهٔ ۱ اجرا می‌شود.
+	if ResourceLoader.exists(SceneRouter.SCENES["main_menu"]):
+		SceneRouter.goto("main_menu", false)
 		return
-	if ResourceLoader.exists(SceneRouter.SCENES["splash"]):
-		SceneRouter.goto("splash", false)
-	else:
-		SceneRouter.goto("sandbox", false)
+	SceneRouter.pending_level = "res://levels/data/ch1_l1.json"
+	SceneRouter.goto("game", false)
