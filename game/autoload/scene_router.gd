@@ -29,6 +29,9 @@ var current: String = ""
 ## بار مرحله‌ای که باید بعد از level_intro اجرا شود
 var pending_level: String = ""
 
+## نتیجهٔ آخرین مرحله، برای صفحهٔ نتیجه
+var last_result: Dictionary = {}
+
 
 func goto(key: String, push: bool = true) -> void:
 	if not SCENES.has(key):

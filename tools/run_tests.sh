@@ -19,6 +19,7 @@ TESTS=(
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_companion.tscn"
   "res://tools/tests/test_solvable.tscn"
+  "res://tools/tests/test_save_ui.tscn"
 )
 
 fail=0
@@ -70,6 +71,20 @@ for t in "${TESTS[@]}"; do
     fail=1
   fi
 done
+
+# اجرای واقعی بازی: --import خطای کامپایل اسکریپت صحنه‌ها را نشان نمی‌دهد،
+# ولی اجرای واقعی نشان می‌دهد. پس بوت تا منوی اصلی هم سنجیده می‌شود.
+echo
+echo "=== بوت تا منوی اصلی ==="
+boot="$LOGDIR/boot.log"
+( cd "$GAME" && timeout 60 "$GODOT" --headless --quit-after 400 >"$boot" 2>&1 )
+if grep -qE "SCRIPT ERROR|^ERROR" "$boot"; then
+  echo "بوت خطا داد:"
+  grep -E "SCRIPT ERROR|^ERROR" "$boot" | head -20
+  fail=1
+else
+  echo "بدون خطا."
+fi
 
 echo
 if [ $fail -eq 0 ]; then

@@ -17,6 +17,28 @@ var tuning: Dictionary = {}
 
 func _ready() -> void:
 	_load_tuning()
+	_load_strings()
+
+
+## جدول رشته‌های فارسی به TranslationServer داده می‌شود تا `tr(key)` کار کند (§۱۹).
+## متن‌ها در JSON نگه داشته می‌شوند نه در .po، چون سند §۱ می‌گوید
+## «همهٔ متن‌های فارسی فقط در data/strings_fa.json و با کلید فراخوانی می‌شوند».
+func _load_strings() -> void:
+	var path := "res://data/strings_fa.json"
+	if not FileAccess.file_exists(path):
+		push_warning("Settings: strings_fa.json پیدا نشد؛ کلیدها خام نشان داده می‌شوند.")
+		return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Dictionary) or not parsed.has("fa"):
+		push_error("Settings: strings_fa.json خراب است.")
+		return
+	var tr_res := Translation.new()
+	tr_res.locale = "fa"
+	var table: Dictionary = parsed["fa"]
+	for key in table.keys():
+		tr_res.add_message(key, String(table[key]))
+	TranslationServer.add_translation(tr_res)
+	TranslationServer.set_locale("fa")
 
 
 func _load_tuning() -> void:

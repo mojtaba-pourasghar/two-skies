@@ -1,0 +1,10 @@
+{
+  "_comment": "شناسهٔ واقعی ادیوری اینجا نمی‌آید. جای‌نگهدار است و پیش از انتشار از پنل ادیوری پر می‌شود (سند ۰۵).",
+  "app_id": "REPLACE_WITH_ADIVERY_APP_ID",
+  "placements": {
+    "rewarded_double_coins": "REPLACE_WITH_PLACEMENT_ID",
+    "rewarded_hint": "REPLACE_WITH_PLACEMENT_ID",
+    "rewarded_revive_check": "REPLACE_WITH_PLACEMENT_ID",
+    "rewarded_daily_bonus": "REPLACE_WITH_PLACEMENT_ID"
+  }
+}

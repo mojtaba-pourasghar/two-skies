@@ -1,0 +1,73 @@
+{
+  "_comment": "محصولات پولی کافه بازار — قیمت‌ها از سند ۰۵. قیمت واقعی از پنل بازار می‌آید؛ این عدد فقط نمایشی است.",
+  "products": [
+    {
+      "sku": "gems_60",
+      "name": "بستهٔ ۶۰ زمرد",
+      "type": "consumable",
+      "price_toman": 19000,
+      "gems": 60
+    },
+    {
+      "sku": "gems_160",
+      "name": "بستهٔ ۱۶۰ زمرد",
+      "type": "consumable",
+      "price_toman": 49000,
+      "gems": 160
+    },
+    {
+      "sku": "gems_400",
+      "name": "بستهٔ ۴۰۰ زمرد",
+      "type": "consumable",
+      "price_toman": 99000,
+      "gems": 400
+    },
+    {
+      "sku": "gems_1000",
+      "name": "بستهٔ ۱۰۰۰ زمرد",
+      "type": "consumable",
+      "price_toman": 199000,
+      "gems": 1000
+    },
+    {
+      "sku": "coins_5k",
+      "name": "۵٬۰۰۰ سکه",
+      "type": "consumable",
+      "price_toman": 12000,
+      "coins": 5000
+    },
+    {
+      "sku": "coins_25k",
+      "name": "۲۵٬۰۰۰ سکه",
+      "type": "consumable",
+      "price_toman": 49000,
+      "coins": 25000
+    },
+    {
+      "sku": "starter_pack",
+      "name": "بستهٔ شروع",
+      "type": "permanent",
+      "price_toman": 39000,
+      "gems": 100,
+      "coins": 5000
+    },
+    {
+      "sku": "double_reward",
+      "name": "پاداش دوبل دائمی",
+      "type": "permanent",
+      "price_toman": 99000
+    },
+    {
+      "sku": "skin_kairo_ember",
+      "name": "کایرو — سرخ آتش",
+      "type": "permanent",
+      "price_toman": 49000
+    },
+    {
+      "sku": "skin_ilara_dawn",
+      "name": "ایلارا — سپیده",
+      "type": "permanent",
+      "price_toman": 49000
+    }
+  ]
+}

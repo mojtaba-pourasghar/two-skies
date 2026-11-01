@@ -58,6 +58,7 @@ func _ready() -> void:
 	_spawn_actors()
 	_enter_room(String(level.get("start_room", "r1")), "", -1)
 	EventBus.level_started.emit(String(level.get("id", "?")))
+	Audio.play_music(String(level.get("music", "music_home")))
 
 
 func _load(path: String) -> bool:
@@ -303,6 +304,12 @@ func _on_exit_reached() -> void:
 	result["stars"] = _stars(result)
 	EventBus.level_completed.emit(result["level_id"], result)
 	level_finished.emit(result)
+	# ذخیره در لحظهٔ پایان مرحله (§۱۲)
+	GameState.record_level_result(result)
+	SceneRouter.last_result = result
+	Audio.play_sfx("level_complete")
+	await get_tree().create_timer(0.6).timeout
+	SceneRouter.goto("result", false)
 
 
 ## رتبه‌بندی: (۱) رسیدن، (۲) جمع هر سه گوهر، (۳) زمان کمتر از زمان هدف (§۸).
@@ -333,7 +340,22 @@ func _process(delta: float) -> void:
 	if not finished and not level.is_empty():
 		elapsed += delta
 	_poll_companion_button(delta)
+	_poll_pause()
 	_update_hud()
+
+
+## دکمهٔ توقف بالا راست (§۱۳)
+func _poll_pause() -> void:
+	if finished or not Input.is_action_just_pressed("pause"):
+		return
+	var pause_scene := SceneRouter.SCENES.get("pause", "")
+	if pause_scene == "" or not ResourceLoader.exists(pause_scene):
+		return
+	get_tree().paused = true
+	var layer := CanvasLayer.new()
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	layer.add_child(load(pause_scene).instantiate())
+	add_child(layer)
 
 
 ## دکمهٔ همراه: یک ضربه = «بیا»، نگه‌داشتن ۰٫۳ ثانیه = «بمان» (§۵)
