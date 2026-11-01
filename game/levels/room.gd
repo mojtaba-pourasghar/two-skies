@@ -18,6 +18,7 @@ var kairo_start := Vector2.ZERO
 var ilara_start := Vector2.ZERO
 var pickups: Array[Pickup] = []
 var gates: Array[Gate] = []
+var hazards: Array[Node] = []
 var exit_point: ExitPoint = null
 
 var _tiles: TileMapLayer
@@ -178,11 +179,48 @@ func _spawn(sym: String, c: int, r: int, objects: Dictionary) -> void:
 				g.auto_close_after = float(def["open_duration"])
 			_objects_root.add_child(g)
 			gates.append(g)
-		"crumble", "laser", "drone":
-			# گام ۴ این‌ها را می‌سازد. تا آن وقت فقط ثبت می‌شود تا نقشه بی‌خطا بار شود.
-			_placeholder(kind, pos)
+		"crumble":
+			var cr := Crumble.new()
+			cr.position = pos
+			_objects_root.add_child(cr)
+			hazards.append(cr)
+		"laser":
+			var la := Laser.new()
+			la.dir = String(def.get("dir", "down"))
+			la.phase_offset = float(def.get("phase", 0.0))
+			la.length_tiles = _beam_length(c, r, String(def.get("dir", "down")))
+			la.position = pos
+			_objects_root.add_child(la)
+			hazards.append(la)
+		"drone":
+			var dr := Drone.new()
+			dr.axis = String(def.get("axis", "h"))
+			dr.patrol_tiles = int(def.get("range", 6))
+			dr.position = pos
+			_objects_root.add_child(dr)
+			hazards.append(dr)
 		_:
 			push_warning("Room %s: نوع شیء «%s» (نماد %s) پیاده‌سازی نشده." % [data.get("id", "?"), kind, sym])
+
+
+## پرتو تا برخورد با دیوار امتداد می‌یابد (§۷)
+func _beam_length(c: int, r: int, d: String) -> int:
+	var rows: Array = data.get("tiles", [])
+	var step := Vector2i(0, 1)
+	match d:
+		"up": step = Vector2i(0, -1)
+		"left": step = Vector2i(-1, 0)
+		"right": step = Vector2i(1, 0)
+	var n := 0
+	var cc := c + step.x
+	var rr := r + step.y
+	while cc >= 0 and cc < ROOM_W and rr >= 0 and rr < rows.size():
+		if String(rows[rr])[cc] == LevelLoader.SOLID:
+			break
+		n += 1
+		cc += step.x
+		rr += step.y
+	return maxi(n, 1)
 
 
 func _placeholder(kind: String, pos: Vector2) -> void:
@@ -215,6 +253,9 @@ func reset_room() -> void:
 		p.respawn()
 	for g in gates:
 		g.reset()
+	for h in hazards:
+		if h.has_method("reset"):
+			h.call("reset")
 	if exit_point != null:
 		exit_point.reset()
 

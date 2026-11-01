@@ -80,7 +80,27 @@ func _room_data(id: String) -> Dictionary:
 	return {}
 
 
+## ابزارها طبق §۶ و دامنهٔ تأییدشده (DECISIONS.md: D-003) باز می‌شوند:
+##   مرحلهٔ ۱ — فقط دویدن/پرش
+##   مرحلهٔ ۲ — دیوارپرش و ماژول هک
+##   مرحلهٔ ۳ — به‌علاوهٔ دش
+const TOOLS_BY_LEVEL := {
+	"ch1_l1": [],
+	"ch1_l2": ["wall_jump", "hack"],
+	"ch1_l3": ["wall_jump", "hack", "dash"],
+}
+
+
+func _apply_tool_unlocks() -> void:
+	var id := String(level.get("id", ""))
+	if not TOOLS_BY_LEVEL.has(id):
+		return
+	for t in TOOLS_BY_LEVEL[id]:
+		GameState.unlock_tool(t)
+
+
 func _spawn_actors() -> void:
+	_apply_tool_unlocks()
 	kairo = load("res://actors/kairo/kairo.tscn").instantiate()
 	add_child(kairo)
 	kairo.respawn_ready.connect(_on_respawn)

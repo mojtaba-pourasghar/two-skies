@@ -19,7 +19,37 @@ SPEC = ROOT / "docs" / "02_godot_spec.md"
 OUT_DIR = ROOT / "game" / "levels" / "data"
 
 ROOM_W = 30
+ROOM_H = 17
 COMPACT_ROWS = 12
+# قالب فشردهٔ §۱۱ از سطر ۲ شروع می‌شود
+COMPACT_OFFSET = 2
+
+
+def in_ranges(c: int, ranges: list[list[int]]) -> bool:
+    return any(len(rng) >= 2 and rng[0] <= c <= rng[1] for rng in ranges)
+
+
+def expand(rows: list[str], gaps: list[list[int]], crumble: list[list[int]]) -> list[str]:
+    """۱۲ سطر §۱۱ → ۱۷ سطر کامل.
+
+    سطر ۰ و ۱ سقف جامد، سطر ۱۴ تا ۱۶ کف جامد، مگر ستون‌هایی که یادداشت اتاق
+    «گودال» یا «کف شکننده» اعلام کرده. این همان کاری است که لودر هم می‌کند؛
+    اینجا انجام می‌شود تا JSON، اعتبارسنج پایتونی و لودر هر سه یک چیز ببینند.
+    """
+    out = ["#" * ROOM_W, "#" * ROOM_W]
+    out.extend(rows)
+    for r in range(14, ROOM_H):
+        line = ""
+        for c in range(ROOM_W):
+            if in_ranges(c, gaps):
+                line += "."
+            elif in_ranges(c, crumble):
+                line += "~" if r == 14 else "."
+            else:
+                line += "#"
+        out.append(line)
+    assert len(out) == ROOM_H, len(out)
+    return out
 
 # ---------------------------------------------------------------- خواندن سند
 
@@ -70,6 +100,59 @@ def validate_raw(rooms: dict[str, list[str]]) -> list[str]:
 
 LOW = [12, 13]
 HIGH = [2, 3]
+
+# ----------------------------------------------------------- وصله‌های نقشه
+#
+# §۱۱ خودش می‌گوید «این ۱۲ اتاق، نقشهٔ اولیهٔ قابل بازی هستند؛ بعد از نخستین
+# ۲۰ دقیقه بازی تستی باید موقعیت موانع و سکه‌ها تنظیم شوند»، و §۱۶ شرط پذیرش
+# می‌گذارد که «همهٔ گوهرها دسترس‌پذیرند». اعتبارسنج نشان داد سه گوهر نزدیک سقف
+# کشیده شده‌اند و هیچ راه رسیدنی ندارند (ارتفاع پرش ۳ کاشی است و اتاق‌ها خالی‌اند).
+#
+# هر وصله اینجا صریح نوشته شده تا تفاوت با سند در یک جا دیده شود.
+# DECISIONS.md: D-017
+PATCHES = {
+    # L1R2: گوهر در (۲۰,۳) زیر سقف بود. سه سکوی کوچک = «مسیر فرعی» که سند ۰۱
+    # برای هر مرحله می‌خواهد. پله‌ها ۳ کاشی فاصله دارند، یعنی اندازهٔ یک پرش.
+    "L1R2": [
+        (11, 19, "#"), (11, 20, "#"),
+        (8, 21, "#"), (8, 22, "#"),
+        (5, 19, "#"), (5, 20, "#"),
+    ],
+    # L2R4: گوهر در (۱۰,۵) دست‌نیافتنی بود. دو سکو، بالای سکوهای شکننده.
+    "L2R4": [
+        (11, 8, "#"), (11, 9, "#"),
+        (8, 9, "#"), (8, 10, "#"),
+    ],
+    # L3R4: سه گوهر در سطر ۴ بود، ۱۰ کاشی بالای کف. سه سکو ساخته شد و هر گوهر
+    # روی پاگرد خودش نشست — یک راه بالاروندهٔ کنار لیزرها، که با توصیف سند ۰۱
+    # («انباری پشت یک پهپاد با زمان‌بندی تنگ») هم می‌خواند.
+    "L3R4": [
+        (4, 9, "."), (4, 16, "."), (4, 23, "."),      # گوهرهای قبلی برداشته شد
+        (11, 8, "#"), (11, 9, "#"), (10, 9, "1"),      # پاگرد اول
+        (8, 12, "#"), (8, 13, "#"), (7, 13, "2"),      # پاگرد دوم
+        (5, 16, "#"), (5, 17, "#"), (4, 17, "3"),      # پاگرد سوم
+    ],
+}
+
+
+def apply_patches(name: str, rows: list[str]) -> list[str]:
+    """وصله‌ها را روی نقشهٔ خوانده‌شده از سند اعمال می‌کند.
+
+    مختصات **مطلق** است (سطر ۰ تا ۱۶)، ولی نقشهٔ §۱۱ فشرده است و از سطر ۲
+    شروع می‌شود، پس قبل از باز شدن قالب، سطر مطلق r به اندیس r-2 نگاشته می‌شود.
+    """
+    patches = PATCHES.get(name, [])
+    if not patches:
+        return rows
+    grid = [list(r) for r in rows]
+    for (abs_row, col, ch) in patches:
+        idx = abs_row - COMPACT_OFFSET
+        if not (0 <= idx < len(grid)):
+            raise ValueError(f"{name}: سطر مطلق {abs_row} بیرون از قالب فشرده است")
+        if not (0 <= col < ROOM_W):
+            raise ValueError(f"{name}: ستون {col} بیرون از اتاق است")
+        grid[idx][col] = ch
+    return ["".join(r) for r in grid]
 
 LEVELS = {
     "ch1_l1": {
@@ -167,7 +250,7 @@ def build_level(level_id: str, cfg: dict, rooms: dict[str, list[str]]) -> dict:
     laser_seen: dict[str, int] = {}
 
     for idx, src_name in enumerate(cfg["rooms"]):
-        rows = rooms[src_name]
+        rows = apply_patches(src_name, rooms[src_name])
         rid = f"r{idx + 1}"
         objects: dict[str, dict] = {}
 
@@ -209,10 +292,12 @@ def build_level(level_id: str, cfg: dict, rooms: dict[str, list[str]]) -> dict:
             # مرحله‌های ۱ تا ۳ همراه دارند، پس هر دو شخصیت باید برسند (§۸)
             objects["X"] = {"type": "exit", "needs_both": True}
 
+        gaps = cfg["floor_gaps"].get(src_name, [])
+        crumble = cfg["floor_crumble"].get(src_name, [])
         room = {
             "id": rid,
             "source": src_name,
-            "tiles": rows,
+            "tiles": expand(rows, gaps, crumble),
             "exits": [
                 {"side": side, "to": to, "rows": list(r)}
                 for (side, to, r) in cfg["exits"].get(src_name, [])

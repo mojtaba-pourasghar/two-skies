@@ -14,12 +14,19 @@ var history: Array[Dictionary] = []
 ## ابزار فعال که دکمهٔ عمل را می‌گیرد؛ در نسخهٔ ۱: "" یا "hack" یا "dash"
 var active_tool: String = ""
 
-var _hack_hold_frames: int = 0
+var hack: HackModule = null
+var dash_tool: DashTool = null
 
 
 func _ready() -> void:
 	actor_name = "kairo"
 	super()
+	hack = HackModule.new()
+	hack.owner_actor = self
+	add_child(hack)
+	dash_tool = DashTool.new()
+	dash_tool.owner_actor = self
+	add_child(dash_tool)
 	_refresh_tools()
 	GameState.progress_changed.connect(_refresh_tools)
 
@@ -39,23 +46,25 @@ func _refresh_tools() -> void:
 		active_tool = ""
 
 
-func _gather_input() -> Dictionary:
-	var x := 0.0
-	if Input.is_action_pressed("move_right"):
-		x += 1.0
-	if Input.is_action_pressed("move_left"):
-		x -= 1.0
-	return {
-		"x": x,
-		"jump": Input.is_action_just_pressed("jump"),
-		"jump_held": Input.is_action_pressed("jump"),
-		"action": Input.is_action_just_pressed("action"),
-	}
-
-
 func _physics_process(delta: float) -> void:
+	_update_hack(delta)
 	super(delta)
 	_record()
+
+
+## هک دکمهٔ عمل را می‌گیرد و کایرو را در مدت نگه‌داشتن ثابت می‌کند (§۶).
+## وقتی ابزار فعال هک است، دش با همان دکمه فعال نمی‌شود.
+func _update_hack(delta: float) -> void:
+	if hack == null:
+		return
+	if not GameState.is_tool_unlocked("hack") or state == State.DEAD or state == State.CUTSCENE:
+		return
+	var holding := active_tool == "hack" and Input.is_action_pressed("action")
+	hack.update_hold(delta, holding)
+	if hack.is_charging():
+		_set_state(State.HACK)
+	elif state == State.HACK:
+		_set_state(State.IDLE)
 
 
 ## صف موقعیت و ورودی برای بازپخش ایلارا (§۵)
@@ -84,27 +93,43 @@ func history_at(delay_frames: int) -> Variant:
 func reset_to(pos: Vector2) -> void:
 	super(pos)
 	history.clear()
-	_hack_hold_frames = 0
-	active_tool = ""
 	_refresh_tools()
+	# ابزار فعال پیش‌فرض: اگر هک باز است، هک؛ وگرنه دش اگر باز است.
+	if GameState.is_tool_unlocked("hack"):
+		active_tool = "hack"
+	elif GameState.is_tool_unlocked("dash"):
+		active_tool = "dash"
+	else:
+		active_tool = ""
 
 
 ## دکمهٔ عمل با ابزار فعال معنی عوض می‌کند (§۶).
-## دش در PlatformActor دست می‌خورد؛ هک اینجا نگه‌داشتن می‌خواهد.
 func is_holding_hack() -> bool:
 	return active_tool == "hack" and Input.is_action_pressed("action")
 
 
 func hack_hold_progress() -> float:
-	var need := _f(Settings.param("hack", "hold_time", 0.6))
-	if need <= 0:
-		return 0.0
-	return clampf(float(_hack_hold_frames) / float(need), 0.0, 1.0)
+	return hack.hold_progress() if hack != null else 0.0
 
 
-func set_hack_hold(frames: int) -> void:
-	_hack_hold_frames = frames
-	if frames > 0:
-		_set_state(State.HACK)
-	elif state == State.HACK:
-		_set_state(State.IDLE)
+## ابزار فعال را عوض می‌کند. در نسخهٔ ۱ فقط "hack" و "dash" و "" هستند.
+func set_active_tool(id: String) -> void:
+	if id != "" and not GameState.is_tool_unlocked(id):
+		return
+	active_tool = id
+
+
+## اگر ابزار فعال هک باشد، دکمهٔ عمل مال هک است و دش نباید شلیک شود.
+func _gather_input() -> Dictionary:
+	var x := 0.0
+	if Input.is_action_pressed("move_right"):
+		x += 1.0
+	if Input.is_action_pressed("move_left"):
+		x -= 1.0
+	var action := Input.is_action_just_pressed("action") and active_tool != "hack"
+	return {
+		"x": x,
+		"jump": Input.is_action_just_pressed("jump"),
+		"jump_held": Input.is_action_pressed("jump"),
+		"action": action,
+	}
