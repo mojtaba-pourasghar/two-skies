@@ -1,0 +1,29 @@
+{
+  "_comment": "نگاشت کلید صدا → فایل (§۱۴). در گام ۶ کامل می‌شود. کلید بدون فایل = سکوت، نه خطا، تا بازی با مکان‌نگهدار بدون خطا اجرا شود.",
+  "sfx": {
+    "kairo_jump": "",
+    "kairo_wall_jump": "",
+    "kairo_dash": "",
+    "kairo_death": "",
+    "kairo_land": "",
+    "ilara_jump": "",
+    "ilara_death": "",
+    "coin": "",
+    "gem": "",
+    "page": "",
+    "hack_start": "",
+    "hack_success": "",
+    "gate_open": "",
+    "crumble": "",
+    "laser_warn": "",
+    "laser_fire": "",
+    "drone_hum": "",
+    "ui_click": "",
+    "music_menu": "",
+    "music_home": "",
+    "music_street": "",
+    "music_hall": "",
+    "music_victory": "",
+    "music_story": ""
+  }
+}

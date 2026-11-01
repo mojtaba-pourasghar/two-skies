@@ -1,0 +1,96 @@
+{
+  "_comment": "هر دو مجموعهٔ اعداد نگه داشته می‌شود. active_profile تعیین می‌کند کدام فعال است؛ عوض کردن همین یک رشته کافی است. منبع: docs/02_godot_spec.md §۳ و §۷، docs/01_main_design_and_screenplay_ch1-8.md (جدول ابزارها و کتاب موانع).",
+  "active_profile": "spec02",
+  "profiles": {
+    "spec02": {
+      "_source": "docs/02_godot_spec.md §۳ و §۷ — مرجع فنی اعلام‌شده در README",
+      "kairo": {
+        "RUN_SPEED": 120.0,
+        "GRAVITY": 900.0,
+        "FALL_GRAVITY_MULT": 1.25,
+        "MAX_FALL": 360.0,
+        "GROUND_ACCEL": 900.0,
+        "GROUND_DECEL": 1200.0,
+        "AIR_ACCEL": 700.0,
+        "AIR_DECEL": 500.0,
+        "JUMP_VELOCITY": -306.0,
+        "JUMP_CUT": 0.45,
+        "COYOTE_TIME": 0.1,
+        "JUMP_BUFFER": 0.12,
+        "WALL_SLIDE_MAX": 60.0,
+        "WALL_JUMP_VEL_X": 170.0,
+        "WALL_JUMP_VEL_Y": -280.0,
+        "WALL_JUMP_LOCK": 0.15,
+        "DASH_SPEED": 260.0,
+        "DASH_TIME": 0.18,
+        "DASH_COOLDOWN": 0.6,
+        "RESPAWN_TIME": 0.35
+      },
+      "ilara": {
+        "RUN_SPEED": 105.0,
+        "JUMP_VELOCITY": -290.0
+      },
+      "hazards": {
+        "crumble_shake": 0.3,
+        "crumble_fall": 0.5,
+        "crumble_respawn": 2.0,
+        "laser_on": 1.2,
+        "laser_off": 1.2,
+        "laser_warn": 0.4,
+        "drone_speed": 40.0,
+        "drone_turn_pause": 0.2,
+        "gate_open_anim": 0.5,
+        "door_open_duration": 2.0
+      },
+      "hack": {
+        "range_px": 48.0,
+        "hold_time": 0.6,
+        "cooldown": 1.0
+      },
+      "camera": {
+        "death_shake_px": 2.0,
+        "death_shake_time": 0.2
+      }
+    },
+    "design01": {
+      "_source": "docs/01_main_design_and_screenplay_ch1-8.md — اعداد «حس بازی»؛ واحد کاشی = ۱۶px",
+      "_note": "فقط کمیت‌هایی که سند ۰۱ عدد متفاوتی برایشان می‌دهد؛ بقیه از spec02 ارث می‌برند.",
+      "kairo": {
+        "RUN_SPEED": 96.0,
+        "JUMP_VELOCITY": -340.0,
+        "WALL_JUMP_VEL_X": 150.0,
+        "WALL_JUMP_VEL_Y": -340.0,
+        "RESPAWN_TIME": 0.3
+      },
+      "hazards": {
+        "crumble_shake": 0.6,
+        "crumble_fall": 0.5,
+        "crumble_respawn": 3.0,
+        "laser_on": 1.5,
+        "laser_off": 1.5,
+        "laser_warn": 0.4,
+        "drone_speed": 48.0,
+        "door_open_duration": 5.0
+      },
+      "hack": {
+        "range_px": 64.0,
+        "hold_time": 1.5,
+        "cooldown": 1.0
+      },
+      "camera": {
+        "death_shake_px": 2.0,
+        "death_shake_time": 0.12
+      }
+    }
+  },
+  "fairness_rules": {
+    "_comment": "هر دو سند روی این‌ها توافق دارند و اعتبارسنج مرحله آن‌ها را اجبار می‌کند.",
+    "min_warning_before_lethal": 0.4,
+    "min_safe_window": 1.0,
+    "max_gap_tiles_without_tool": 4.5,
+    "max_restart_seconds": 0.3,
+    "respawn_budget_spec02": 0.4,
+    "respawn_budget_doc01_doc05": 0.3,
+    "_respawn_note": "سند ۰۲ §۳ هم RESPAWN_TIME=0.35 می‌دهد و هم «کمتر از ۰٫۴ ثانیه»؛ سند ۰۱ و ۰۵ «زیر ۰٫۳» می‌خواهند. مقدار فعال از سند ۰۲ است (DECISIONS.md: D-004)."
+  }
+}
