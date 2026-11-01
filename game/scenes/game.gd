@@ -10,10 +10,16 @@ const TILE := LevelLoader.TILE
 
 @export var level_path: String = "res://levels/data/test_room.json"
 
+## نگه‌داشتن دکمهٔ همراه این‌قدر = «بمان»؛ کوتاه‌تر = «بیا» (§۵)
+const COMPANION_HOLD: float = 0.3
+
 var level: Dictionary = {}
 var room: Room = null
 var kairo: Kairo = null
-var ilara: Node2D = null
+var ilara: Ilara = null
+
+var _companion_held: float = 0.0
+var _companion_fired: bool = false
 
 var current_room_id: String = ""
 var checkpoint_room: String = ""
@@ -80,6 +86,15 @@ func _spawn_actors() -> void:
 	kairo.respawn_ready.connect(_on_respawn)
 	kairo.died.connect(_on_death)
 
+	if not bool(level.get("companion", false)):
+		return
+	ilara = load("res://actors/ilara/ilara.tscn").instantiate()
+	add_child(ilara)
+	ilara.kairo = kairo
+	# مرگ ایلارا = شکست مرحله (§۵ و «قانون همراهی» سند ۰۱).
+	# شمارندهٔ «افتادن ایلارا» جدا نگه داشته می‌شود و در رتبه شمرده نمی‌شود.
+	ilara.died.connect(_on_ilara_died)
+
 
 ## ----- گذار اتاق -----
 
@@ -119,9 +134,13 @@ func _place_actors_on_entry() -> void:
 	else:
 		pos = _entry_position(_entry_side, _entry_row)
 	kairo.reset_to(pos)
-	if ilara != null and ilara.has_method("reset_to"):
-		var ipos: Vector2 = room.ilara_start if _entry_side == "" and room.ilara_start != Vector2.ZERO else pos
-		ilara.call("reset_to", ipos)
+	if ilara == null:
+		return
+	# در ابتدای مرحله ایلارا سر جای نماد P می‌نشیند؛ هنگام گذار اتاق کنار کایرو.
+	var ipos := pos
+	if _entry_side == "" and room.ilara_start != Vector2.ZERO:
+		ipos = room.ilara_start
+	ilara.reset_to(ipos)
 
 
 ## `exit_side` سمتی است که بازیکن از اتاق قبلی **بیرون** رفته؛ پس در اتاق تازه
@@ -192,10 +211,30 @@ func _on_respawn() -> void:
 	_place_actors_on_entry()
 
 
+## مرگ ایلارا شروع دوبارهٔ همان اتاق نیست؛ کل مرحله از اول (یا از چک‌پوینت).
+func _on_ilara_died() -> void:
+	ilara_falls += 1
+	Audio.play_sfx("ilara_death")
+	# «موسیقی قطع می‌شود، صفحه ۰٫۲ ثانیه بی‌رنگ می‌شود، کایرو فریاد می‌زند» (سند ۰۱)
+	_flash_desaturate()
+	await get_tree().create_timer(KairoConst.RESPAWN_TIME).timeout
+	restart_level_from_companion_death()
+
+
+func _flash_desaturate() -> void:
+	var rect := ColorRect.new()
+	rect.color = Color(0.6, 0.6, 0.6, 0.55)
+	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud.add_child(rect)
+	var tw := create_tween()
+	tw.tween_property(rect, "color:a", 0.0, 0.2)
+	tw.tween_callback(rect.queue_free)
+
+
 ## مرگ ایلارا = شکست مرحله: مرحله از ابتدا شروع می‌شود (§۵ و «قانون همراهی» سند ۰۱).
 ## استثنا: اگر چک‌پوینت گرفته شده باشد، از آخرین چک‌پوینت.
 func restart_level_from_companion_death() -> void:
-	ilara_falls += 1
 	coins_banked = 0
 	gems_banked.clear()
 	pages_banked.clear()
@@ -273,7 +312,24 @@ func _total_gems() -> int:
 func _process(delta: float) -> void:
 	if not finished and not level.is_empty():
 		elapsed += delta
+	_poll_companion_button(delta)
 	_update_hud()
+
+
+## دکمهٔ همراه: یک ضربه = «بیا»، نگه‌داشتن ۰٫۳ ثانیه = «بمان» (§۵)
+func _poll_companion_button(delta: float) -> void:
+	if ilara == null:
+		return
+	if Input.is_action_pressed("companion"):
+		_companion_held += delta
+		if not _companion_fired and _companion_held >= COMPANION_HOLD:
+			_companion_fired = true
+			ilara.command_stay()
+	elif _companion_held > 0.0:
+		if not _companion_fired:
+			ilara.command_come()
+		_companion_held = 0.0
+		_companion_fired = false
 
 
 ## ----- HUD (§۱۳) -----
@@ -292,7 +348,10 @@ func _update_hud() -> void:
 	if _hud_label == null or level.is_empty():
 		return
 	# چیدمان نهایی HUD (سکه بالا چپ، شمارندهٔ مرگ بالا وسط، توقف بالا راست) در گام ۵
-	_hud_label.text = "سکه %d   مرگ %d   اتاق %s   %0.1fs" % [
+	var mode_txt := ""
+	if ilara != null:
+		mode_txt = "   ایلارا: %s" % ("بمان" if ilara.mode == Ilara.Mode.STAY else "دنبال")
+	_hud_label.text = "سکه %d   مرگ %d   افتادن ایلارا %d   اتاق %s   %0.1fs%s" % [
 		coins_banked + (int(room.collected()["coins"]) if room != null else 0),
-		deaths, current_room_id, elapsed,
+		deaths, ilara_falls, current_room_id, elapsed, mode_txt,
 	]

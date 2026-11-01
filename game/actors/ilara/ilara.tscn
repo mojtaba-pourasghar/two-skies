@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://actors/ilara/ilara.gd" id="1_ilara"]
+
+[sub_resource type="RectangleShape2D" id="Rect_body_i"]
+size = Vector2(10, 16)
+
+[node name="Ilara" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+floor_snap_length = 2.0
+script = ExtResource("1_ilara")
+actor_name = "ilara"
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("Rect_body_i")
+
+[node name="Placeholder" type="Polygon2D" parent="."]
+color = Color(0.95, 0.62, 0.78, 1)
+polygon = PackedVector2Array(-5, -8, 5, -8, 5, 8, -5, 8)

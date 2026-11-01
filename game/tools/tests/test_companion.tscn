@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tools/tests/test_companion.gd" id="1_tc"]
+
+[node name="TestCompanion" type="Node2D"]
+script = ExtResource("1_tc")
