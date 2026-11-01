@@ -2,6 +2,7 @@
 ##
 ## یک مرحله را بار می‌کند، اتاق فعال را می‌سازد، دوربین را به اتاق قفل می‌کند،
 ## گذار بین اتاق‌ها را انجام می‌دهد و مرگ و شروع دوباره را اداره می‌کند.
+class_name GameRunner
 extends Node2D
 
 signal level_finished(result: Dictionary)
@@ -370,7 +371,7 @@ func _process(delta: float) -> void:
 func _poll_pause() -> void:
 	if finished or not Input.is_action_just_pressed("pause"):
 		return
-	var pause_scene := SceneRouter.SCENES.get("pause", "")
+	var pause_scene: String = String(SceneRouter.SCENES.get("pause", ""))
 	if pause_scene == "" or not ResourceLoader.exists(pause_scene):
 		return
 	get_tree().paused = true

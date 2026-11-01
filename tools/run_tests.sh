@@ -15,12 +15,14 @@ TIMEOUT="${TIMEOUT:-180}"
 LOGDIR="${LOGDIR:-$(mktemp -d)}"
 
 TESTS=(
+  "res://tools/tests/test_compile.tscn"
   "res://tools/tests/test_physics.tscn"
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_companion.tscn"
   "res://tools/tests/test_solvable.tscn"
   "res://tools/tests/test_save_ui.tscn"
   "res://tools/tests/test_cutscene_audio.tscn"
+  "res://tools/tests/test_acceptance.tscn"
 )
 
 fail=0
@@ -67,7 +69,15 @@ for t in "${TESTS[@]}"; do
   ( cd "$GAME" && timeout "$TIMEOUT" "$GODOT" --headless "$t" >"$log" 2>&1 )
   code=$?
   grep -vE "^\s*$|کلید صدا بدون فایل|^Godot Engine" "$log"
-  if [ $code -ne 0 ]; then
+  if grep -q "Failed to load script" "$log"; then
+    # اسکریپت کامپایل نشده: صحنه هرگز quit نمی‌کند و آزمون با timeout می‌ایستد.
+    # بدون این پیام، علت به‌شکل یک هنگِ بی‌دلیل دیده می‌شد.
+    echo "  ← $name: اسکریپت کامپایل نشد (خطای Parse بالا را ببین)"
+    fail=1
+  elif [ $code -eq 124 ]; then
+    echo "  ← $name: با timeout ($TIMEOUT ثانیه) ایستاد"
+    fail=1
+  elif [ $code -ne 0 ]; then
     echo "  ← $name با کد $code تمام شد"
     fail=1
   fi
