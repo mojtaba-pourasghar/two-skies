@@ -240,21 +240,31 @@ func _g_persian_text() -> void:
 	_finish_section("g")
 
 
-## تمام شدن واقعی مرحله با روبات کنترلی (§۲۲).
+## تمام شدن واقعی **هر سه مرحله** با روبات کنترلی (§۲۲).
 ##
 ## این بخش جای «آزمون دوام ۹۰ ثانیه» را گرفت: دوام فقط می‌گفت کرش نمی‌کند، نه
-## این‌که مرحله بازی‌شدنی است. اینجا روبات با ورودی واقعی مرحله را تا خروج
-## می‌برد و ایلارا هم باید زنده برسد، چون خروج `needs_both` است (D-042).
+## این‌که مرحله بازی‌شدنی است. روبات با ورودی واقعی هر مرحله را تا خروج می‌برد و
+## ایلارا هم باید زنده برسد، چون خروج `needs_both` است.
+##
+## سنجه سخت‌گیرانه است: اگر مرحله‌ای تمام نشود این آزمون **رد می‌شود**. وضعیت
+## امروز در DECISIONS.md (D-056) نوشته شده است.
+const ROBOT_LEVELS := ["ch1_l1", "ch1_l2", "ch1_l3"]
+
+
 func _h_level_playthrough() -> void:
-	print("— تمام شدن مرحله با روبات کنترلی —")
-	var plan := Robot.load_plan("ch1_l1")
-	_check("برنامهٔ کنش ch1_l1 موجود است", not plan.is_empty(),
-		"(از tools/export_plans.py)")
+	print("— تمام شدن هر سه مرحله با روبات کنترلی —")
+	for level_id in ROBOT_LEVELS:
+		await _play_one(level_id)
+	_finish_section("h")
+
+
+func _play_one(level_id: String) -> void:
+	var plan := Robot.load_plan(level_id)
 	if plan.is_empty():
-		_finish_section("h")
+		_check("برنامهٔ کنش %s" % level_id, false, "(tools/export_plans.py)")
 		return
 
-	SceneRouter.pending_level = "res://levels/data/ch1_l1.json"
+	SceneRouter.pending_level = "res://levels/data/%s.json" % level_id
 	GameState.data = GameState.default_save()
 	GameState.data["cutscenes_seen"] = ["c1_intro", "c1_title"]
 	var game = load("res://scenes/game.tscn").instantiate()
@@ -271,32 +281,29 @@ func _h_level_playthrough() -> void:
 	game.level_finished.connect(func(_r): finished[0] = true, CONNECT_ONE_SHOT)
 	var rooms := {}
 	var f := 0
-	while f < 60 * 120 and not finished[0] and robot.phase != Robot.Phase.DONE:
+	var total_rooms: int = (plan.get("rooms", []) as Array).size()
+	while f < 60 * 150 and not finished[0] and robot.phase != Robot.Phase.DONE:
 		await get_tree().physics_frame
 		f += 1
 		robot.step()
 		rooms[String(game.current_room_id)] = true
 
-	print("    اتاق‌ها: %s، %.1f ثانیه، مرگ %d، افتادن ایلارا %d"
-		% [str(rooms.keys()), f / 60.0, game.deaths, game.ilara_falls])
-	_check("مرحلهٔ ۱ تا خروج تمام شد", finished[0] or game.finished,
-		"(%d/4 اتاق)" % rooms.size())
-	_check("ایلارا زنده به خروج رسید",
-		game.ilara != null and is_instance_valid(game.ilara)
-		and game.ilara.state != PlatformActor.State.DEAD, "")
-	_check("هر چهار اتاق پیموده شد", rooms.size() == 4, "= %d" % rooms.size())
-	_check("نتیجهٔ مرحله ستاره داد",
-		int(SceneRouter.last_result.get("stars", 0)) >= 1,
-		"= %d ستاره" % int(SceneRouter.last_result.get("stars", 0)))
-	print("    i مرحلهٔ ۲ و ۳ هنوز با روبات تمام نمی‌شوند — کار باز گام ۸ با")
-	print("      پایهٔ پسرفت در tools/tests/test_robot.gd (D-042)")
+	var done: bool = finished[0] or game.finished
+	_check("%s تا خروج تمام شد" % level_id, done,
+		"(%d/%d اتاق، %.0f ثانیه، مرگ %d، افتادن ایلارا %d)"
+		% [rooms.size(), total_rooms, f / 60.0, game.deaths, game.ilara_falls])
+	if done:
+		_check("%s: ایلارا زنده رسید" % level_id,
+			game.ilara != null and is_instance_valid(game.ilara)
+			and game.ilara.state != PlatformActor.State.DEAD, "")
+		_check("%s: ستاره گرفت" % level_id,
+			int(SceneRouter.last_result.get("stars", 0)) >= 1,
+			"= %d ستاره" % int(SceneRouter.last_result.get("stars", 0)))
 
 	robot._release_all()
 	robot.queue_free()
 	game.queue_free()
 	await get_tree().process_frame
-	_finish_section("h")
-
 
 
 ## بندهایی که فقط روی دستگاه واقعی سنجیدنی‌اند (§۱۶ و معیار پذیرش سند ۰۵)

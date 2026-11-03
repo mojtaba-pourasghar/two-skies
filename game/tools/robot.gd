@@ -24,7 +24,7 @@ const STUCK_FRAMES: int = 70
 const MAX_SKIPS: int = 40
 
 enum Phase { RUN, GATE_WAIT, GATE_RUN, STAY_BEFORE_CRUMBLE, WAIT_CRUMBLE, CALL_COME,
-	WAIT_ILARA, AT_EXIT, DONE }
+	WAIT_ILARA, CLEAR_DRONE, AT_EXIT, DONE }
 
 var game                      ## GameRunner (بدون تایپ: ریشهٔ صحنه Node2D است)
 var plan: Dictionary = {}     ## برنامهٔ مرحله
@@ -62,6 +62,14 @@ var _gate_hx: float = 0.0
 var _gate_frames: int = 0
 var _gates_done: Dictionary = {}
 var _prev_falls: int = 0
+var _drone_cleared: bool = false
+var _crumble_recalled: bool = false
+var _next_after_stay: Phase = Phase.RUN
+var _come_cooldown: int = 0
+var _exit_stuck: int = 0
+## چند فریم باید به سمت مخالف رفت تا از گیر در بیاییم (ضد-گیر)
+var _unwedge: int = 0
+var _unwedge_dir: int = -1
 var _ilara_trail: Array[Vector2] = []
 var _companion_hold: int = 0
 var _wait: int = 0
@@ -124,6 +132,8 @@ func step() -> void:
 			_phase_gate_wait(kairo)
 		Phase.GATE_RUN:
 			_phase_gate_run(kairo)
+		Phase.CLEAR_DRONE:
+			_phase_clear_drone(kairo)
 		Phase.STAY_BEFORE_CRUMBLE:
 			_phase_stay(kairo)
 		Phase.WAIT_CRUMBLE:
@@ -191,6 +201,9 @@ func _enter_room(rid: String) -> void:
 	_legs = rp.get(route, [])
 	_crumble_cols = rp.get("crumble_cols", [])
 	_crumble_done = false
+	_crumble_recalled = false
+	_drone_cleared = false
+	_next_after_stay = Phase.RUN
 	_gates_done.clear()
 	_leg = 0
 	_wp = 0
@@ -213,6 +226,7 @@ func _phase_run(kairo) -> void:
 	if not _crumble_done and _crumble_ahead(kairo):
 		_crumble_done = true
 		phase = Phase.STAY_BEFORE_CRUMBLE
+		_next_after_stay = Phase.RUN
 		_companion_hold = 24  # ۰٫۴ ثانیه نگه‌داشتن = دستور «بمان» (§۵)
 		log_lines.append("  میدان سکوی شکننده جلو است → «بمان»")
 		return
@@ -233,6 +247,21 @@ func _phase_run(kairo) -> void:
 	var kind := String(wp.get("kind", "walk"))
 	var target := _cell_px(wp.get("cell", [0, 0]))
 
+	# ضد-گیر: در L2R4 بازیگر زیر بلوک جامد سطر ۱۱ و روی سکوی شکننده گیر می‌کرد
+	# و فشار دادن پیوسته به یک سمت بازش نمی‌کرد. چند فریم عقب رفتن و یک پرش
+	# گره را باز می‌کند (D-052).
+	if _unwedge > 0:
+		_unwedge -= 1
+		if _unwedge_dir > 0:
+			_press("move_right")
+			_release("move_left")
+		else:
+			_press("move_left")
+			_release("move_right")
+		if _unwedge % 12 == 0:
+			_request_jump(14)
+		return
+
 	# از ایلارا جلو نزن: او ۰٫۸ ثانیه عقب‌تر و کندتر است (۱۰۵ مقابل ۱۲۰)، و اگر
 	# فاصله زیاد شود از نقطه‌های پرش جا می‌ماند و در شکاف می‌افتد (D-037).
 	if game.ilara != null and game.ilara.mode == Ilara.Mode.FOLLOW \
@@ -246,6 +275,53 @@ func _phase_run(kairo) -> void:
 				return
 		else:
 			_wait_ilara_frames = 0
+
+	# کایرو از میدان سکوی شکننده گذشته و ایلارا هنوز «بمان» است: صبر تا بازگشت
+	# سکوها، بعد «بیا» و انتظار تا رسیدنش. بدون این، ایلارا تا پایان مرحله
+	# عقب می‌ماند و چون خروج `needs_both` است مرحله تمام نمی‌شود (D-055).
+	if _crumble_done and not _crumble_recalled and not _crumble_cols.is_empty() \
+			and game.ilara != null and game.ilara.mode == Ilara.Mode.STAY \
+			and kairo.is_on_floor():
+		var last_col: int = int(_crumble_cols[_crumble_cols.size() - 1])
+		if int(kairo.global_position.x / TILE) > last_col + 1:
+			_crumble_recalled = true
+			phase = Phase.WAIT_CRUMBLE
+			# سکوی شکننده ۲ ثانیه بعد از افتادن برمی‌گردد (§۷)؛ نیم ثانیه حاشیه
+			_wait = int((Settings.hazard("crumble_respawn", 2.0) + 0.5) * 60.0)
+			log_lines.append("  از میدان گذشتم؛ صبر برای بازگشت سکوها")
+			return
+
+	# پهپاد زندهٔ روی مسیر و ایلارا در حال دنبال کردن: اول ایلارا را نگه دار،
+	# پهپاد را خاموش کن، بعد صدایش کن.
+	#
+	# در L2R4 ورودی اتاق (ستون ۱، سطر ۲) **داخل** مسیر گشت پهپاد (ستون ۱ تا ۷)
+	# است، پس ایلارا همان‌جا که فرود می‌آید در خطر است و جای امنی برای «بمان»
+	# وجود ندارد. تنها بازی درست این است: نگه داشتن او، خاموش کردن پهپاد (۳
+	# ثانیه)، و بعد عبور دادن هر دو در همان پنجره (D-050).
+	if not _drone_cleared and kairo.is_on_floor() and game.ilara != null \
+			and game.ilara.mode == Ilara.Mode.FOLLOW and _live_drone_near(kairo, 8.0):
+		_drone_cleared = true
+		phase = Phase.STAY_BEFORE_CRUMBLE
+		_next_after_stay = Phase.CLEAR_DRONE
+		_companion_hold = 24
+		log_lines.append("  پهپاد زنده روی مسیر → «بمان» و خاموش کردن")
+		return
+
+	# در هوا و پهپادی زیر پایمان: روی آن فرود نیاییم.
+	#
+	# دروازهٔ مانع فقط وقتی کار می‌کند که روی زمین باشیم، ولی ورودی L2R4 در
+	# سطر ۲ است و درست بالای مسیر گشت پهپاد (ستون ۱ تا ۷)، پس بازیگر مستقیم
+	# روی پهپاد فرود می‌آمد و هر بار می‌مرد (D-049).
+	if not kairo.is_on_floor():
+		var dodge := _drone_below(kairo)
+		if dodge != 0:
+			if dodge > 0:
+				_press("move_right")
+				_release("move_left")
+			else:
+				_press("move_left")
+				_release("move_right")
+			return
 
 	# مانع زمان‌بندی‌دار جلو است: وارد «دروازه» می‌شویم.
 	#
@@ -274,9 +350,19 @@ func _phase_run(kairo) -> void:
 				elif kairo.is_on_floor():
 					_press("action")
 		"hop":
-			_steer_to(target, kairo)
+			# اگر هدف بالاتر است، **اول پرش** و بعد حرکت افقی. با هدایت افقیِ
+			# هم‌زمان، بازیگر پیش از پرش زیر لبه می‌رفت و سقف جلوی پرشش را
+			# می‌گرفت — در L2R4 درست زیر سکوی شکنندهٔ سطر ۱۲ گیر می‌کرد (D-053).
+			var hop_above: bool = target.y < kairo.global_position.y - float(TILE) * 0.6
 			if kairo.is_on_floor():
 				_request_jump(16)
+				if hop_above:
+					_release("move_left")
+					_release("move_right")
+				else:
+					_steer_to(target, kairo)
+			else:
+				_steer_to(target, kairo)
 		_:  # walk، drop
 			_steer_to(target, kairo)
 			# اگر دیوار جلو است یا هدف بالاتر است، بپر
@@ -428,15 +514,73 @@ func _do_climb(wp: Dictionary, target: Vector2, kairo) -> void:
 	_climb_frames += 1
 
 	# پرش دیواری انجام شد؟ (از WALL_SLIDE در آمدیم و روی زمین نیستیم)
-	if _wj_armed and kairo.state != PlatformActor.State.WALL_SLIDE \
+	# نزدیک پاگرد این بلوک دخالت نمی‌کند؛ آن‌جا جهت از سرعت واقعی می‌آید.
+	# آستانهٔ «پرش آخر» باید به اندازه‌ای بالا باشد که اوجِ پرش دیواری از لبهٔ
+	# پاگرد رد شود. پرش دیواری ۴۳٫۶px بالا می‌برد؛ از سطر ۶ (y=104) اوج y=60
+	# می‌شود که پایین‌تر از y=56 لازم است و بازیگر به جدارهٔ بلوک می‌خورد. از
+	# سطر ۵ (y=88) اوج y=44 است و رد می‌شود. پس دو کاشی، نه سه (D-048).
+	var finishing: bool = kairo.global_position.y <= target.y + float(TILE) * 2.0
+	if not finishing and _wj_armed \
+			and kairo.state != PlatformActor.State.WALL_SLIDE \
 			and not kairo.is_on_floor():
 		_wj_armed = false
 		_climb_dir = -_climb_dir
 
-	# به ارتفاع هدف رسیدیم: شفت خودش کف ندارد، پاگرد در ستون هدف است.
-	# پس از اینجا افقی به سمت هدف می‌رویم تا روی پاگرد فرود بیاید.
-	if kairo.global_position.y <= target.y + float(TILE) * 0.75:
+	# بالاتر از پاگرد رسیدیم: شفت خودش کف ندارد و پاگرد در ستون هدف است، پس از
+	# اینجا افقی می‌رویم تا روی پاگرد فرود بیاید.
+	#
+	# آستانه نیم کاشی **بالاتر** از پاگرد است، نه هم‌سطح آن. با آستانهٔ هم‌سطح،
+	# بازیگر در شفت ۴ کاشی‌ایِ L2R3 پیش از رسیدن به لبه سقوط می‌کرد و بین دو
+	# دیوار نوسان می‌کرد: عبور یک کاشی ۰٫۱۳ ثانیه طول می‌کشد و سقوط یک کاشی
+	# ۰٫۱۷ ثانیه، پس بدون حاشیهٔ ارتفاع لبه از دست می‌رود (D-048).
+	if kairo.global_position.y <= target.y - float(TILE) * 0.5:
 		_steer_to(target, kairo)
+		return
+
+	# ----- نزدیک پاگرد: پرش آخر باید از دیوار **مقابلِ** هدف باشد -----
+	#
+	# بالا رفتن معمولی جهت را یک‌در‌میان عوض می‌کند، پس ممکن است پرش آخر از
+	# دیوار سمت هدف بزند و بازیگر را از پاگرد **دور** کند. در L2R3 همین
+	# می‌شد: از دیوار راست (ستون ۱۶) می‌پرید و به ستون ۱۳ می‌رفت، در حالی که
+	# پاگرد در ستون ۱۶ بود. پس نزدیک بالا، جهت را به دیوار مقابل قفل می‌کنیم
+	# تا پرش به سمت هدف پرتاب کند (D-048).
+	var to_target: int = 1 if target.x > kairo.global_position.x else -1
+	if finishing:
+		var far := "move_left" if to_target > 0 else "move_right"
+		var near := "move_right" if to_target > 0 else "move_left"
+		var wall_side := 0
+		if kairo.is_on_wall():
+			wall_side = -1 if kairo.get_wall_normal().x > 0.0 else 1
+
+		if kairo.state == PlatformActor.State.WALL_SLIDE:
+			if wall_side == -to_target:
+				# روی دیوار مقابل هدفیم: بپر و همان جهت را نگه دار تا شرط
+				# sliding در فریم بعد هم برقرار بماند و پرش اجرا شود
+				_request_jump(12)
+				_press(far)
+				_release(near)
+				_wj_armed = true
+			else:
+				# روی دیوار سمت هدفیم: نپر، به دیوار مقابل برو
+				_press(far)
+				_release(near)
+			return
+		if not kairo.is_on_floor():
+			# تصمیم از روی **سرعت واقعی** گرفته می‌شود، نه از پرچم `_wj_armed`:
+			# بلوک عوض کردن جهتِ بالاتر آن پرچم را پیش از رسیدن به اینجا پاک
+			# می‌کند، و نتیجه‌اش این بود که بازیگر پس از پرتاب به سمت هدف،
+			# دوباره به دیوار مقابل فشار می‌داد و شتاب خودش را می‌کشت (D-048).
+			if signf(kairo.velocity.x) == float(to_target):
+				# در حال پرتاب به سمت هدفیم: نگه دار
+				_press(near)
+				_release(far)
+			else:
+				# هنوز باید به دیوار مقابل برسیم
+				_press(far)
+				_release(near)
+			return
+		# روی زمین نزدیک بالا: صاف بپر
+		_request_jump(16)
 		return
 
 	var toward := "move_left" if _climb_dir < 0 else "move_right"
@@ -672,6 +816,32 @@ func _ilara_behind_hazard(p: Vector2, target: Vector2) -> bool:
 	return false
 
 
+## اگر پهپاد زندهٔ زیر پایمان است، به کدام سمت باید دور شویم؟ ۰ = خبری نیست.
+func _drone_below(kairo) -> int:
+	if game.room == null:
+		return 0
+	var p: Vector2 = kairo.global_position
+	for h in game.room.hazards:
+		if not is_instance_valid(h) or not (h is Drone):
+			continue
+		var drone := h as Drone
+		if drone.is_disabled:
+			continue
+		var d: Vector2 = drone.global_position
+		# زیر ما و در برد سقوط
+		if d.y < p.y or d.y - p.y > 10.0 * float(TILE):
+			continue
+		if absf(d.x - p.x) > 2.2 * float(TILE):
+			continue
+		# به سمت مخالف پهپاد، ولی داخل اتاق
+		var dir := 1 if d.x <= p.x else -1
+		var nx: float = p.x + dir * 3.0 * float(TILE)
+		if nx < float(TILE) or nx > float((LevelLoader.ROOM_W - 1) * TILE):
+			dir = -dir
+		return dir
+	return 0
+
+
 ## آیا مانعی (لیزر یا پهپاد فعال) در فاصلهٔ داده‌شده هست؟
 func _hazard_near(p: Vector2, dist: float) -> bool:
 	if game.room == null:
@@ -723,6 +893,63 @@ func _gate_on_path(gate: Gate, kairo) -> bool:
 	return g.x >= lo and g.x <= hi and absf(g.y - kairo.global_position.y) < 2.0 * float(TILE)
 
 
+## آیا پهپاد زنده‌ای در این فاصله روی مسیر ما هست؟
+func _live_drone_near(kairo, tiles: float) -> bool:
+	if game.room == null:
+		return false
+	var p: Vector2 = kairo.global_position
+	for h in game.room.hazards:
+		if not is_instance_valid(h) or not (h is Drone):
+			continue
+		if (h as Drone).is_disabled:
+			continue
+		var d: Vector2 = (h as Drone).global_position
+		if absf(d.y - p.y) <= 2.0 * float(TILE) and absf(d.x - p.x) <= tiles * float(TILE):
+			return true
+	return false
+
+
+## نزدیک‌ترین پهپاد زنده
+func _nearest_live_drone(kairo):
+	var best = null
+	var best_d := INF
+	if game.room == null:
+		return null
+	for h in game.room.hazards:
+		if not is_instance_valid(h) or not (h is Drone):
+			continue
+		if (h as Drone).is_disabled:
+			continue
+		var d: float = kairo.global_position.distance_to((h as Drone).global_position)
+		if d < best_d:
+			best_d = d
+			best = h
+	return best
+
+
+## ایلارا ایستاده؛ پهپاد را خاموش کن و بعد صدایش کن.
+func _phase_clear_drone(kairo) -> void:
+	_wait += 1
+	var drone = _nearest_live_drone(kairo)
+	if drone == null or _wait > 60 * 12:
+		# خاموش شد (یا وقت تمام): ایلارا را صدا بزن
+		phase = Phase.CALL_COME
+		_wait = 0
+		log_lines.append("  پهپاد خاموش شد؛ «بیا»")
+		return
+
+	var p: Vector2 = kairo.global_position
+	var dx: float = drone.global_position.x - p.x
+	var hack_range: float = Settings.param("hack", "range_px", 48.0)
+	if absf(dx) > hack_range - 6.0:
+		# بیا در برد هک، ولی نه زیر پایش
+		_steer_to(Vector2(drone.global_position.x - signf(dx) * (hack_range - 10.0), p.y), kairo)
+	else:
+		_release("move_left")
+		_release("move_right")
+	_maybe_hack(kairo)
+
+
 ## ----- فازهای همراه -----
 
 func _crumble_ahead(kairo) -> bool:
@@ -739,8 +966,10 @@ func _phase_stay(kairo) -> void:
 	if _companion_hold > 0:
 		return
 	if game.ilara != null and game.ilara.mode == Ilara.Mode.STAY:
-		phase = Phase.RUN
-		log_lines.append("  ایلارا ایستاد؛ عبور از میدان")
+		phase = _next_after_stay
+		_next_after_stay = Phase.RUN
+		_wait = 0
+		log_lines.append("  ایلارا ایستاد؛ ادامه")
 	else:
 		_companion_hold = 24
 
@@ -752,12 +981,12 @@ func _phase_wait_crumble(kairo) -> void:
 
 
 func _phase_call_come(kairo) -> void:
-	# یک ضربهٔ کوتاه = «بیا»
-	_press("companion")
-	if _companion_hold == 0:
+	# یک ضربهٔ کوتاه = «بیا». نگه‌داشتن پیوسته برعکس عمل می‌کند (D-051).
+	_come_cooldown -= 1
+	if _come_cooldown <= 0 and _companion_hold == 0:
 		_companion_hold = 3
+		_come_cooldown = 45
 	if game.ilara != null and game.ilara.mode == Ilara.Mode.FOLLOW:
-		_release("companion")
 		phase = Phase.WAIT_ILARA
 		_wait = 60 * 8
 		log_lines.append("  «بیا» زده شد؛ انتظار برای ایلارا")
@@ -776,12 +1005,41 @@ func _phase_wait_ilara(kairo) -> void:
 ## روی خروج ایستادن تا هر دو شخصیت برسند (§۸: needs_both)
 func _phase_at_exit(kairo) -> void:
 	var ex := _exit_px()
+	if _unwedge > 0:
+		_unwedge -= 1
+		if _unwedge_dir > 0:
+			_press("move_right")
+			_release("move_left")
+		else:
+			_press("move_left")
+			_release("move_right")
+		if _unwedge % 12 == 0:
+			_request_jump(14)
+		return
 	_steer_to(ex, kairo)
-	# اگر ایلارا در حالت بمان مانده، صدایش کن
+
+	# اگر ایلارا در حالت بمان مانده، **یک ضربه** بزن.
+	#
+	# فشار دادن هر فریم دکمهٔ همراه، ضربه را به نگه‌داشتن تبدیل می‌کند و
+	# نگه‌داشتن ۰٫۳ ثانیه یعنی دستور «بمان» (§۵) — یعنی دقیقاً خلافش. پیش از
+	# این رفع، ایلارا تا پایان مرحله در «بمان» قفل می‌شد (D-051).
 	if game.ilara != null and game.ilara.mode == Ilara.Mode.STAY:
-		_press("companion")
-		if _companion_hold == 0:
+		_come_cooldown -= 1
+		if _come_cooldown <= 0:
 			_companion_hold = 3
+			_come_cooldown = 45
+
+	# اگر مدتی تکان نخورده‌ایم، یک پرش برای در آمدن از گیر
+	if kairo.global_position.distance_to(_last_pos) > 1.0:
+		_exit_stuck = 0
+		_last_pos = kairo.global_position
+	else:
+		_exit_stuck += 1
+		if _exit_stuck > 40:
+			_exit_stuck = 0
+			_unwedge_dir = -1 if ex.x >= kairo.global_position.x else 1
+			_unwedge = 24
+			_request_jump(16)
 
 
 func _at_exit_cell(kairo) -> bool:
@@ -816,10 +1074,15 @@ func _check_stuck(kairo) -> void:
 			% [MAX_SKIPS, _room_id])
 		return
 	var wp := _current_wp()
-	log_lines.append("  گیر کرد در %s → %s؛ رد می‌شود (%d)"
+	log_lines.append("  گیر کرد در %s → %s؛ ضد-گیر (%d)"
 		% [_current_action(), str(wp.get("cell", [])), skips])
-	_advance()
-	# یک پرش برای در آمدن از گیر
+	# اول ضد-گیر: عقب رفتن به سمت مخالف هدف. فقط هر سه بار یک نقطهٔ راه رد
+	# می‌شود، تا مسیر درست به‌خاطر یک گیر موقت دور ریخته نشود.
+	var tgt := _cell_px(wp.get("cell", [0, 0])) if not wp.is_empty() else Vector2.ZERO
+	_unwedge_dir = -1 if tgt.x >= _last_pos.x else 1
+	_unwedge = 24
+	if skips % 3 == 0:
+		_advance()
 	_request_jump(14 + (jitter % 6))
 
 

@@ -18,7 +18,7 @@ const LEVELS := ["ch1_l1", "ch1_l2", "ch1_l3"]
 ## ایلارا. تا آن وقت، آزمون **پسرفت** را می‌گیرد: اگر تعداد اتاق‌های پیموده‌شده
 ## از عدد پایه کمتر شود، رد می‌شود (DECISIONS.md: D-042).
 const KNOWN_INCOMPLETE := {
-	"ch1_l2": 3,
+	"ch1_l2": 4,
 	"ch1_l3": 1,
 }
 ## سقف زمان هر تلاش
@@ -90,6 +90,8 @@ func _run_level(level_id: String) -> void:
 			"= %d اتاق، مرگ %d، افتادن ایلارا %d" % [
 				rooms, int(best.get("deaths", 0)), int(best.get("ilara_falls", 0))])
 		print("    ⚠ %s هنوز تا خروج نمی‌رسد — کار باز گام ۸ (D-042)" % level_id)
+		for line in (best.get("log", []) as Array):
+			print("      %s" % line)
 		return
 
 	_check("%s تا خروج تمام شد" % level_id, finished,

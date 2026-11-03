@@ -129,6 +129,23 @@ class Grid:
             return self.objects[sym].get("type", "")
         return ""
 
+    def tight(self, c: int, r: int) -> bool:
+        """خانهٔ قابل‌ایستادنی که سقفش چسبیده است: بازیگر در آن جا نمی‌شود.
+
+        قد جعبهٔ برخورد ۱۶px است، یعنی دقیقاً یک کاشی (§۳). اگر هم زیر و هم
+        بالای خانه جامد باشد، بازیگر با حاشیهٔ صفر داخلش می‌افتد و در عمل گیر
+        می‌کند. BFS کاشی‌محور این را نمی‌بیند، پس برنامه‌ریز باید چنین خانه‌ای را
+        نافرابر بشمارد و مسیر را **از روی** مانع ببرد — همان کاری که آدم می‌کند
+        (DECISIONS.md: D-052).
+        """
+        if not (0 <= c < ROOM_W and 0 <= r < ROOM_H):
+            return False
+        if self.at(c, r) in SOLID:
+            return False
+        above_solid = self.at(c, r - 1) in SOLID if r > 0 else True
+        below_solid = self.at(c, r + 1) in SOLID if r + 1 < ROOM_H else True
+        return above_solid and below_solid
+
     def solid(self, c: int, r: int, hacked: bool) -> bool:
         if (c, r) in self.sealed:
             return True
@@ -143,6 +160,9 @@ class Grid:
             return True
         if sym in HACKABLE_SOLID:
             return not hacked
+        # خانهٔ تنگ برای برنامه‌ریز نافرابر است
+        if self.tight(c, r):
+            return True
         return False
 
     def deadly(self, c: int, r: int) -> bool:
@@ -498,6 +518,39 @@ def check_companion_gaps(level: dict, K: dict) -> list[str]:
     return problems
 
 
+def check_headroom(level: dict) -> list[str]:
+    """هر خانهٔ قابل‌ایستادن باید دست‌کم ۲ کاشی ارتفاع آزاد داشته باشد.
+
+    قد جعبهٔ برخورد هر دو شخصیت ۱۶px است، یعنی **دقیقاً یک کاشی** (§۳:
+    `HITBOX = Vector2(10, 16)`). پس یک کاشی ارتفاع آزاد حاشیهٔ صفر می‌دهد و
+    بازیگر زیر سقف گیر می‌کند: نه آدم می‌تواند رد شود و نه روبات.
+
+    این نگهبان پس از آن اضافه شد که روبات گام ۸ ب در L2R4 خانهٔ (۹,۱۲) گیر کرد —
+    جایی که سکوی اضافه‌شده در D-017 درست بالای سکوی شکننده افتاده بود
+    (DECISIONS.md: D-052).
+    """
+    problems: list[str] = []
+    for room in level["rooms"]:
+        tiles = room["tiles"]
+        for c in range(1, ROOM_W - 1):
+            for r in range(2, ROOM_H - 1):
+                if tiles[r][c] in SOLID:
+                    continue
+                if tiles[r + 1][c] not in SOLID:
+                    continue
+                free = 0
+                rr = r
+                while rr >= 0 and tiles[rr][c] not in SOLID:
+                    free += 1
+                    rr -= 1
+                if free < 2:
+                    problems.append(
+                        "%s/%s: خانهٔ (%d,%d) فقط %d کاشی ارتفاع آزاد دارد "
+                        "(قد بازیگر ۱ کاشی، حداقل لازم ۲)"
+                        % (level.get("id", "?"), room["id"], c, r, free))
+    return problems
+
+
 def validate(levels: list[str], K: dict, label: str) -> tuple[int, int, list[str]]:
     ok = 0
     total = 0
@@ -591,10 +644,12 @@ def main() -> int:
     print("  برد پرش ایلارا %.1fpx = %.2f کاشی (کایرو %.2f کاشی)"
           % (K["ilara_range_px"], K["ilara_range_px"] / TILE, K["range_px"] / TILE))
     gap_problems: list[str] = []
+    head_problems: list[str] = []
     for level_id in levels:
         level = json.loads((DATA / f"{level_id}.json").read_text(encoding="utf-8"))
         level.setdefault("id", level_id)
         gap_problems += check_companion_gaps(level, K)
+        head_problems += check_headroom(level)
     if gap_problems:
         for p in gap_problems:
             print("  ✘", p)
@@ -602,6 +657,16 @@ def main() -> int:
         margin = float(K["fairness"].get("companion_gap_margin", 0.85))
         print("  ✔ هیچ چاله‌ای از ظرفیت امن ایلارا (%.0fpx با %.0f%% حاشیه) نمی‌گذرد"
               % (K["ilara_range_px"] * margin, (1.0 - margin) * 100.0))
+
+    print("\n=== ارتفاع آزاد (قد بازیگر ۱ کاشی) ===")
+    if head_problems:
+        # خطا نیست: نقشه مجاز است و برنامه‌ریز این خانه‌ها را نافرابر می‌شمارد،
+        # پس مسیر از **روی** مانع می‌رود — همان کاری که آدم می‌کند.
+        print("  i %d خانهٔ تنگ؛ برنامه‌ریز از آن‌ها عبور نمی‌دهد:" % len(head_problems))
+        for p in head_problems:
+            print("    ·", p)
+    else:
+        print("  ✔ هیچ خانهٔ تنگی نیست")
 
     ok, total, problems = validate(levels, K, "ثابت‌های واقعی §۳")
     problems += gap_problems
