@@ -41,3 +41,15 @@
 
 ## قرارداد تحویل
 هر دارایی `art_drop/<نام>/` با `asset.json` و PNG. نام‌ها و اندازه‌ها با `game/assets/README.md` یکی باشد تا جایگزینی هنرمند بدون تغییر کد ممکن باشد.
+
+## وضعیت تولید محیط‌ها (Canva؛ تصویر کامل در Canva، فقط پیش‌نمایش در مخزن)
+| # | محیط | شناسهٔ Canva | لینک |
+| --- | --- | --- | --- |
+| ۶ | تنهٔ درخت روی آب | MAHZ2mcHaAE | https://www.canva.com/M/MAHZ2mcHaAE |
+| ۷ | فلات و آبشار | MAHZ2rJUPt4 | https://www.canva.com/M/MAHZ2rJUPt4 |
+| ۸ | غار شبانه | MAHZ2lisrJc | https://www.canva.com/M/MAHZ2lisrJc |
+| ۹ | شهر بندری | MAHZ2tEHDjk | https://www.canva.com/M/MAHZ2tEHDjk |
+| ۱۰ | خلیج مرجانی | MAHZ2nvEHjw | https://www.canva.com/M/MAHZ2nvEHjw |
+| — | کایرو (برگه) | MAHZ2kQ7SvY | https://www.canva.com/M/MAHZ2kQ7SvY |
+| — | ایلارا (برگه) | MAHZ2o8BDr8 | https://www.canva.com/M/MAHZ2o8BDr8 |
+تصاویر کامل تأییدشدهٔ کایرو و ایلارا: `art/approved/`. برای محیط‌ها: دانلود از لینک → `art/raw/` → `pixelize.py`.
