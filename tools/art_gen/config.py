@@ -15,8 +15,12 @@ LOGS = PKG / "logs"
 CACHE = PKG / "cache"
 SCREENS = GAME / "docs_screens"
 
-#: مدل متنی. اگر در دسترس نبود، در DECISIONS.md ثبت و با مدل موجود ادامه.
-CLAUDE_MODEL = os.environ.get("ART_CLAUDE_MODEL", "claude-opus-5-5")
+#: مدل متنی. ART_MODEL برتری دارد؛ اگر آن مدل در دسترس نبود، مسیر API به
+#: FALLBACK_MODEL برمی‌گردد و دلیلش در DECISIONS.md ثبت می‌شود.
+CLAUDE_MODEL = os.environ.get("ART_MODEL") or os.environ.get(
+	"ART_CLAUDE_MODEL", "claude-fable-5-1"
+)
+FALLBACK_MODEL = "claude-opus-5-5"
 
 #: مدل تصویر Cloudflare Workers AI.
 CF_MODEL = os.environ.get("ART_CF_MODEL", "@cf/black-forest-labs/flux-1-schnell")

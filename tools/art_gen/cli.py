@@ -42,6 +42,12 @@ MATRIX_ASSETS: dict[str, dict] = {
 		"صخرهٔ گرد، دیوارهٔ جلوی صخره، علف روی لبه، سکوی شکننده، لبهٔ چاله، آب "
 		"فیروزه‌ای با خط کف سفید.",
 	},
+	"ui_3q": {
+		"out": "ui/td/hud.png",
+		"brief": "یک صفحهٔ نمونهٔ رابط: پنل آبی تیره با لبهٔ روشن نازک، نوار "
+		"سلامت و انرژی، شمارندهٔ سکه، دکمهٔ لمسی گرد، و مکان‌نمای ستارهٔ "
+		"هشت‌پر. اصیل و بدون هیچ نماد مشهور.",
+	},
 	"hazards_3q": {
 		"out": "sprites/td/hazards.png",
 		"brief": "تیغه و فرستندهٔ لیزر در نمای سه‌چهارم، ۱۶×۱۶ هر کدام. خطر گرم "
@@ -53,7 +59,9 @@ MATRIX_ASSETS: dict[str, dict] = {
 CF_ASSETS: dict[str, dict] = {
 	"ch1_sky_3q": {
 		"out": "fx/td/ch1_sky.png",
-		"depth": 3,
+		# آسمان خودش دورترین چیز است؛ پرسپکتیو رنگی عمق ۳ آن را به سه نوار
+		# تخت می‌بُرد. عمق ۱ گرادیان را نگه می‌دارد. (DECISIONS.md: D-068)
+		"depth": 1,
 		"prompt": "painterly high-detail pixel art background, three-quarter "
 		"top-down view, burning night sky over a ruined city, rust red fading "
 		"to ash grey, soft volumetric fog, warm rim light from upper left, "
@@ -63,6 +71,7 @@ CF_ASSETS: dict[str, dict] = {
 	"ch1_far_3q": {
 		"out": "fx/td/ch1_far.png",
 		"depth": 2,
+		"despeckle": 3,
 		"prompt": "painterly high-detail pixel art, three-quarter top-down "
 		"view, distant rooftops and broken towers seen from above, purple blue "
 		"low contrast haze, volumetric fog layer, 16-bit era limited palette, "
@@ -124,7 +133,9 @@ def _build_cf(name: str, spec: dict, led: budget.Ledger, dry: bool) -> bool:
 		print("  ⊘ %s: %s" % (name, exc))
 		_log_failure(name, [str(exc)])
 		return False
-	img = postprocess.pipeline_background(raw, depth=spec["depth"])
+	img = postprocess.pipeline_background(
+		raw, depth=spec["depth"], despeckle_passes=spec.get("despeckle", 1)
+	)
 	if dry:
 		print("  ○ %s: %dx%d از کش (نوشته نشد: --dry-run)" % (name, img.width, img.height))
 		return True

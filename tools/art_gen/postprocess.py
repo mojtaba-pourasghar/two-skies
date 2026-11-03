@@ -171,6 +171,7 @@ def pipeline_background(
 	seamless: bool = True,
 	chapter: int = 1,
 	dither: bool = False,
+	despeckle_passes: int = 1,
 ) -> Image.Image:
 	"""زنجیرهٔ کامل یک لایهٔ پس‌زمینه."""
 	img = raw if isinstance(raw, Image.Image) else Image.open(_buf(raw))
@@ -195,7 +196,11 @@ def pipeline_background(
 	# برفک دیده می‌شود (۲۴ رنگ پرنویز در برابر ۱۵ رنگ تمیز). پس پیش‌فرض خاموش
 	# است و نوارهای نقاشی‌وار می‌ماند. (DECISIONS.md: D-067)
 	img = quantize(img, world_palette(chapter), dither=dither)
-	img = despeckle(img)
+	# لایهٔ دور مه‌آلود است و رنگ‌بندی روی خاکستری کم‌اشباع گاهی به بنفش خطا
+	# (#7A4DFF) می‌افتد، که نقطه‌های بنفش پراکنده می‌سازد. یک گذر اضافی
+	# despeckle آن‌ها را به رنگ همسایه برمی‌گرداند. (DECISIONS.md: D-068)
+	for _ in range(max(1, despeckle_passes)):
+		img = despeckle(img)
 	return img.convert("RGBA")
 
 
