@@ -271,7 +271,7 @@ func _on_ilara_died() -> void:
 	Audio.play_sfx("ilara_death")
 	# «موسیقی قطع می‌شود، صفحه ۰٫۲ ثانیه بی‌رنگ می‌شود، کایرو فریاد می‌زند» (سند ۰۱)
 	_flash_desaturate()
-	await get_tree().create_timer(KairoConst.RESPAWN_TIME).timeout
+	await Wait.seconds(self, KairoConst.RESPAWN_TIME)
 	restart_level_from_companion_death()
 
 
@@ -341,7 +341,7 @@ func _on_exit_reached() -> void:
 	GameState.record_level_result(result)
 	SceneRouter.last_result = result
 	Audio.play_sfx("level_complete")
-	await get_tree().create_timer(0.6).timeout
+	await Wait.seconds(self, 0.6)
 	# مرحلهٔ ۳ آخرین مرحلهٔ نسخهٔ ۱ است؛ صحنهٔ «پایان نسخهٔ اول» (سند ۰۵)
 	if String(level.get("id", "")) == "ch1_l3":
 		await Cutscene.play("v1_end")

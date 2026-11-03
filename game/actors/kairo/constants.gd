@@ -34,7 +34,10 @@ static var WALL_JUMP_LOCK: float = 0.15
 static var DASH_SPEED: float = 260.0
 static var DASH_TIME: float = 0.18
 static var DASH_COOLDOWN: float = 0.6
-static var RESPAWN_TIME: float = 0.35
+## ۰٫۲۸ ثانیه = ۱۷ فریم. §۳ عدد ۰٫۳۵ می‌دهد ولی خودش «کمتر از ۰٫۴» می‌خواهد و
+## سند ۰۱ و معیار پذیرش سند ۰۵ «زیر ۰٫۳»؛ ۰٫۲۸ هر سه را برآورده می‌کند
+## (DECISIONS.md: D-044).
+static var RESPAWN_TIME: float = 0.28
 
 ## ضریب شتاب روی زمین لغزنده (§۳)
 const SLIPPERY_ACCEL_MULT: float = 0.3

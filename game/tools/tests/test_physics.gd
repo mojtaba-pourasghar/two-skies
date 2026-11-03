@@ -253,10 +253,11 @@ func _test_death_respawn() -> void:
 	var budget_02: float = Settings.fairness().get("respawn_budget_spec02", 0.4)
 	_check("ریستارت در بودجهٔ سند ۰۲ (< ۰٫۴s)", (n / 60.0) <= budget_02 + 0.001,
 		"= %.3f ثانیه، بودجه %.3f" % [n / 60.0, budget_02])
+	# با RESPAWN_TIME = ۰٫۲۸ این بودجه هم برآورده می‌شود، پس از سنجهٔ اطلاعی به
+	# سنجهٔ واقعی ارتقا یافت (DECISIONS.md: D-044).
 	var budget_05: float = Settings.fairness().get("respawn_budget_doc01_doc05", 0.3)
-	var meets_05: bool = (n / 60.0) <= budget_05 + 0.001
-	print("  i بودجهٔ سند ۰۱/۰۵ (< ۰٫۳s): %s — با پروفایل design01 برآورده می‌شود"
-		% ("برآورده" if meets_05 else "برآورده نمی‌شود"))
+	_check("ریستارت در بودجهٔ سند ۰۱ و ۰۵ (< ۰٫۳s)", (n / 60.0) <= budget_05 + 0.001,
+		"= %.3f ثانیه، بودجه %.3f" % [n / 60.0, budget_05])
 
 
 ## تکرارپذیری: ده بار اجرای یکسان ورودی‌ها باید نتیجهٔ یکسان بدهد (معیار پذیرش سند ۰۵)

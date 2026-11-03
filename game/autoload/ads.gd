@@ -74,7 +74,7 @@ func show(placement: String) -> void:
 
 
 func _stub_show(placement: String) -> void:
-	await get_tree().create_timer(2.0).timeout
+	await Wait.seconds(self, 2.0)
 	rewarded_completed.emit(placement)
 	rewarded_closed.emit(placement)
 

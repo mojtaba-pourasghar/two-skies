@@ -10,5 +10,5 @@ func build() -> VBoxContainer:
 
 func _ready() -> void:
 	super()
-	await get_tree().create_timer(1.2).timeout
+	await Wait.seconds(self, 1.2)
 	SceneRouter.goto("main_menu", false)
