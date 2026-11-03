@@ -1,0 +1,15 @@
+{
+  "name": "env09_harbor_town",
+  "kind": "environment",
+  "status": "approved-by-user",
+  "source": "art/raw/env09_harbor_town_full.png",
+  "source_size": [
+    1600,
+    899
+  ],
+  "game_size": [
+    1280,
+    720
+  ],
+  "note": "پس‌زمینهٔ کامل؛ لایه‌های پارالکس نیاز به تولید جدا دارند"
+}
