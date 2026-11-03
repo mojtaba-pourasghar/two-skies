@@ -81,6 +81,56 @@
         "death_shake_px": 2.0,
         "death_shake_time": 0.12
       }
+    },
+    "topdown": {
+      "_source": "game/TOPDOWN_SPEC.md — تصمیم گام ۱۲ (نمای سه‌چهارم از بالا)",
+      "_note": "بدون گرانش. اعداد پرش و دیوارپرش اینجا نیستند چون حذف شده‌اند.",
+      "kairo": {
+        "RUN_SPEED": 96.0,
+        "GROUND_ACCEL": 900.0,
+        "GROUND_DECEL": 1200.0,
+        "DASH_SPEED": 240.0,
+        "DASH_TIME": 0.1333,
+        "DASH_COOLDOWN": 0.6,
+        "RESPAWN_TIME": 0.28
+      },
+      "ilara": {
+        "RUN_SPEED": 105.0
+      },
+      "topdown": {
+        "HOP_DISTANCE": 48.0,
+        "HOP_TIME": 0.4,
+        "HOP_ARC_PX": 8.0,
+        "FOOT_BOX": [
+          10.0,
+          8.0
+        ],
+        "FOOT_OFFSET_Y": 4.0,
+        "COMPANION_DELAY_FRAMES": 48
+      },
+      "hazards": {
+        "crumble_shake": 0.3,
+        "crumble_fall": 0.5,
+        "crumble_respawn": 2.0,
+        "laser_on": 1.2,
+        "laser_off": 1.2,
+        "laser_warn": 0.4,
+        "drone_speed": 40.0,
+        "drone_turn_pause": 0.2,
+        "gate_open_anim": 0.5,
+        "door_open_duration": 2.0
+      },
+      "hack": {
+        "range_px": 48.0,
+        "hold_time": 0.6,
+        "cooldown": 1.0
+      },
+      "camera": {
+        "death_shake_px": 2.0,
+        "death_shake_time": 0.12,
+        "dash_shake_px": 1.0,
+        "dash_shake_time": 0.06
+      }
     }
   },
   "fairness_rules": {
