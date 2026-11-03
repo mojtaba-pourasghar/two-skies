@@ -1,0 +1,120 @@
+{
+  "name": "ui",
+  "status": "sliced-from-canva-sheet",
+  "source": "art/raw/sheet_ui.png",
+  "files": {
+    "portrait_frame": [
+      203,
+      273
+    ],
+    "bar_health": [
+      319,
+      58
+    ],
+    "bar_energy": [
+      320,
+      60
+    ],
+    "bar_stamina": [
+      302,
+      52
+    ],
+    "dialog_frame": [
+      578,
+      247
+    ],
+    "btn_pause": [
+      102,
+      100
+    ],
+    "btn_settings": [
+      103,
+      100
+    ],
+    "counter_coin": [
+      295,
+      64
+    ],
+    "counter_gem": [
+      292,
+      60
+    ],
+    "panel_square": [
+      400,
+      364
+    ],
+    "slot_a": [
+      115,
+      144
+    ],
+    "slot_b": [
+      111,
+      143
+    ],
+    "slot_c": [
+      114,
+      144
+    ],
+    "slot_empty": [
+      116,
+      143
+    ],
+    "btn_jump": [
+      174,
+      175
+    ],
+    "btn_dash": [
+      175,
+      175
+    ],
+    "cursor": [
+      111,
+      120
+    ],
+    "skill_fire": [
+      125,
+      141
+    ],
+    "skill_ice": [
+      124,
+      140
+    ],
+    "skill_nature": [
+      124,
+      141
+    ],
+    "skill_aura": [
+      124,
+      141
+    ],
+    "btn_action": [
+      180,
+      176
+    ],
+    "btn_companion": [
+      175,
+      174
+    ],
+    "badge_gem": [
+      114,
+      113
+    ],
+    "banner_red": [
+      92,
+      92
+    ],
+    "banner_green": [
+      94,
+      91
+    ],
+    "banner_purple": [
+      94,
+      91
+    ],
+    "divider": [
+      1498,
+      45
+    ]
+  },
+  "note": "اندازه‌ها در تراکم اصلی برگه؛ Godot در زمان واردکردن به اندازهٔ نمایش (مقیاس ۱۲۸۰×۷۲۰) کوچک می‌کند. فیلتر Nearest."
+}

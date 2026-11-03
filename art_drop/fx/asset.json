@@ -1,0 +1,56 @@
+{
+  "name": "fx",
+  "status": "sliced-from-canva-sheet",
+  "strips": {
+    "dash_trail": {
+      "frames": 9,
+      "frame_size": [
+        172,
+        100
+      ]
+    },
+    "hack_ring": {
+      "frames": 9,
+      "frame_size": [
+        172,
+        135
+      ]
+    },
+    "dust": {
+      "frames": 9,
+      "frame_size": [
+        172,
+        90
+      ]
+    },
+    "death_burst": {
+      "frames": 9,
+      "frame_size": [
+        172,
+        130
+      ]
+    },
+    "respawn_ring": {
+      "frames": 9,
+      "frame_size": [
+        172,
+        105
+      ]
+    },
+    "coin_sparkle": {
+      "frames": 9,
+      "frame_size": [
+        172,
+        85
+      ]
+    },
+    "leaves": {
+      "frames": 9,
+      "frame_size": [
+        172,
+        75
+      ]
+    }
+  },
+  "note": "هر نوار ۹ فریم افقی؛ آلفا از روشنایی؛ پیشنهاد: blend add"
+}

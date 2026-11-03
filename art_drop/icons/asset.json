@@ -1,0 +1,60 @@
+{
+  "name": "icons",
+  "status": "sliced-from-canva-sheet",
+  "source": "art/raw/sheet_icons.png",
+  "files": {
+    "dash": [
+      310,
+      210
+    ],
+    "hack": [
+      281,
+      300
+    ],
+    "hop": [
+      319,
+      259
+    ],
+    "companion_stay": [
+      171,
+      182
+    ],
+    "companion_come": [
+      244,
+      162
+    ],
+    "coin": [
+      263,
+      223
+    ],
+    "gem": [
+      227,
+      238
+    ],
+    "notebook": [
+      227,
+      218
+    ],
+    "keycard": [
+      236,
+      223
+    ],
+    "shield": [
+      252,
+      256
+    ],
+    "checkpoint_flag": [
+      244,
+      243
+    ],
+    "heart": [
+      281,
+      234
+    ],
+    "crystals": [
+      281,
+      222
+    ]
+  },
+  "note": "اندازه‌ها در تراکم اصلی برگه؛ Godot در زمان واردکردن به اندازهٔ نمایش (مقیاس ۱۲۸۰×۷۲۰) کوچک می‌کند. فیلتر Nearest."
+}

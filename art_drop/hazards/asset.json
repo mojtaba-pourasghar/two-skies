@@ -1,0 +1,68 @@
+{
+  "name": "hazards",
+  "status": "sliced-from-canva-sheet",
+  "source": "art/raw/sheet_hazards.png",
+  "files": {
+    "spikes": [
+      407,
+      287
+    ],
+    "laser_emitter": [
+      408,
+      227
+    ],
+    "drone_a1": [
+      127,
+      156
+    ],
+    "drone_a2": [
+      108,
+      156
+    ],
+    "drone_a3": [
+      116,
+      157
+    ],
+    "drone_a4": [
+      125,
+      157
+    ],
+    "drone_hacked1": [
+      128,
+      156
+    ],
+    "drone_hacked2": [
+      113,
+      156
+    ],
+    "drone_hacked3": [
+      116,
+      155
+    ],
+    "drone_hacked4": [
+      125,
+      156
+    ],
+    "platform_intact": [
+      382,
+      220
+    ],
+    "platform_shaking": [
+      373,
+      283
+    ],
+    "platform_falling": [
+      362,
+      423
+    ],
+    "door_security": [
+      309,
+      259
+    ],
+    "checkpoint_flag": [
+      181,
+      224
+    ]
+  },
+  "note": "اندازه‌ها در تراکم اصلی برگه؛ Godot در زمان واردکردن به اندازهٔ نمایش (مقیاس ۱۲۸۰×۷۲۰) کوچک می‌کند. فیلتر Nearest."
+}
