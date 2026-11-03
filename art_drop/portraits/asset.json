@@ -1,0 +1,14 @@
+{
+ "type": "portraits",
+ "status": "draft",
+ "source": "canva MAHZ2-C79xk / MAHZ2z54nnU / MAHZ2_uLlSA",
+ "expressions": [
+  "neutral",
+  "angry",
+  "shocked",
+  "sad",
+  "happy",
+  "crying"
+ ],
+ "note": "background not yet removed; icons need resize to UI size"
+}
