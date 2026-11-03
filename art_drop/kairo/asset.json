@@ -1,0 +1,16 @@
+{
+  "name": "kairo",
+  "status": "draft-from-approved-sheet",
+  "frame_size": [
+    64,
+    64
+  ],
+  "feet_baseline_y": 60,
+  "body_height_px": 44,
+  "files": {
+    "down": "kairo_idle_down.png",
+    "side": "kairo_idle_side.png",
+    "up": "kairo_idle_up.png"
+  },
+  "note": "side_left = mirror of side. فقط ایستاده؛ انیمیشن‌ها با هنرمند/ابزار پیکسل‌آرت از روی برگهٔ تأییدشده."
+}

@@ -1,0 +1,16 @@
+{
+  "name": "ilara",
+  "status": "draft-from-approved-sheet",
+  "frame_size": [
+    64,
+    64
+  ],
+  "feet_baseline_y": 60,
+  "body_height_px": 44,
+  "files": {
+    "down": "ilara_idle_down.png",
+    "side": "ilara_idle_side.png",
+    "up": "ilara_idle_up.png"
+  },
+  "note": "side_left = mirror of side. فقط ایستاده؛ انیمیشن‌ها با هنرمند/ابزار پیکسل‌آرت از روی برگهٔ تأییدشده."
+}
