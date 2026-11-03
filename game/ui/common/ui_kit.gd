@@ -9,9 +9,9 @@ class_name UIKit
 extends RefCounted
 
 const MIN_TOUCH: float = 48.0
-const PANEL_BG := Color(0.08, 0.09, 0.12, 0.92)
-const ACCENT := Color(0.45, 0.72, 1.0)
-const MUTED := Color(0.55, 0.57, 0.62)
+const PANEL_BG := Color(Palette.UI_PANEL, 0.92)
+const ACCENT := Palette.DIGITAL_CYAN
+const MUTED := Palette.LIGHT_DUST
 
 
 static func make_root(title_key: String) -> VBoxContainer:
@@ -120,7 +120,7 @@ static func make_backdrop(parent: Control) -> ColorRect:
 static func make_currency_bar() -> HBoxContainer:
 	var row := make_row()
 	row.add_child(make_label("%s %s" % [Fa.t("ui_coins"), Fa.num(int(GameState.data.get("coins", 0)))], 10,
-		Color(1.0, 0.84, 0.3)))
+		Palette.COIN))
 	row.add_child(make_label("%s %s" % [Fa.t("ui_gems"), Fa.num(int(GameState.data.get("gems", 0)))], 10,
-		Color(0.45, 0.95, 0.75)))
+		Palette.EMERALD))
 	return row

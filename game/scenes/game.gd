@@ -49,6 +49,7 @@ func _ready() -> void:
 	if SceneRouter.pending_level != "":
 		level_path = SceneRouter.pending_level
 	_tileset = LevelLoader.make_placeholder_tileset()
+	_build_backdrop()
 	_rooms_root = Node2D.new()
 	_rooms_root.name = "Rooms"
 	add_child(_rooms_root)
@@ -221,6 +222,30 @@ func _on_door_crossed(side: String, to_room: String, row: int) -> void:
 
 ## ----- دوربین -----
 
+## پس‌زمینهٔ لایه‌ای فصل ۱ — «قالب مشترک ساخت هر صحنه» سند ۰۴:
+## لایهٔ ۰ آسمان، ۱ دور، ۲ میانه، ۳ بازی (اتاق)، ۴ جلو، ۵ نور.
+##
+## دوربین در هر اتاق **ثابت** است (یک اتاق = یک صفحه)، پس درصدهای پارالاکس
+## فعلاً حرکتی تولید نمی‌کنند و لایه‌ها فقط عمق می‌سازند. ساختار لایه‌ای را
+## همین حالا می‌گذاریم تا وقتی دوربین کشویی آمد فقط ضریب‌ها وصل شود.
+## (DECISIONS.md: D-060)
+func _build_backdrop() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "Backdrop"
+	layer.layer = -1
+	add_child(layer)
+	for path in [Art.SKY, Art.FAR, Art.MID]:
+		if not ResourceLoader.exists(path):
+			continue
+		var tex := TextureRect.new()
+		tex.texture = load(path)
+		tex.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		tex.set_anchors_preset(Control.PRESET_FULL_RECT)
+		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		layer.add_child(tex)
+
+
 func _build_camera() -> void:
 	_camera = Camera2D.new()
 	_camera.position_smoothing_enabled = false
@@ -277,7 +302,7 @@ func _on_ilara_died() -> void:
 
 func _flash_desaturate() -> void:
 	var rect := ColorRect.new()
-	rect.color = Color(0.6, 0.6, 0.6, 0.55)
+	rect.color = Color(Palette.LIGHT_DUST, 0.55)
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hud.add_child(rect)

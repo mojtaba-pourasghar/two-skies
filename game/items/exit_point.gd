@@ -38,11 +38,8 @@ func _ready() -> void:
 	shape.shape = r
 	add_child(shape)
 
-	var poly := Polygon2D.new()
-	poly.color = Color(0.55, 1.0, 0.6) if not is_checkpoint else Color(0.6, 0.8, 1.0)
-	poly.polygon = PackedVector2Array([
-		Vector2(-7, -12), Vector2(7, -12), Vector2(7, 12), Vector2(-7, 12)])
-	add_child(poly)
+	# فریم ۰ خروج (سبز موفقیت)، فریم ۱ نقطهٔ ذخیره (فیروزهٔ نکسا)
+	add_child(Art.sprite(Art.EXIT, 2, 1 if is_checkpoint else 0))
 
 	body_entered.connect(_on_enter)
 	body_exited.connect(_on_exit)

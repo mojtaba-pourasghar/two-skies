@@ -228,21 +228,34 @@ func _validate(level: Dictionary) -> void:
 
 ## ----- ساخت صحنه -----
 
-## یک TileSet با یک کاشی جامد ۱۶×۱۶ می‌سازد.
-## مکان‌نگهدار است: وقتی کاشی واقعی رسید، فقط این تابع به بارگذاری یک .tres عوض می‌شود
-## و هیچ جای دیگری از کد تغییر نمی‌کند (گام ۶ سند ۰۵).
-static func make_placeholder_tileset(color: Color = Color(0.18, 0.19, 0.24)) -> TileSet:
-	var img := Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)
-	img.fill(color)
-	# یک خط روشن‌تر بالای کاشی تا لبه‌ها در بازی‌تست دیده شوند
-	for x in TILE:
-		img.set_pixel(x, 0, color.lightened(0.25))
-	var tex := ImageTexture.create_from_image(img)
+## مسیر اطلس کاشی فصل ۱ — با tools/gen_art.py ساخته می‌شود.
+const GROUND_ATLAS := "res://art/tilesets/ch1_ground.png"
 
+## شمار گونه‌های کاشی در اطلس (درون توده، سطح، سکوی تک، ستون).
+const TILE_VARIANTS := 4
+
+
+## TileSet زمین را می‌سازد: اطلس ۴ کاشیِ هنر موقت، و اگر بافت نبود یک کاشی
+## یک‌رنگ. هر چهار گونه برخورد یکسان دارند، پس گونه فقط ظاهری است و هیچ‌وقت
+## روی فیزیک و حل‌پذیری اثر نمی‌گذارد.
+static func make_placeholder_tileset(color: Color = Palette.NIGHT_ASH) -> TileSet:
 	var source := TileSetAtlasSource.new()
-	source.texture = tex
+	var variants := TILE_VARIANTS
+
+	if ResourceLoader.exists(GROUND_ATLAS):
+		source.texture = load(GROUND_ATLAS)
+	else:
+		# بازگشت امن: اگر هنر هنوز وارد نشده، بازی باید بالا بیاید
+		variants = 1
+		var img := Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)
+		img.fill(color)
+		for x in TILE:
+			img.set_pixel(x, 0, color.lightened(0.25))
+		source.texture = ImageTexture.create_from_image(img)
+
 	source.texture_region_size = Vector2i(TILE, TILE)
-	source.create_tile(Vector2i.ZERO)
+	for i in variants:
+		source.create_tile(Vector2i(i, 0))
 
 	var ts := TileSet.new()
 	ts.tile_size = Vector2i(TILE, TILE)
@@ -251,12 +264,14 @@ static func make_placeholder_tileset(color: Color = Color(0.18, 0.19, 0.24)) -> 
 	ts.set_physics_layer_collision_mask(0, 0)
 	ts.add_source(source, 0)
 
-	var data := source.get_tile_data(Vector2i.ZERO, 0)
-	data.add_collision_polygon(0)
-	data.set_collision_polygon_points(0, 0, PackedVector2Array([
+	var box := PackedVector2Array([
 		Vector2(-TILE * 0.5, -TILE * 0.5),
 		Vector2(TILE * 0.5, -TILE * 0.5),
 		Vector2(TILE * 0.5, TILE * 0.5),
 		Vector2(-TILE * 0.5, TILE * 0.5),
-	]))
+	])
+	for i in variants:
+		var data := source.get_tile_data(Vector2i(i, 0), 0)
+		data.add_collision_polygon(0)
+		data.set_collision_polygon_points(0, 0, box)
 	return ts

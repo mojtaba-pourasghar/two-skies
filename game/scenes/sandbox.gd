@@ -66,7 +66,7 @@ func _build_geometry() -> void:
 			body.add_child(shape)
 
 			var poly := Polygon2D.new()
-			poly.color = Color(0.18, 0.19, 0.24)
+			poly.color = Palette.NIGHT_ASH
 			poly.polygon = PackedVector2Array([
 				Vector2(c * TILE, r * TILE),
 				Vector2((c + 1) * TILE, r * TILE),

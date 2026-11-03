@@ -28,34 +28,26 @@ func _ready() -> void:
 
 
 func _build_visual() -> void:
-	var poly := Polygon2D.new()
+	# اطلس ۳ فریمی: ۰ سکه، ۱ زمرد، ۲ تراشه
+	var frame := 0
 	match kind:
 		"coin":
-			poly.color = Color(1.0, 0.84, 0.3)
-			poly.polygon = _diamond(4.0)
+			frame = 0
 		"gem":
-			poly.color = Color(0.45, 0.95, 0.75)
-			poly.polygon = _diamond(5.5)
+			frame = 1
 		"page":
-			poly.color = Color(0.95, 0.95, 0.85)
-			poly.polygon = PackedVector2Array([
-				Vector2(-3, -4), Vector2(3, -4), Vector2(3, 4), Vector2(-3, 4)])
+			frame = 2
 		_:
-			poly.color = Color(1, 1, 1)
-			poly.polygon = _diamond(4.0)
-	add_child(poly)
-	_visual = poly
+			frame = 0
+	var art := Art.sprite(Art.PICKUPS, 3, frame)
+	add_child(art)
+	_visual = art
 
 	var shape := CollisionShape2D.new()
 	var c := CircleShape2D.new()
 	c.radius = maxf(magnet_radius, 5.0) if kind == "coin" else 6.0
 	shape.shape = c
 	add_child(shape)
-
-
-func _diamond(r: float) -> PackedVector2Array:
-	return PackedVector2Array([
-		Vector2(0, -r), Vector2(r, 0), Vector2(0, r), Vector2(-r, 0)])
 
 
 func _on_body_entered(body: Node2D) -> void:

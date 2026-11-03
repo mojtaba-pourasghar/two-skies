@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://actors/kairo/kairo.gd" id="1_kairo"]
+[ext_resource type="Texture2D" path="res://art/sprites/kairo.png" id="2_kairo"]
 
 [sub_resource type="RectangleShape2D" id="Rect_body"]
 size = Vector2(10, 16)
@@ -15,6 +16,6 @@ actor_name = "kairo"
 [node name="Body" type="CollisionShape2D" parent="."]
 shape = SubResource("Rect_body")
 
-[node name="Placeholder" type="Polygon2D" parent="."]
-color = Color(0.36, 0.69, 1, 1)
-polygon = PackedVector2Array(-5, -8, 5, -8, 5, 8, -5, 8)
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_kairo")
+texture_filter = 1

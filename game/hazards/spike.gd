@@ -18,12 +18,10 @@ func _ready() -> void:
 	shape.position = Vector2(0, 4)
 	add_child(shape)
 
-	var poly := Polygon2D.new()
-	poly.color = Color(0.85, 0.3, 0.35)
-	poly.polygon = PackedVector2Array([
-		Vector2(-8, 8), Vector2(-4, 0), Vector2(0, 8), Vector2(0, 8),
-		Vector2(4, 0), Vector2(8, 8)])
-	add_child(poly)
+	# بافت در نیمهٔ پایین تایل می‌نشیند، هم‌جای جعبهٔ برخورد
+	var art := Art.sprite(Art.SPIKE)
+	art.position = Vector2(0, 4)
+	add_child(art)
 
 	body_entered.connect(_on_body_entered)
 

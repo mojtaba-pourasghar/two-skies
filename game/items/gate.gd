@@ -16,7 +16,7 @@ signal closed
 
 var is_open: bool = false
 var _shape: CollisionShape2D
-var _visual: Polygon2D
+var _visual: Sprite2D
 var _close_timer: float = 0.0
 
 
@@ -31,18 +31,12 @@ func _ready() -> void:
 	_shape.shape = r
 	add_child(_shape)
 
-	_visual = Polygon2D.new()
-	_visual.color = _closed_color()
-	_visual.polygon = PackedVector2Array([
-		Vector2(-8, -8), Vector2(8, -8), Vector2(8, 8), Vector2(-8, 8)])
+	# فریم ۰ دروازهٔ هک‌شدنی (فیروزه)، فریم ۱ در کلیددار (کهربا)
+	_visual = Art.sprite(Art.GATE, 2, 0 if gate_kind == "gate" else 1)
 	add_child(_visual)
 
 	if auto_close_after < 0.0:
 		auto_close_after = Settings.param("hazards", "door_open_duration", 2.0)
-
-
-func _closed_color() -> Color:
-	return Color(0.35, 0.55, 0.9) if gate_kind == "gate" else Color(0.9, 0.55, 0.3)
 
 
 func _process(delta: float) -> void:

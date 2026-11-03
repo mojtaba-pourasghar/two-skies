@@ -16,6 +16,7 @@ LOGDIR="${LOGDIR:-$(mktemp -d)}"
 
 TESTS=(
   "res://tools/tests/test_compile.tscn"
+  "res://tools/tests/test_art.tscn"
   "res://tools/tests/test_physics.tscn"
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_companion.tscn"
@@ -36,6 +37,12 @@ fi
 echo
 echo "=== اعتبارسنج نقشهٔ فصل ۱ (بدون موتور) ==="
 if ! python3 -I "$ROOT/tools/validate_ch1.py"; then
+  fail=1
+fi
+
+echo
+echo "=== بازتولیدپذیری هنر موقت ==="
+if ! python3 -I "$ROOT/tools/gen_art.py" --check; then
   fail=1
 fi
 

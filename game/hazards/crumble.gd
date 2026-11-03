@@ -10,7 +10,7 @@ enum Phase { IDLE, SHAKING, GONE }
 var phase: Phase = Phase.IDLE
 
 var _shape: CollisionShape2D
-var _visual: Polygon2D
+var _visual: Sprite2D
 var _timer: float = 0.0
 var _home := Vector2.ZERO
 var _shake_time: float
@@ -36,10 +36,8 @@ func _ready() -> void:
 	_shape.position = Vector2(0, -4)
 	add_child(_shape)
 
-	_visual = Polygon2D.new()
-	_visual.color = Color(0.55, 0.45, 0.3)
-	_visual.polygon = PackedVector2Array([
-		Vector2(-8, -8), Vector2(8, -8), Vector2(8, 0), Vector2(-8, 0)])
+	_visual = Art.sprite(Art.CRUMBLE)
+	_visual.position = Vector2(0, -4)
 	add_child(_visual)
 
 	var detector := Area2D.new()

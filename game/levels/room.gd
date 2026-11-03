@@ -38,6 +38,7 @@ func build(level: Dictionary, room: Dictionary, tileset: TileSet) -> void:
 	_objects_root.name = "Objects"
 	add_child(_objects_root)
 
+	var solid: Dictionary = {}
 	var rows: Array = room.get("tiles", [])
 	var objects: Dictionary = room.get("objects", {})
 	var doors: Array = room.get("exits", [])
@@ -55,16 +56,35 @@ func build(level: Dictionary, room: Dictionary, tileset: TileSet) -> void:
 			# است؛ بدون این کار بازیکن از لبهٔ بی‌مقصد بیرون می‌افتد.
 			# کف (سطر ۱۴ تا ۱۶) مُهر نمی‌شود: چاه طراحی‌شده و مرگ از پایین (§۷).
 			if _is_sealable_border(c, r) and sym != LevelLoader.SOLID:
-				_tiles.set_cell(Vector2i(c, r), 0, Vector2i.ZERO)
+				solid[Vector2i(c, r)] = true
 				continue
 			if sym == LevelLoader.SOLID:
-				_tiles.set_cell(Vector2i(c, r), 0, Vector2i.ZERO)
+				solid[Vector2i(c, r)] = true
 				continue
 			if sym == LevelLoader.EMPTY:
 				continue
 			_spawn(sym, c, r, objects)
 
+	# گذر دوم: حالا که می‌دانیم کدام خانه جامد است، گونهٔ ظاهری هر کاشی را
+	# می‌شود انتخاب کرد (سطحِ دیده‌شده خط روشن می‌گیرد). برخورد همهٔ گونه‌ها
+	# یکسان است، پس این کار هیچ اثری روی فیزیک ندارد.
+	for cell in solid:
+		_tiles.set_cell(cell, 0, Vector2i(_tile_variant(cell, solid), 0))
+
 	_spawn_door_triggers(doors)
+
+
+## گونهٔ ظاهری کاشی: ۰ درون توده، ۱ سطح، ۲ سکوی تک، ۳ ستون.
+func _tile_variant(cell: Vector2i, solid: Dictionary) -> int:
+	if LevelLoader.TILE_VARIANTS < 2:
+		return 0
+	var top: bool = not solid.has(cell + Vector2i(0, -1))
+	var free_sides: bool = (
+		not solid.has(cell + Vector2i(-1, 0)) and not solid.has(cell + Vector2i(1, 0))
+	)
+	if top:
+		return 2 if free_sides else 1
+	return 3 if free_sides else 0
 
 
 ## لبه‌هایی که اگر درگاه نباشند باید جامد شوند: ستون ۰ و ۲۹ در سطرهای ۰ تا ۱۳،
@@ -226,7 +246,7 @@ func _beam_length(c: int, r: int, d: String) -> int:
 func _placeholder(kind: String, pos: Vector2) -> void:
 	var poly := Polygon2D.new()
 	poly.position = pos
-	poly.color = Color(1, 0, 1, 0.35)
+	poly.color = Color(Palette.ERROR_PURPLE, 0.35)
 	poly.polygon = PackedVector2Array([
 		Vector2(-8, -8), Vector2(8, -8), Vector2(8, 8), Vector2(-8, 8)])
 	poly.name = "TODO_%s" % kind

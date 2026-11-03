@@ -22,7 +22,7 @@ var _pause: float = 0.0
 var _disabled_left: float = 0.0
 var _speed: float
 var _turn_pause: float
-var _visual: Polygon2D
+var _visual: Sprite2D
 var _hurt: Area2D
 
 
@@ -50,10 +50,8 @@ func _ready() -> void:
 	cs.shape = r
 	add_child(cs)
 
-	_visual = Polygon2D.new()
-	_visual.color = Color(0.9, 0.45, 0.25)
-	_visual.polygon = PackedVector2Array([
-		Vector2(-7, -4), Vector2(7, -4), Vector2(7, 4), Vector2(-7, 4)])
+	# اطلس ۲ فریمی: ۰ فعال (چشم قرمز)، ۱ هک‌شده (چشم فیروزه)
+	_visual = Art.sprite(Art.DRONE, 2, 0)
 	add_child(_visual)
 
 	# ناحیهٔ کشنده جدا از بدنه است، تا وقتی خاموش شد فقط همین خاموش شود
@@ -112,13 +110,13 @@ func _on_touch(body: Node2D) -> void:
 func on_hacked() -> void:
 	is_disabled = true
 	_disabled_left = DISABLED_SECONDS
-	_visual.color = Color(0.4, 0.5, 0.6)
+	_visual.frame = 1
 	_hurt.set_deferred("monitoring", false)
 
 
 func _wake() -> void:
 	is_disabled = false
-	_visual.color = Color(0.9, 0.45, 0.25)
+	_visual.frame = 0
 	_hurt.set_deferred("monitoring", true)
 
 

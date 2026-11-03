@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://actors/ilara/ilara.gd" id="1_ilara"]
+[ext_resource type="Texture2D" path="res://art/sprites/ilara.png" id="2_ilara"]
 
 [sub_resource type="RectangleShape2D" id="Rect_body_i"]
 size = Vector2(10, 16)
@@ -15,6 +16,6 @@ actor_name = "ilara"
 [node name="Body" type="CollisionShape2D" parent="."]
 shape = SubResource("Rect_body_i")
 
-[node name="Placeholder" type="Polygon2D" parent="."]
-color = Color(0.95, 0.62, 0.78, 1)
-polygon = PackedVector2Array(-5, -8, 5, -8, 5, 8, -5, 8)
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_ilara")
+texture_filter = 1

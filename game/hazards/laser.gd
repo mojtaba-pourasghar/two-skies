@@ -25,7 +25,7 @@ var _t: float = 0.0
 var _area: Area2D
 var _shape: CollisionShape2D
 var _beam: Polygon2D
-var _emitter: Polygon2D
+var _emitter: Sprite2D
 
 
 func _ready() -> void:
@@ -34,17 +34,15 @@ func _ready() -> void:
 	_warn_time = Settings.hazard("laser_warn", 0.4)
 	_t = phase_offset
 
-	_emitter = Polygon2D.new()
-	_emitter.color = Color(0.7, 0.7, 0.75)
-	_emitter.polygon = PackedVector2Array([
-		Vector2(-6, -8), Vector2(6, -8), Vector2(6, -2), Vector2(-6, -2)])
+	_emitter = Art.sprite(Art.LASER_EMITTER)
 	add_child(_emitter)
 
 	var len_px := float(length_tiles * KairoConst.TILE)
 	var beam_rect := _beam_rect(len_px)
 
 	_beam = Polygon2D.new()
-	_beam.color = Color(1.0, 0.25, 0.3, 0.85)
+	# «خطر همیشه قرمز #FF4D4D» — قاعدهٔ ثابت لوحهٔ رنگ یکپارچه
+	_beam.color = Color(Palette.DANGER, 0.85)
 	_beam.polygon = PackedVector2Array([
 		beam_rect.position,
 		beam_rect.position + Vector2(beam_rect.size.x, 0),

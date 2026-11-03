@@ -24,11 +24,7 @@ func _ready() -> void:
 	shape.shape = c
 	add_child(shape)
 
-	var poly := Polygon2D.new()
-	poly.color = Color(0.75, 0.68, 0.45)
-	poly.polygon = PackedVector2Array([
-		Vector2(-5, -6), Vector2(5, -6), Vector2(5, 2), Vector2(-5, 2)])
-	add_child(poly)
+	add_child(Art.sprite(Art.NOTE))
 
 	_label = Label.new()
 	_label.add_theme_font_size_override("font_size", 8)

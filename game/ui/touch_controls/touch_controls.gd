@@ -160,6 +160,6 @@ func _draw() -> void:
 		var c: Vector2 = _centers[action]
 		var r: float = _radius(action)
 		var held: bool = _owner_index.has(action)
-		var col := Color(1, 1, 1, 0.30 if held else 0.16)
+		var col := Color(Palette.WHITE, 0.30 if held else 0.16)
 		draw_circle(c, r, col)
-		draw_arc(c, r, 0.0, TAU, 24, Color(1, 1, 1, 0.45), 1.0, false)
+		draw_arc(c, r, 0.0, TAU, 24, Color(Palette.WHITE, 0.45), 1.0, false)
