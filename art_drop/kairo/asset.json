@@ -2,11 +2,11 @@
   "name": "kairo",
   "status": "draft-from-approved-sheet",
   "frame_size": [
-    64,
-    64
+    128,
+    128
   ],
-  "feet_baseline_y": 60,
-  "body_height_px": 44,
+  "feet_baseline_y": 124,
+  "body_height_px": 88,
   "files": {
     "down": "kairo_idle_down.png",
     "side": "kairo_idle_side.png",

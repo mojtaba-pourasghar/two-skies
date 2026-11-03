@@ -13,6 +13,7 @@ def main():
     ap.add_argument("--height", type=int, default=44)
     ap.add_argument("--colors", type=int, default=24)
     ap.add_argument("--tol", type=int, default=34)
+    ap.add_argument("--canvas", type=int, default=64)
     a = ap.parse_args()
     im = Image.open(a.sheet).convert("RGB"); W, H = im.size
     bg = im.getpixel((5, 5)); px = im.load()
@@ -48,12 +49,13 @@ def main():
         sub = sub.resize((nw, nh), Image.BOX); mask = mask.resize((nw, nh), Image.BOX).point(lambda v: 255 if v > 110 else 0)
         rgba = sub.convert("RGB").quantize(colors=a.colors, method=Image.MEDIANCUT, dither=Image.NONE).convert("RGBA")
         rgba.putalpha(mask)
-        canvas = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
-        canvas.alpha_composite(rgba, ((64-nw)//2, 60-nh+1))
+        C = a.canvas
+        canvas = Image.new("RGBA", (C, C), (0, 0, 0, 0))
+        canvas.alpha_composite(rgba, ((C-nw)//2, C-4-nh+1))
         canvas.save(f"{a.outdir}/{a.name}_idle_{nm}.png")
-        canvas.resize((512, 512), Image.NEAREST).save(f"{a.outdir}/{a.name}_idle_{nm}_preview.png")
-    json.dump({"name": a.name, "status": "draft-from-approved-sheet", "frame_size": [64, 64],
-               "feet_baseline_y": 60, "body_height_px": a.height,
+        canvas.resize((C*4, C*4), Image.NEAREST).save(f"{a.outdir}/{a.name}_idle_{nm}_preview.png")
+    json.dump({"name": a.name, "status": "draft-from-approved-sheet", "frame_size": [a.canvas, a.canvas],
+               "feet_baseline_y": a.canvas - 4, "body_height_px": a.height,
                "files": {nm: f"{a.name}_idle_{nm}.png" for nm in names},
                "note": "side_left = mirror of side. فقط ایستاده؛ انیمیشن‌ها با هنرمند/ابزار پیکسل‌آرت از روی برگهٔ تأییدشده."},
               open(f"{a.outdir}/asset.json", "w"), ensure_ascii=False, indent=2)
