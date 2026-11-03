@@ -1,0 +1,23 @@
+; افزونهٔ ادیوری — docs/02_godot_spec.md §۱۵
+;
+; این فایل فقط **قرارداد** است. خود AAR در مخزن نیست و باید ساخته و اینجا
+; گذاشته شود؛ `binary` به نام فایل AAR اشاره می‌کند.
+;
+; هیچ کلیدی اینجا نمی‌آید: APP_ID و شناسهٔ جایگاه‌ها در
+; `res://data/ads_config.json` جای‌نگهدارند و پیش از انتشار از پنل ادیوری پر
+; می‌شوند (DECISIONS.md: D-021 و D-046).
+;
+; کد بازی با `Engine.has_singleton("AdiveryGodot")` نگهبانی می‌کند، پس بدون AAR
+; بازی بدون خطا ساخته و اجرا می‌شود و فقط StubProvider کار می‌کند.
+
+[config]
+
+name="AdiveryGodot"
+binary_type="local"
+binary="AdiveryGodot.aar"
+
+[dependencies]
+
+local=[]
+remote=["com.adivery:sdk:4.8.8"]
+custom_maven_repos=[]

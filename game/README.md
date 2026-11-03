@@ -72,6 +72,74 @@ res://
 `LevelLoader.make_placeholder_tileset()` تنها جایی است که باید با رسیدن کاشی واقعی
 عوض شود. فهرست دقیق دارایی‌های لازم در `docs/05_release_v1_plan.md` است.
 
+## ساخت اندروید
+
+پریست `Android` در `export_presets.cfg` آماده و کامیت شده است:
+`arm64-v8a` تنها، `min_sdk=24` (§۱۵)، `target_sdk=34`، Gradle build روشن،
+جهت صفحه landscape قفل (از `project.godot`)، و نام بستهٔ **جای‌نگهدار**
+`ir.twoskies.game`. هیچ کلید یا keystore در مخزن نیست.
+
+**در این محیط APK ساخته نشد** و دلیلش این است:
+
+```
+No export template found at the expected path
+Invalid Android SDK path in Editor Settings. Missing 'platform-tools' directory!
+```
+
+یعنی پریست درست خوانده و اعتبارسنجی شد، ولی قالب اکسپورت و SDK اندروید نصب
+نیستند. جاوا ۲۱ و Gradle ۸٫۱۴ هستند. مراحل ساخت روی ماشینی که SDK دارد:
+
+```bash
+# ۱) قالب اکسپورت هم‌نسخهٔ موتور (۴٫۵)
+#    یا از منوی ویرایشگر: Editor → Manage Export Templates → Download
+mkdir -p ~/.local/share/godot/export_templates/4.5.stable
+# فایل Godot_v4.5-stable_export_templates.tpz را باز کنید و محتوایش را آنجا بریزید
+```
+
+```bash
+# ۲) SDK اندروید (command line tools) و بسته‌های لازم
+export ANDROID_HOME="$HOME/android-sdk"
+sdkmanager --sdk_root="$ANDROID_HOME"   "platform-tools" "build-tools;34.0.0" "platforms;android-34" "cmdline-tools;latest"
+```
+
+```bash
+# ۳) مسیرها را به ویرایشگر بدهید (یک بار)
+godot -e --headless --quit
+# سپس در Editor Settings → Export → Android:
+#   Android SDK Path = $ANDROID_HOME
+#   Java SDK Path    = مسیر JDK ۱۷ یا بالاتر
+```
+
+```bash
+# ۴) keystore دیباگ (برای بیلد رلیز، keystore خودتان و هرگز در مخزن)
+keytool -genkeypair -v -keystore ~/debug.keystore -alias androiddebugkey   -keyalg RSA -keysize 2048 -validity 10000   -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+```
+
+```bash
+# ۵) ساخت APK دیباگ
+mkdir -p ../build
+godot --headless --path . --export-debug "Android" ../build/two-skies.apk
+```
+
+سقف حجم بسته در سند ۰۵ صد مگابایت است. با مکان‌نگهدارهای فعلی (مستطیل رنگی و
+کلید صدای بدون فایل) حجم بسیار کمتر از آن است؛ عدد واقعی پس از رسیدن هنر و صدای
+نهایی سنجیده می‌شود.
+
+### پلاگین‌های اندروید
+
+`android/plugins/AdiveryGodot.gdap` و `Poolakey.gdap` **قرارداد** پلاگین‌اند و
+کامیت شده‌اند؛ خود فایل AAR در مخزن نیست و باید ساخته و کنار همان `.gdap`
+گذاشته شود (`android/plugins/*.aar` در `.gitignore` است).
+
+کد از قبل آماده است: `autoload/ads.gd` و `autoload/billing.gd` با
+`Engine.has_singleton(...)` نگهبانی می‌کنند، پس **بدون AAR هم بازی بدون خطا
+ساخته و اجرا می‌شود** — تبلیغ روی `StubProvider` می‌رود و فروشگاه پیام
+«بازار در دسترس نیست» نشان می‌دهد.
+
+شناسه‌های واقعی ادیوری در `data/ads_config.json` جای‌نگهدارند
+(`REPLACE_WITH_ADIVERY_APP_ID`) و پیش از انتشار از پنل ادیوری پر می‌شوند.
+کلید RSA بازار فقط به محصول نهایی وصل می‌شود (§۱۵).
+
 ## پیش از انتشار
 
 `data/ads_config.json` و شناسه‌های پولاکی **جای‌نگهدارند**. کلید واقعی و keystore

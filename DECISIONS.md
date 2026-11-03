@@ -551,3 +551,44 @@ BFS دش را ترجیح می‌دهد چون هر یالش دو کاشی جلو
 **نگهبان:** `run_tests.sh` خط `ObjectDB instances leaked` را می‌پاید و آزمون را رد
 می‌کند. سه آزمون (`test_save_ui`، `test_robot`، `test_acceptance`) نشت داشتند و اکنون
 هر سه صفرند.
+
+---
+
+# گام ۱۰ — اندروید
+
+## D-046 — پریست کامیت می‌شود، کلید و AAR نه
+
+`export_presets.cfg` از `.gitignore` بیرون آمد و کامیت شد، چون **هیچ کلیدی در آن
+نیست**: نام بستهٔ جای‌نگهدار `ir.twoskies.game`، بدون مسیر keystore و بدون رمز.
+در عوض این‌ها هرگز کامیت نمی‌شوند: `*.keystore`، `*.jks`،
+`android/plugins/*.aar`، و `build/`.
+
+`android/` هم از `.gitignore` به `android/build/` محدود شد: قالب Gradle که Godot
+می‌سازد نباید کامیت شود، ولی `android/plugins/*.gdap` **قرارداد** پلاگین است و باید
+کامیت شود.
+
+تنظیمات پریست: `arm64-v8a` تنها (arm32، x86 و x86_64 خاموش)، `min_sdk=24` طبق §۱۵،
+`target_sdk=34`، `use_gradle_build=true`، و `exclude_filter` که پوشهٔ آزمون‌ها را از
+بسته بیرون می‌گذارد. جهت صفحه از `project.godot` قفلِ landscape است.
+
+## D-047 — APK ساخته نشد، و دلیلش سنجیده شد
+
+تلاش واقعی برای اکسپورت انجام شد و موتور این را داد:
+
+```
+No export template found at the expected path
+Invalid Android SDK path in Editor Settings. Missing 'platform-tools' directory!
+```
+
+یعنی **پریست درست خوانده و اعتبارسنجی شد** (موتور آن را با نام «Android» پیدا کرد)
+و شکست فقط از دو چیز محیطی است: قالب اکسپورت نصب نیست و `ANDROID_HOME` وجود ندارد.
+جاوا ۲۱ و Gradle ۸٫۱۴ در محیط هستند.
+
+طبق خود دستور («اگر نیست، فقط مراحل دقیق ساخت را در game/README.md بنویس»)، پنج گام
+ساخت با فرمان‌های قابل کپی در `game/README.md` نوشته شد: نصب قالب هم‌نسخه، نصب SDK
+با `sdkmanager`، دادن مسیرها به Editor Settings، ساخت keystore دیباگ، و
+`--export-debug`.
+
+**اثر روی پروژه سنجیده شد:** پس از افزودن پریست و دو `.gdap`، وارد کردن پروژه بدون
+خطا و کل مجموعهٔ آزمون سبز ماند — یعنی قرارداد پلاگین بدون AAR چیزی را نمی‌شکند،
+چون `ads.gd` و `billing.gd` با `Engine.has_singleton()` نگهبانی می‌کنند.

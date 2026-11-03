@@ -1,5 +1,12 @@
 # Godot 4
 .godot/
-android/
-export_presets.cfg
+# Godot قالب Gradle را در android/build/ می‌سازد؛ ولی android/plugins/*.gdap
+# قرارداد پلاگین است و کامیت می‌شود.
+android/build/
 *.translation
+
+# پریست اکسپورت کامیت می‌شود (کلیدی در آن نیست)، ولی این‌ها هرگز:
+*.keystore
+*.jks
+android/plugins/*.aar
+build/
