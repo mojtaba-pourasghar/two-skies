@@ -91,6 +91,8 @@
     "max_restart_seconds": 0.3,
     "respawn_budget_spec02": 0.4,
     "respawn_budget_doc01_doc05": 0.3,
-    "_respawn_note": "سند ۰۲ §۳ هم RESPAWN_TIME=0.35 می‌دهد و هم «کمتر از ۰٫۴ ثانیه»؛ سند ۰۱ و ۰۵ «زیر ۰٫۳» می‌خواهند. مقدار فعال از سند ۰۲ است (DECISIONS.md: D-004)."
+    "_respawn_note": "سند ۰۲ §۳ هم RESPAWN_TIME=0.35 می‌دهد و هم «کمتر از ۰٫۴ ثانیه»؛ سند ۰۱ و ۰۵ «زیر ۰٫۳» می‌خواهند. مقدار فعال از سند ۰۲ است (DECISIONS.md: D-004).",
+    "companion_gap_margin": 0.85,
+    "_companion_gap_note": "چاله نباید از برد پرش ایلارا (۶۴٫۱px) با ۱۵٪ حاشیه بگذرد. §۳ حد ۴٫۵ کاشی را از برد کایرو می‌گیرد که برای ایلارا بس نیست (DECISIONS.md: D-038)."
   }
 }

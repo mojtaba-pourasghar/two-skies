@@ -113,13 +113,13 @@ func on_hacked() -> void:
 	is_disabled = true
 	_disabled_left = DISABLED_SECONDS
 	_visual.color = Color(0.4, 0.5, 0.6)
-	_hurt.monitoring = false
+	_hurt.set_deferred("monitoring", false)
 
 
 func _wake() -> void:
 	is_disabled = false
 	_visual.color = Color(0.9, 0.45, 0.25)
-	_hurt.monitoring = true
+	_hurt.set_deferred("monitoring", true)
 
 
 func hack_label() -> String:

@@ -1,0 +1,4450 @@
+{
+ "level_id": "ch1_l1",
+ "tools": [],
+ "_generated_by": "tools/export_plans.py از BFS اعتبارسنج",
+ "rooms": [
+  {
+   "id": "r1",
+   "starts": [
+    [
+     1,
+     13
+    ]
+   ],
+   "exits": [
+    [
+     29,
+     12
+    ],
+    [
+     29,
+     13
+    ]
+   ],
+   "collectibles": [],
+   "crumble_cols": [],
+   "direct": [
+    {
+     "goal": [
+      29,
+      12
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        12
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        11
+       ],
+       "from": [
+        7,
+        12
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        10
+       ],
+       "from": [
+        7,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        8,
+        10
+       ],
+       "from": [
+        7,
+        10
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        9,
+        10
+       ],
+       "from": [
+        8,
+        10
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        10,
+        10
+       ],
+       "from": [
+        9,
+        10
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        11,
+        10
+       ],
+       "from": [
+        10,
+        10
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        11,
+        11
+       ],
+       "from": [
+        11,
+        10
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        12,
+        11
+       ],
+       "from": [
+        11,
+        11
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        12,
+        11
+       ],
+       "from": [
+        12,
+        11
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        12,
+        10
+       ],
+       "from": [
+        12,
+        11
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        12,
+        9
+       ],
+       "from": [
+        12,
+        10
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        12,
+        8
+       ],
+       "from": [
+        12,
+        9
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        13,
+        8
+       ],
+       "from": [
+        12,
+        8
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        14,
+        8
+       ],
+       "from": [
+        13,
+        8
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        15,
+        8
+       ],
+       "from": [
+        14,
+        8
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        8
+       ],
+       "from": [
+        15,
+        8
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        16,
+        9
+       ],
+       "from": [
+        16,
+        8
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        9
+       ],
+       "from": [
+        16,
+        9
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        9
+       ],
+       "from": [
+        17,
+        9
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        10
+       ],
+       "from": [
+        18,
+        9
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        11
+       ],
+       "from": [
+        18,
+        10
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        12
+       ],
+       "from": [
+        18,
+        11
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        18,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        19,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        13
+       ],
+       "from": [
+        19,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        21,
+        13
+       ],
+       "from": [
+        20,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        22,
+        13
+       ],
+       "from": [
+        21,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        23,
+        13
+       ],
+       "from": [
+        22,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        24,
+        13
+       ],
+       "from": [
+        23,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        25,
+        13
+       ],
+       "from": [
+        24,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        25,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        27,
+        13
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        27,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        11
+       ],
+       "from": [
+        28,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        29,
+        12
+       ],
+       "from": [
+        28,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        7,
+        13
+       ],
+       "kind": "walk",
+       "micro": 6
+      },
+      {
+       "cell": [
+        11,
+        11
+       ],
+       "kind": "hop",
+       "micro": 9
+      },
+      {
+       "cell": [
+        12,
+        11
+       ],
+       "kind": "walk",
+       "micro": 1
+      },
+      {
+       "cell": [
+        15,
+        8
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        17,
+        9
+       ],
+       "kind": "walk",
+       "micro": 3
+      },
+      {
+       "cell": [
+        28,
+        13
+       ],
+       "kind": "walk",
+       "micro": 15
+      },
+      {
+       "cell": [
+        29,
+        12
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    },
+    {
+     "goal": [
+      29,
+      13
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "fall",
+       "to": [
+        29,
+        13
+       ],
+       "from": [
+        29,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        29,
+        13
+       ],
+       "kind": "drop",
+       "micro": 1
+      }
+     ]
+    }
+   ],
+   "full": [
+    {
+     "goal": [
+      29,
+      12
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        12
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        11
+       ],
+       "from": [
+        7,
+        12
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        10
+       ],
+       "from": [
+        7,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        8,
+        10
+       ],
+       "from": [
+        7,
+        10
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        9,
+        10
+       ],
+       "from": [
+        8,
+        10
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        10,
+        10
+       ],
+       "from": [
+        9,
+        10
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        11,
+        10
+       ],
+       "from": [
+        10,
+        10
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        11,
+        11
+       ],
+       "from": [
+        11,
+        10
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        12,
+        11
+       ],
+       "from": [
+        11,
+        11
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        12,
+        11
+       ],
+       "from": [
+        12,
+        11
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        12,
+        10
+       ],
+       "from": [
+        12,
+        11
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        12,
+        9
+       ],
+       "from": [
+        12,
+        10
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        12,
+        8
+       ],
+       "from": [
+        12,
+        9
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        13,
+        8
+       ],
+       "from": [
+        12,
+        8
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        14,
+        8
+       ],
+       "from": [
+        13,
+        8
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        15,
+        8
+       ],
+       "from": [
+        14,
+        8
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        8
+       ],
+       "from": [
+        15,
+        8
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        16,
+        9
+       ],
+       "from": [
+        16,
+        8
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        9
+       ],
+       "from": [
+        16,
+        9
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        9
+       ],
+       "from": [
+        17,
+        9
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        10
+       ],
+       "from": [
+        18,
+        9
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        11
+       ],
+       "from": [
+        18,
+        10
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        12
+       ],
+       "from": [
+        18,
+        11
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        18,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        19,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        13
+       ],
+       "from": [
+        19,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        21,
+        13
+       ],
+       "from": [
+        20,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        22,
+        13
+       ],
+       "from": [
+        21,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        23,
+        13
+       ],
+       "from": [
+        22,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        24,
+        13
+       ],
+       "from": [
+        23,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        25,
+        13
+       ],
+       "from": [
+        24,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        25,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        27,
+        13
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        27,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        11
+       ],
+       "from": [
+        28,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        29,
+        12
+       ],
+       "from": [
+        28,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        7,
+        13
+       ],
+       "kind": "walk",
+       "micro": 6
+      },
+      {
+       "cell": [
+        11,
+        11
+       ],
+       "kind": "hop",
+       "micro": 9
+      },
+      {
+       "cell": [
+        12,
+        11
+       ],
+       "kind": "walk",
+       "micro": 1
+      },
+      {
+       "cell": [
+        15,
+        8
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        17,
+        9
+       ],
+       "kind": "walk",
+       "micro": 3
+      },
+      {
+       "cell": [
+        28,
+        13
+       ],
+       "kind": "walk",
+       "micro": 15
+      },
+      {
+       "cell": [
+        29,
+        12
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    },
+    {
+     "goal": [
+      29,
+      13
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "fall",
+       "to": [
+        29,
+        13
+       ],
+       "from": [
+        29,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        29,
+        13
+       ],
+       "kind": "drop",
+       "micro": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "r2",
+   "starts": [
+    [
+     1,
+     12
+    ],
+    [
+     1,
+     13
+    ]
+   ],
+   "exits": [
+    [
+     29,
+     12
+    ],
+    [
+     29,
+     13
+    ]
+   ],
+   "collectibles": [
+    {
+     "kind": "gem",
+     "id": "ch1_l1_g1",
+     "cell": [
+      20,
+      3
+     ]
+    },
+    {
+     "kind": "page",
+     "id": "ch1_p1",
+     "cell": [
+      23,
+      12
+     ]
+    }
+   ],
+   "crumble_cols": [],
+   "direct": [
+    {
+     "goal": [
+      29,
+      12
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        8,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        8,
+        13
+       ],
+       "from": [
+        8,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        8,
+        12
+       ],
+       "from": [
+        8,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        9,
+        12
+       ],
+       "from": [
+        8,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        10,
+        12
+       ],
+       "from": [
+        9,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        10,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        12,
+        12
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        12,
+        13
+       ],
+       "from": [
+        12,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        13,
+        13
+       ],
+       "from": [
+        12,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        14,
+        13
+       ],
+       "from": [
+        13,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        15,
+        13
+       ],
+       "from": [
+        14,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        13
+       ],
+       "from": [
+        15,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        13
+       ],
+       "from": [
+        16,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        17,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        19,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        13
+       ],
+       "from": [
+        19,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        21,
+        13
+       ],
+       "from": [
+        20,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        22,
+        13
+       ],
+       "from": [
+        21,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        23,
+        13
+       ],
+       "from": [
+        22,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        24,
+        13
+       ],
+       "from": [
+        23,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        25,
+        13
+       ],
+       "from": [
+        24,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        25,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        27,
+        13
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        27,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        11
+       ],
+       "from": [
+        28,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        29,
+        12
+       ],
+       "from": [
+        28,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        8,
+        13
+       ],
+       "kind": "walk",
+       "micro": 7
+      },
+      {
+       "cell": [
+        12,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        28,
+        13
+       ],
+       "kind": "walk",
+       "micro": 16
+      },
+      {
+       "cell": [
+        29,
+        12
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    },
+    {
+     "goal": [
+      29,
+      13
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "fall",
+       "to": [
+        29,
+        13
+       ],
+       "from": [
+        29,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        29,
+        13
+       ],
+       "kind": "drop",
+       "micro": 1
+      }
+     ]
+    }
+   ],
+   "full": [
+    {
+     "goal": [
+      20,
+      3
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        8,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        8,
+        13
+       ],
+       "from": [
+        8,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        8,
+        12
+       ],
+       "from": [
+        8,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        9,
+        12
+       ],
+       "from": [
+        8,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        10,
+        12
+       ],
+       "from": [
+        9,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        10,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        12,
+        12
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        12,
+        13
+       ],
+       "from": [
+        12,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        13,
+        13
+       ],
+       "from": [
+        12,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        14,
+        13
+       ],
+       "from": [
+        13,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        15,
+        13
+       ],
+       "from": [
+        14,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        13
+       ],
+       "from": [
+        15,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        13
+       ],
+       "from": [
+        16,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        17,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        18,
+        12
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        18,
+        11
+       ],
+       "from": [
+        18,
+        12
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        18,
+        10
+       ],
+       "from": [
+        18,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        19,
+        10
+       ],
+       "from": [
+        18,
+        10
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        10
+       ],
+       "from": [
+        19,
+        10
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        20,
+        10
+       ],
+       "from": [
+        20,
+        10
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        20,
+        9
+       ],
+       "from": [
+        20,
+        10
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        20,
+        8
+       ],
+       "from": [
+        20,
+        9
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        20,
+        7
+       ],
+       "from": [
+        20,
+        8
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        21,
+        7
+       ],
+       "from": [
+        20,
+        7
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        21,
+        7
+       ],
+       "from": [
+        21,
+        7
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        21,
+        6
+       ],
+       "from": [
+        21,
+        7
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        21,
+        5
+       ],
+       "from": [
+        21,
+        6
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        21,
+        4
+       ],
+       "from": [
+        21,
+        5
+       ]
+      },
+      {
+       "action": "air_left",
+       "to": [
+        20,
+        4
+       ],
+       "from": [
+        21,
+        4
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        20,
+        4
+       ],
+       "from": [
+        20,
+        4
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        20,
+        3
+       ],
+       "from": [
+        20,
+        4
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        20,
+        2
+       ],
+       "from": [
+        20,
+        3
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        20,
+        3
+       ],
+       "from": [
+        20,
+        2
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        8,
+        13
+       ],
+       "kind": "walk",
+       "micro": 7
+      },
+      {
+       "cell": [
+        12,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        18,
+        13
+       ],
+       "kind": "walk",
+       "micro": 6
+      },
+      {
+       "cell": [
+        19,
+        10
+       ],
+       "kind": "hop",
+       "micro": 5
+      },
+      {
+       "cell": [
+        20,
+        10
+       ],
+       "kind": "walk",
+       "micro": 1
+      },
+      {
+       "cell": [
+        21,
+        7
+       ],
+       "kind": "hop",
+       "micro": 5
+      },
+      {
+       "cell": [
+        20,
+        4
+       ],
+       "kind": "hop",
+       "micro": 5
+      },
+      {
+       "cell": [
+        20,
+        3
+       ],
+       "kind": "hop",
+       "micro": 4
+      }
+     ]
+    },
+    {
+     "goal": [
+      23,
+      12
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "air_right",
+       "to": [
+        21,
+        3
+       ],
+       "from": [
+        20,
+        3
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        22,
+        3
+       ],
+       "from": [
+        21,
+        3
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        23,
+        3
+       ],
+       "from": [
+        22,
+        3
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        4
+       ],
+       "from": [
+        23,
+        3
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        5
+       ],
+       "from": [
+        23,
+        4
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        6
+       ],
+       "from": [
+        23,
+        5
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        7
+       ],
+       "from": [
+        23,
+        6
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        8
+       ],
+       "from": [
+        23,
+        7
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        9
+       ],
+       "from": [
+        23,
+        8
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        10
+       ],
+       "from": [
+        23,
+        9
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        11
+       ],
+       "from": [
+        23,
+        10
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        23,
+        12
+       ],
+       "from": [
+        23,
+        11
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        23,
+        12
+       ],
+       "kind": "walk",
+       "micro": 12
+      }
+     ]
+    },
+    {
+     "goal": [
+      29,
+      12
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "air_right",
+       "to": [
+        24,
+        12
+       ],
+       "from": [
+        23,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        25,
+        12
+       ],
+       "from": [
+        24,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        26,
+        12
+       ],
+       "from": [
+        25,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        27,
+        12
+       ],
+       "from": [
+        26,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        27,
+        13
+       ],
+       "from": [
+        27,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        27,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        11
+       ],
+       "from": [
+        28,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        29,
+        12
+       ],
+       "from": [
+        28,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        28,
+        13
+       ],
+       "kind": "walk",
+       "micro": 6
+      },
+      {
+       "cell": [
+        29,
+        12
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    },
+    {
+     "goal": [
+      29,
+      13
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "fall",
+       "to": [
+        29,
+        13
+       ],
+       "from": [
+        29,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        29,
+        13
+       ],
+       "kind": "drop",
+       "micro": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "r3",
+   "starts": [
+    [
+     1,
+     12
+    ],
+    [
+     1,
+     13
+    ]
+   ],
+   "exits": [
+    [
+     29,
+     12
+    ],
+    [
+     29,
+     13
+    ]
+   ],
+   "collectibles": [],
+   "crumble_cols": [],
+   "direct": [
+    {
+     "goal": [
+      29,
+      12
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        8,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        9,
+        13
+       ],
+       "from": [
+        8,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        10,
+        13
+       ],
+       "from": [
+        9,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        10,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        12,
+        12
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        13,
+        12
+       ],
+       "from": [
+        12,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        14,
+        12
+       ],
+       "from": [
+        13,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        15,
+        12
+       ],
+       "from": [
+        14,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        15,
+        13
+       ],
+       "from": [
+        15,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        13
+       ],
+       "from": [
+        15,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        13
+       ],
+       "from": [
+        16,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        17,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        19,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        13
+       ],
+       "from": [
+        19,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        21,
+        13
+       ],
+       "from": [
+        20,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        22,
+        13
+       ],
+       "from": [
+        21,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        23,
+        13
+       ],
+       "from": [
+        22,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        24,
+        13
+       ],
+       "from": [
+        23,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        25,
+        13
+       ],
+       "from": [
+        24,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        25,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        27,
+        13
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        27,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        11
+       ],
+       "from": [
+        28,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        29,
+        12
+       ],
+       "from": [
+        28,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        11,
+        13
+       ],
+       "kind": "walk",
+       "micro": 10
+      },
+      {
+       "cell": [
+        15,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        28,
+        13
+       ],
+       "kind": "walk",
+       "micro": 13
+      },
+      {
+       "cell": [
+        29,
+        12
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    },
+    {
+     "goal": [
+      29,
+      13
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "fall",
+       "to": [
+        29,
+        13
+       ],
+       "from": [
+        29,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        29,
+        13
+       ],
+       "kind": "drop",
+       "micro": 1
+      }
+     ]
+    }
+   ],
+   "full": [
+    {
+     "goal": [
+      29,
+      12
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        8,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        9,
+        13
+       ],
+       "from": [
+        8,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        10,
+        13
+       ],
+       "from": [
+        9,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        10,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        12,
+        12
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        13,
+        12
+       ],
+       "from": [
+        12,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        14,
+        12
+       ],
+       "from": [
+        13,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        15,
+        12
+       ],
+       "from": [
+        14,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        15,
+        13
+       ],
+       "from": [
+        15,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        13
+       ],
+       "from": [
+        15,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        13
+       ],
+       "from": [
+        16,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        17,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        19,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        13
+       ],
+       "from": [
+        19,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        21,
+        13
+       ],
+       "from": [
+        20,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        22,
+        13
+       ],
+       "from": [
+        21,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        23,
+        13
+       ],
+       "from": [
+        22,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        24,
+        13
+       ],
+       "from": [
+        23,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        25,
+        13
+       ],
+       "from": [
+        24,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        25,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        27,
+        13
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        27,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        28,
+        13
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        28,
+        11
+       ],
+       "from": [
+        28,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        28,
+        12
+       ],
+       "from": [
+        28,
+        11
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        29,
+        12
+       ],
+       "from": [
+        28,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        11,
+        13
+       ],
+       "kind": "walk",
+       "micro": 10
+      },
+      {
+       "cell": [
+        15,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        28,
+        13
+       ],
+       "kind": "walk",
+       "micro": 13
+      },
+      {
+       "cell": [
+        29,
+        12
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    },
+    {
+     "goal": [
+      29,
+      13
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "fall",
+       "to": [
+        29,
+        13
+       ],
+       "from": [
+        29,
+        12
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        29,
+        13
+       ],
+       "kind": "drop",
+       "micro": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "r4",
+   "starts": [
+    [
+     1,
+     12
+    ],
+    [
+     1,
+     13
+    ]
+   ],
+   "exits": [
+    [
+     26,
+     11
+    ]
+   ],
+   "collectibles": [],
+   "crumble_cols": [],
+   "direct": [
+    {
+     "goal": [
+      26,
+      11
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        12
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        8,
+        12
+       ],
+       "from": [
+        7,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        9,
+        12
+       ],
+       "from": [
+        8,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        10,
+        12
+       ],
+       "from": [
+        9,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        10,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        12,
+        12
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        13,
+        12
+       ],
+       "from": [
+        12,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        14,
+        12
+       ],
+       "from": [
+        13,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        15,
+        12
+       ],
+       "from": [
+        14,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        15,
+        13
+       ],
+       "from": [
+        15,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        13
+       ],
+       "from": [
+        15,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        13
+       ],
+       "from": [
+        16,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        17,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        19,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        13
+       ],
+       "from": [
+        19,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        21,
+        13
+       ],
+       "from": [
+        20,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        22,
+        13
+       ],
+       "from": [
+        21,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        23,
+        13
+       ],
+       "from": [
+        22,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        24,
+        13
+       ],
+       "from": [
+        23,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        25,
+        13
+       ],
+       "from": [
+        24,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        25,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        26,
+        12
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        26,
+        11
+       ],
+       "from": [
+        26,
+        12
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        26,
+        10
+       ],
+       "from": [
+        26,
+        11
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        26,
+        11
+       ],
+       "from": [
+        26,
+        10
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        7,
+        13
+       ],
+       "kind": "walk",
+       "micro": 6
+      },
+      {
+       "cell": [
+        11,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        15,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        26,
+        13
+       ],
+       "kind": "walk",
+       "micro": 11
+      },
+      {
+       "cell": [
+        26,
+        11
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    }
+   ],
+   "full": [
+    {
+     "goal": [
+      26,
+      11
+     ],
+     "reachable": true,
+     "steps": [
+      {
+       "action": "walk_right",
+       "to": [
+        2,
+        13
+       ],
+       "from": [
+        1,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        3,
+        13
+       ],
+       "from": [
+        2,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        4,
+        13
+       ],
+       "from": [
+        3,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        5,
+        13
+       ],
+       "from": [
+        4,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        6,
+        13
+       ],
+       "from": [
+        5,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        6,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        7,
+        13
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        7,
+        12
+       ],
+       "from": [
+        7,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        8,
+        12
+       ],
+       "from": [
+        7,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        9,
+        12
+       ],
+       "from": [
+        8,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        10,
+        12
+       ],
+       "from": [
+        9,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        10,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        11,
+        13
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        11,
+        12
+       ],
+       "from": [
+        11,
+        13
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        12,
+        12
+       ],
+       "from": [
+        11,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        13,
+        12
+       ],
+       "from": [
+        12,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        14,
+        12
+       ],
+       "from": [
+        13,
+        12
+       ]
+      },
+      {
+       "action": "air_right",
+       "to": [
+        15,
+        12
+       ],
+       "from": [
+        14,
+        12
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        15,
+        13
+       ],
+       "from": [
+        15,
+        12
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        16,
+        13
+       ],
+       "from": [
+        15,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        17,
+        13
+       ],
+       "from": [
+        16,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        18,
+        13
+       ],
+       "from": [
+        17,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        19,
+        13
+       ],
+       "from": [
+        18,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        20,
+        13
+       ],
+       "from": [
+        19,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        21,
+        13
+       ],
+       "from": [
+        20,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        22,
+        13
+       ],
+       "from": [
+        21,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        23,
+        13
+       ],
+       "from": [
+        22,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        24,
+        13
+       ],
+       "from": [
+        23,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        25,
+        13
+       ],
+       "from": [
+        24,
+        13
+       ]
+      },
+      {
+       "action": "walk_right",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        25,
+        13
+       ]
+      },
+      {
+       "action": "jump",
+       "to": [
+        26,
+        13
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        26,
+        12
+       ],
+       "from": [
+        26,
+        13
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        26,
+        11
+       ],
+       "from": [
+        26,
+        12
+       ]
+      },
+      {
+       "action": "rise",
+       "to": [
+        26,
+        10
+       ],
+       "from": [
+        26,
+        11
+       ]
+      },
+      {
+       "action": "fall",
+       "to": [
+        26,
+        11
+       ],
+       "from": [
+        26,
+        10
+       ]
+      }
+     ],
+     "waypoints": [
+      {
+       "cell": [
+        7,
+        13
+       ],
+       "kind": "walk",
+       "micro": 6
+      },
+      {
+       "cell": [
+        11,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        15,
+        13
+       ],
+       "kind": "hop",
+       "micro": 7
+      },
+      {
+       "cell": [
+        26,
+        13
+       ],
+       "kind": "walk",
+       "micro": 11
+      },
+      {
+       "cell": [
+        26,
+        11
+       ],
+       "kind": "hop",
+       "micro": 5
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

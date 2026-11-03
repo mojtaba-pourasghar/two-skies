@@ -85,6 +85,7 @@ func _run_all() -> void:
 	await _test_wall_jump()
 	await _test_death_respawn()
 	await _test_determinism()
+	await _test_fall_out_of_room()
 
 
 ## ارتفاع پرش باید با عدد §۳ بخواند (۵۲px ≈ ۳٫۲۵ کاشی)
@@ -275,6 +276,37 @@ func _test_determinism() -> void:
 		if not r.is_equal_approx(results[0]):
 			same = false
 	_check("تکرارپذیری ۱۰ اجرا", same, "= %s" % str(results[0]))
+
+
+## خروج از پایین اتاق مرگ است (§۴ جدول گذارها، §۷).
+## این سنجه بعد از آن اضافه شد که روبات گام ۸ دید کایرو در چالهٔ طراحی‌شدهٔ
+## L1R3 تا سطر ۱۱۹۲ سقوط می‌کند و نمی‌میرد (DECISIONS.md: D-031).
+func _test_fall_out_of_room() -> void:
+	await _place(5)
+	var deaths := [0]
+	_kairo.died.connect(func(): deaths[0] += 1)
+	# مرز اتاق ۱۷ کاشی + یک کاشی حاشیه، مثل همان چیزی که مرحله می‌نشاند
+	_kairo.fall_limit_y = float(18 * TILE)
+	# بالای یک چاه بی‌کف رهایش می‌کنیم
+	_kairo.reset_to(Vector2(60.0 * TILE, 4.0 * TILE))
+	_kairo.fall_limit_y = float(18 * TILE)
+	var died_frame := -1
+	for i in 120:
+		await get_tree().physics_frame
+		if _kairo.state == PlatformActor.State.DEAD and died_frame < 0:
+			died_frame = i
+			break
+	_check("سقوط از پایین اتاق می‌کشد", died_frame >= 0,
+		"(در فریم %d، y=%.0f)" % [died_frame, _kairo.global_position.y])
+	_check("سقوط بی‌پایان نمی‌شود", _kairo.global_position.y < float(40 * TILE),
+		"= y %.0f px" % _kairo.global_position.y)
+	_check("مرگ شمرده شد", deaths[0] >= 1, "= %d" % deaths[0])
+	# با مرز منفی (اتاق آزمایش) نباید بکشد
+	_kairo.fall_limit_y = -1.0
+	_kairo.reset_to(Vector2(60.0 * TILE, 4.0 * TILE))
+	for i in 40:
+		await get_tree().physics_frame
+	_check("با مرز خاموش نمی‌کشد", _kairo.state != PlatformActor.State.DEAD, "")
 
 
 func _report() -> void:

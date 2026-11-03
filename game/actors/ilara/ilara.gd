@@ -30,6 +30,11 @@ var kairo: Kairo = null
 
 var _stay_icon: Label
 var _replay := {"x": 0.0, "jump": false, "jump_held": false, "action": false}
+var _jump_cursor: int = 0
+## چند فریم دکمهٔ پرش نگه داشته شود. بدون این، `JUMP_CUT` در فریم بعد ارتفاع را
+## به ۴۵٪ می‌برد و ایلارا کوتاه می‌پرد و در شکاف می‌افتد (DECISIONS.md: D-037).
+var _jump_hold_frames: int = 0
+const JUMP_HOLD: int = 14
 
 
 func _ready() -> void:
@@ -84,8 +89,16 @@ func _gather_input() -> Dictionary:
 		x_in = clampf(dx / float(KairoConst.TILE), -1.0, 1.0)
 		x_in = signf(x_in)
 
-	var jump: bool = bool(rec["jump"])
-	var jump_held: bool = bool(rec["jump_held"])
+	# پرش با **رسیدن به نقطه** بازپخش می‌شود، نه با گذشت زمان. §۵ می‌گوید ایلارا
+	# «از لبه نمی‌پرد مگر مسیر کایرو را بازپخش کند»؛ بازپخش زمانی وقتی کایرو
+	# تندتر می‌رود (دش) از دست می‌رود و او در شکاف می‌افتد (D-037).
+	var jump: bool = _consume_jump_mark(x_in)
+	if jump:
+		_jump_hold_frames = JUMP_HOLD
+	elif _jump_hold_frames > 0:
+		_jump_hold_frames -= 1
+	# نگه‌داشتن پرش برای چند فریم، وگرنه JUMP_CUT پرش را نصف می‌کند
+	var jump_held: bool = jump or _jump_hold_frames > 0 or bool(rec["jump_held"])
 
 	# اگر از عقب‌افتادن، پرشِ ثبت‌شده را از دست داده باشد: وقتی روی زمین است و
 	# هدف بیش از سه‌چهارم کاشی بالاتر و افقاً نزدیک است، خودش می‌پرد.
@@ -114,6 +127,34 @@ func _check_rescue() -> void:
 	# هر دو نفر به‌غلط گیر کردن شمرده می‌شود.
 	if stuck_seconds() >= STUCK_SECONDS and absf(kairo.velocity.x) > 5.0:
 		teleport_to_kairo()
+
+
+## آیا به نقطه‌ای **رسیده‌ایم** که کایرو در آن پرید؟
+##
+## سنجه جهت‌دار است، نه «نزدیک بودن». با پنجرهٔ نزدیکی، ایلارا تا ۰٫۹ کاشی
+## **زودتر** می‌پرید و چون برد پرش او ۴ کاشی است و چالهٔ L1R3 سه کاشی، همان یک
+## کاشی زودی یعنی افتادن در چاله. دیرتر پریدن بی‌خطر است، زودتر پریدن نه
+## (DECISIONS.md: D-037).
+func _consume_jump_mark(dir: float) -> bool:
+	if kairo == null or not is_on_floor():
+		return false
+	while _jump_cursor < kairo.jump_events.size():
+		var ev: Dictionary = kairo.jump_events[_jump_cursor]
+		var ex: float = (ev["pos"] as Vector2).x
+		var dx: float = ex - global_position.x
+		# نقطه‌ای که بیش از ۱۲ کاشی دور است به مسیر فعلی ما ربطی ندارد
+		if absf(dx) > 12.0 * float(KairoConst.TILE):
+			_jump_cursor += 1
+			continue
+		var moving_right: bool = dir >= 0.0
+		# «رسیدن» یعنی در جهت حرکت از نقطه گذشته‌ایم (با ۲ پیکسل رواداری)
+		var reached: bool = (global_position.x >= ex - 2.0) if moving_right \
+			else (global_position.x <= ex + 2.0)
+		if reached:
+			_jump_cursor += 1
+			return true
+		return false
+	return false
 
 
 ## ظاهر شدن کنار کایرو با افکت ذره (§۵)
@@ -157,6 +198,8 @@ func command_come() -> void:
 
 func reset_to(pos: Vector2) -> void:
 	super(pos)
+	_jump_cursor = 0
+	_jump_hold_frames = 0
 	mode = Mode.FOLLOW
 	if _stay_icon != null:
 		_stay_icon.visible = false

@@ -237,80 +237,66 @@ func _g_persian_text() -> void:
 		"(%d کلید)" % table.size() if empty.is_empty() else str(empty))
 	_check("یکدست‌سازی کاف و یای عربی", Fa.shape("كيك") == "کیک", "")
 	_check("اعداد فارسی در نمایش", Fa.num(2026) == "۲۰۲۶", "= %s" % Fa.num(2026))
-
-
-## یک بازی خودکار: کایرو با روبات از اتاق اول به خروج مرحلهٔ ۱ می‌رسد.
-## این بند §۱۶ «آزمون خودکار مسیر» را با فیزیک واقعی می‌سنجد.
 	_finish_section("g")
+
+
+## تمام شدن واقعی مرحله با روبات کنترلی (§۲۲).
+##
+## این بخش جای «آزمون دوام ۹۰ ثانیه» را گرفت: دوام فقط می‌گفت کرش نمی‌کند، نه
+## این‌که مرحله بازی‌شدنی است. اینجا روبات با ورودی واقعی مرحله را تا خروج
+## می‌برد و ایلارا هم باید زنده برسد، چون خروج `needs_both` است (D-042).
 func _h_level_playthrough() -> void:
-	print("— دوام: ۹۰ ثانیه بازی خودکار مرحلهٔ ۱ —")
+	print("— تمام شدن مرحله با روبات کنترلی —")
+	var plan := Robot.load_plan("ch1_l1")
+	_check("برنامهٔ کنش ch1_l1 موجود است", not plan.is_empty(),
+		"(از tools/export_plans.py)")
+	if plan.is_empty():
+		_finish_section("h")
+		return
+
 	SceneRouter.pending_level = "res://levels/data/ch1_l1.json"
+	GameState.data = GameState.default_save()
+	GameState.data["cutscenes_seen"] = ["c1_intro", "c1_title"]
 	var game = load("res://scenes/game.tscn").instantiate()
 	add_child(game)
 	for i in 20:
 		await get_tree().physics_frame
 
-	var rooms_seen := {}
+	var robot := Robot.new()
+	robot.game = game
+	robot.plan = plan
+	add_child(robot)
+
 	var finished := [false]
 	game.level_finished.connect(func(_r): finished[0] = true, CONNECT_ONE_SHOT)
-
-	# روبات: به راست بدو و وقتی جلویت دیوار یا چاله بود بپر.
-	var max_frames := 60 * 90
+	var rooms := {}
 	var f := 0
-	Input.action_press("move_right")
-	while f < max_frames and not finished[0]:
+	while f < 60 * 120 and not finished[0] and robot.phase != Robot.Phase.DONE:
 		await get_tree().physics_frame
 		f += 1
-		rooms_seen[game.current_room_id] = true
-		var k: Kairo = game.kairo
-		if k == null:
-			break
-		# پرش وقتی روی زمین است و جلو مانع یا لبه است
-		if k.is_on_floor() and f % 6 == 0:
-			if k.is_on_wall() or _edge_ahead(game, k):
-				Input.action_press("jump")
-				await get_tree().physics_frame
-				Input.action_release("jump")
-	Input.action_release("move_right")
-	Input.action_release("jump")
+		robot.step()
+		rooms[String(game.current_room_id)] = true
 
-	print("    اتاق‌های دیده‌شده: %s، فریم شبیه‌سازی‌شده: %d (%.0f ثانیه)"
-		% [str(rooms_seen.keys()), f, f / 60.0])
-	print("    مرگ کایرو: %d، افتادن ایلارا: %d" % [game.deaths, game.ilara_falls])
+	print("    اتاق‌ها: %s، %.1f ثانیه، مرگ %d، افتادن ایلارا %d"
+		% [str(rooms.keys()), f / 60.0, game.deaths, game.ilara_falls])
+	_check("مرحلهٔ ۱ تا خروج تمام شد", finished[0] or game.finished,
+		"(%d/4 اتاق)" % rooms.size())
+	_check("ایلارا زنده به خروج رسید",
+		game.ilara != null and is_instance_valid(game.ilara)
+		and game.ilara.state != PlatformActor.State.DEAD, "")
+	_check("هر چهار اتاق پیموده شد", rooms.size() == 4, "= %d" % rooms.size())
+	_check("نتیجهٔ مرحله ستاره داد",
+		int(SceneRouter.last_result.get("stars", 0)) >= 1,
+		"= %d ستاره" % int(SceneRouter.last_result.get("stars", 0)))
+	print("    i مرحلهٔ ۲ و ۳ هنوز با روبات تمام نمی‌شوند — کار باز گام ۸ با")
+	print("      پایهٔ پسرفت در tools/tests/test_robot.gd (D-042)")
 
-	# این بخش «تمام کردن مرحله» را نمی‌سنجد و نباید بسنجد: اتاق اول مرحلهٔ ۱ یک
-	# بالا رفتن سه‌پله‌ای از کنار بلوک چهار کاشی می‌خواهد و روباتِ سادهٔ
-	# «به راست بدو و روی دیوار بپر» از آن رد نمی‌شود. حل‌پذیری هندسی با
-	# tools/validate_ch1.py تأیید شده (۱۲/۱۲ اتاق) و تمام کردن واقعی مرحله بند
-	# آزمون دستی است. آنچه اینجا سنجیده می‌شود دوام است: ۹۰ ثانیه فیزیک و
-	# مانع و همراه، بدون کرش و بدون از دست رفتن گره.
-	_check("۹۰ ثانیه شبیه‌سازی بدون کرش", f >= 60 * 89, "= %.0f ثانیه" % (f / 60.0))
-	_check("کایرو تا پایان سالم ماند",
-		game.kairo != null and is_instance_valid(game.kairo), "")
-	_check("ایلارا تا پایان سالم ماند",
-		game.ilara != null and is_instance_valid(game.ilara), "")
-	_check("اتاق تا پایان ساخته ماند",
-		game.room != null and is_instance_valid(game.room), "")
-	_check("فیزیک زنده بود (کایرو جابه‌جا شد یا مُرد)",
-		game.deaths > 0 or game.kairo.global_position != game.room.kairo_start,
-		"(مرگ %d، x=%.0f)" % [game.deaths, game.kairo.global_position.x])
-	_check("شمارنده‌ها بی‌معنی نشدند",
-		game.deaths >= 0 and game.ilara_falls >= 0, "")
-	print("    i تمام کردن سر‌تا‌سر مرحله بند آزمون دستی است؛ حل‌پذیری هندسی")
-	print("      با validate_ch1.py تأیید شده: ۱۲/۱۲ اتاق.")
+	robot._release_all()
+	robot.queue_free()
 	game.queue_free()
 	await get_tree().process_frame
-
-
-## آیا یک کاشی جلوتر زمین تمام می‌شود
 	_finish_section("h")
-func _edge_ahead(game, k: Kairo) -> bool:
-	var tiles_layer = game.room.get_node_or_null("Tiles")
-	if tiles_layer == null:
-		return false
-	var c := int(k.global_position.x / LevelLoader.TILE) + 1
-	var r := int(k.global_position.y / LevelLoader.TILE) + 1
-	return tiles_layer.get_cell_source_id(Vector2i(c, r)) == -1
+
 
 
 ## بندهایی که فقط روی دستگاه واقعی سنجیدنی‌اند (§۱۶ و معیار پذیرش سند ۰۵)

@@ -127,6 +127,32 @@ func reset() -> void:
 	_t = phase_offset
 
 
+## ----- پرسش‌هایی که روبات و آزمون‌ها می‌پرسند -----
+
+## همین حالا کشنده است؟
+func is_lethal() -> bool:
+	return phase == Phase.ON
+
+
+## مستطیل پرتو در مختصات جهانی — برای سنجش این‌که مسیر از آن می‌گذرد یا نه.
+func beam_global_rect() -> Rect2:
+	var r := _beam_rect(float(length_tiles * KairoConst.TILE))
+	return Rect2(global_position + r.position, r.size)
+
+
+## چند ثانیه از پنجرهٔ خاموشی مانده است (اگر روشن است، صفر).
+##
+## روبات به این نیاز دارد چون ایلارا ۰٫۸ ثانیه عقب‌تر است: عبور در ثانیهٔ آخر
+## پنجره برای کایرو بی‌خطر است ولی ایلارا را می‌کشد و طبق قانون همراهی مرحله
+## از اول شروع می‌شود.
+func off_time_left() -> float:
+	if phase == Phase.ON:
+		return 0.0
+	var cycle := _off_time + _on_time
+	var t := fmod(_t, cycle)
+	return maxf(_off_time - t, 0.0)
+
+
 ## پنجرهٔ امن این لیزر، برای اعتبارسنج قاعدهٔ عدالت.
 ##
 ## §۷: «۰٫۴ ثانیه هشدار چشمک‌زن **پیش از روشن‌شدن**» — در مدت هشدار پرتو هنوز

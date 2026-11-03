@@ -21,7 +21,7 @@ var _visual: Node2D
 func _ready() -> void:
 	collision_layer = Layers.ITEM
 	collision_mask = Layers.ACTORS
-	monitoring = true
+	set_deferred("monitoring", true)
 	_home = position
 	_build_visual()
 	body_entered.connect(_on_body_entered)
@@ -67,7 +67,9 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	_taken = true
 	visible = false
-	monitoring = false
+	# `monitoring` را نمی‌شود داخل callback خود سیگنال عوض کرد؛ موتور خطای
+	# «Function blocked during in/out signal» می‌دهد (DECISIONS.md: D-028).
+	set_deferred("monitoring", false)
 	picked.emit(kind, id)
 	Audio.play_sfx(kind)
 
@@ -76,7 +78,7 @@ func _on_body_entered(body: Node2D) -> void:
 func respawn() -> void:
 	_taken = false
 	visible = true
-	monitoring = true
+	set_deferred("monitoring", true)
 	position = _home
 
 

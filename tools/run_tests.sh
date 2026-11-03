@@ -11,7 +11,7 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 GAME="$ROOT/game"
 GODOT="${GODOT:-godot}"
-TIMEOUT="${TIMEOUT:-180}"
+TIMEOUT="${TIMEOUT:-400}"
 LOGDIR="${LOGDIR:-$(mktemp -d)}"
 
 TESTS=(
@@ -22,6 +22,7 @@ TESTS=(
   "res://tools/tests/test_solvable.tscn"
   "res://tools/tests/test_save_ui.tscn"
   "res://tools/tests/test_cutscene_audio.tscn"
+  "res://tools/tests/test_robot.tscn"
   "res://tools/tests/test_acceptance.tscn"
 )
 
@@ -35,6 +36,12 @@ fi
 echo
 echo "=== اعتبارسنج نقشهٔ فصل ۱ (بدون موتور) ==="
 if ! python3 -I "$ROOT/tools/validate_ch1.py"; then
+  fail=1
+fi
+
+echo
+echo "=== برنامهٔ کنش روبات از BFS ==="
+if ! python3 -I "$ROOT/tools/export_plans.py"; then
   fail=1
 fi
 
@@ -66,9 +73,15 @@ for t in "${TESTS[@]}"; do
   echo
   echo "=== $name ==="
   log="$LOGDIR/$name.log"
-  ( cd "$GAME" && timeout "$TIMEOUT" "$GODOT" --headless "$t" >"$log" 2>&1 )
+  # --fixed-fps حلقه را از ساعت دیوار جدا می‌کند. بدون آن آزمون روبات
+  # دقیقه‌ها طول می‌کشد؛ با آن همان کار در چند ثانیه تمام می‌شود.
+  ( cd "$GAME" && timeout "$TIMEOUT" "$GODOT" --headless --fixed-fps 60 "$t" >"$log" 2>&1 )
   code=$?
   grep -vE "^\s*$|کلید صدا بدون فایل|^Godot Engine" "$log"
+  if grep -q "ObjectDB instances leaked" "$log"; then
+    echo "  ← $name: نشت ObjectDB (گره‌ای آزاد نشده)"
+    fail=1
+  fi
   if grep -q "Failed to load script" "$log"; then
     # اسکریپت کامپایل نشده: صحنه هرگز quit نمی‌کند و آزمون با timeout می‌ایستد.
     # بدون این پیام، علت به‌شکل یک هنگِ بی‌دلیل دیده می‌شد.

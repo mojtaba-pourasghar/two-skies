@@ -11,6 +11,12 @@ const HISTORY_FRAMES: int = 120
 ## هر درایه: {"frame": int, "pos": Vector2, "x": float, "jump": bool, "jump_held": bool, "facing": int}
 var history: Array[Dictionary] = []
 
+## نقطه‌هایی که کایرو در آن‌ها پرید. ایلارا پرش را با **رسیدن به همان نقطه**
+## بازپخش می‌کند نه با گذشت زمان، وگرنه هر وقت کایرو تندتر برود (مثلاً با دش)
+## او از فریم پرش جا می‌ماند و در شکاف می‌افتد (DECISIONS.md: D-037).
+var jump_events: Array[Dictionary] = []
+const MAX_JUMP_EVENTS: int = 64
+
 ## ابزار فعال که دکمهٔ عمل را می‌گیرد؛ در نسخهٔ ۱: "" یا "hack" یا "dash"
 var active_tool: String = ""
 
@@ -68,6 +74,17 @@ func _update_hack(delta: float) -> void:
 
 
 ## صف موقعیت و ورودی برای بازپخش ایلارا (§۵)
+## پرش زمینی را در **لحظهٔ خودش** ثبت می‌کند تا ایلارا بتواند با رسیدن به همان
+## نقطه بازپخشش کند. ثبت در `_record()` کار نمی‌کرد: آن‌جا `move_and_slide()`
+## از قبل اجرا شده و `is_on_floor()` دیگر false است (DECISIONS.md: D-037).
+## پرش دیواری ثبت نمی‌شود، چون ایلارا در فصل ۱ دیوارپرش ندارد (§۵).
+func _do_jump() -> void:
+	super()
+	jump_events.append({"frame": frame, "pos": global_position})
+	if jump_events.size() > MAX_JUMP_EVENTS:
+		jump_events.remove_at(0)
+
+
 func _record() -> void:
 	history.append({
 		"frame": frame,
@@ -82,6 +99,7 @@ func _record() -> void:
 		history.remove_at(0)
 
 
+
 ## ورودی ثبت‌شدهٔ `delay_frames` فریم قبل. اگر صف هنوز پر نشده null برمی‌گردد.
 func history_at(delay_frames: int) -> Variant:
 	var idx := history.size() - 1 - delay_frames
@@ -93,6 +111,7 @@ func history_at(delay_frames: int) -> Variant:
 func reset_to(pos: Vector2) -> void:
 	super(pos)
 	history.clear()
+	jump_events.clear()
 	_refresh_tools()
 	# ابزار فعال پیش‌فرض: اگر هک باز است، هک؛ وگرنه دش اگر باز است.
 	if GameState.is_tool_unlocked("hack"):

@@ -24,6 +24,11 @@ const HARD_LAND_VY: float = 260.0
 @export var can_wall_jump: bool = false
 @export var can_dash: bool = false
 
+## مرز پایین اتاق بر حسب پیکسل. پایین‌تر از این = مرگ (§۴ و §۷:
+## «خروج از پایین اتاق مرگ است»). مرحله هنگام ساخت اتاق مقدارش را می‌نشاند؛
+## مقدار منفی یعنی بی‌مرز (مثلاً در اتاق آزمایش).
+var fall_limit_y: float = -1.0
+
 var state: State = State.IDLE
 var facing: int = 1
 var frame: int = 0
@@ -80,6 +85,12 @@ func _physics_process(delta: float) -> void:
 	if state == State.CUTSCENE:
 		velocity = Vector2.ZERO
 		move_and_slide()
+		return
+
+	# خروج از پایین اتاق مرگ است (§۴ جدول گذارها، §۷). بدون این سنجه بازیگر
+	# در چاه‌های طراحی‌شده تا بی‌نهایت سقوط می‌کند.
+	if fall_limit_y > 0.0 and global_position.y > fall_limit_y:
+		die()
 		return
 
 	input = _gather_input()

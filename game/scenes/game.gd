@@ -163,9 +163,19 @@ func _enter_room(room_id: String, from_side: String, row: int) -> void:
 	room.exit_reached.connect(_on_exit_reached)
 	room.checkpoint_reached.connect(_on_checkpoint)
 
+	_apply_fall_limit()
 	_place_actors_on_entry()
 	_lock_camera()
 	EventBus.room_entered.emit(String(level.get("id", "?")), room_id)
+
+
+## مرز سقوط هر دو بازیگر از ارتفاع اتاق می‌آید، نه از عددی ثابت.
+## یک کاشی حاشیه می‌گذاریم تا افتادن در چاه دیده شود و بعد مرگ بیاید.
+func _apply_fall_limit() -> void:
+	var limit := room.size_px().y + float(TILE)
+	kairo.fall_limit_y = limit
+	if ilara != null:
+		ilara.fall_limit_y = limit
 
 
 func _place_actors_on_entry() -> void:
@@ -203,7 +213,10 @@ func _entry_position(exit_side: String, index: int) -> Vector2:
 func _on_door_crossed(side: String, to_room: String, row: int) -> void:
 	if finished:
 		return
-	_enter_room(to_room, side, row)
+	# گذار اتاق از داخل callback سیگنال Area2D انجام نمی‌شود: موتور در میانهٔ
+	# flush کردن پرس‌وجوهای فیزیک است و ساختن Area2D تازه خطا می‌دهد
+	# (DECISIONS.md: D-029).
+	_enter_room.call_deferred(to_room, side, row)
 
 
 ## ----- دوربین -----
