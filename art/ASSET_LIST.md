@@ -97,3 +97,11 @@
 - props (۱۲ شیء، پس‌زمینه شفاف): `art_drop/props/` — پیش‌نویس؛ ممکن است لکهٔ ریز یا هالهٔ نور بماند.
 - terrain (۱۸ کاشی، نسخه‌های full/64/32): `art_drop/terrain/` — کاشی‌های صخره/پله/پل جلوهٔ مورب دارند و باید قبل از استفاده بررسی شوند؛ seamless بودن چمن/خاک/آب تأیید نشده.
 - title: `art_drop/title/title_1280x720.png` (نقاشی‌وارتر از سبک پیکسلی؛ اگر لازم شد بازسازی شود).
+
+## صحنه‌های داستانی و آیکون برنامه (پیش‌نمایش؛ منتظر دانلود کامل)
+| آیتم | Canva id | لینک |
+|---|---|---|
+| صحنهٔ مقدمه (کریستال در خرابه‌ها) | MAHZ6hr5W3I | https://www.canva.com/M/MAHZ6hr5W3I |
+| پس‌زمینهٔ عنوان فصل ۱ | MAHZ6qWLGj8 | https://www.canva.com/M/MAHZ6qWLGj8 |
+| صحنهٔ پایان نسخهٔ ۱ (دروازهٔ نور) | MAHZ6lv_RKM | https://www.canva.com/M/MAHZ6lv_RKM |
+| آیکون برنامه (مربع) | MAHZ6ivILm8 | https://www.canva.com/M/MAHZ6ivILm8 |
