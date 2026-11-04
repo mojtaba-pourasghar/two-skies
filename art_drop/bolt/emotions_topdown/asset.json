@@ -1,0 +1,16 @@
+{
+ "status": "draft-until-user-approval",
+ "frame_size": [
+  100,
+  78
+ ],
+ "scale": 0.2,
+ "frames": [
+  "happy",
+  "curious",
+  "scared",
+  "sad",
+  "angry",
+  "hover_glow"
+ ]
+}

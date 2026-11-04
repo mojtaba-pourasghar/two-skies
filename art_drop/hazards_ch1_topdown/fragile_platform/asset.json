@@ -1,0 +1,16 @@
+{
+ "status": "draft-until-user-approval",
+ "frame_size": [
+  103,
+  70
+ ],
+ "scale": 0.2,
+ "frames": [
+  "fragile_platform_0",
+  "fragile_platform_1",
+  "fragile_platform_2",
+  "fragile_platform_3",
+  "fragile_platform_4",
+  "fragile_platform_5"
+ ]
+}

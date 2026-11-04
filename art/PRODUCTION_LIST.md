@@ -62,3 +62,7 @@
 - بولت، احساس‌ها از بالا: MAHZ-oVrmhk
 - صحنهٔ سکوی پرتاب/جدایی (صحنهٔ ۷): MAHZ-iDi1Dg
 - هنوز نساخته: جهش و دش به چهار جهت (بالا/چپ/راست)، انیمیشن راه رفتن روبه‌پایین/بالا لباس خانگی (walk_down/up)، آیکن‌های ابزار «بالا رفتن»، پارالکس سه‌چهارم برای مراحل ۴–۸
+
+## دستهٔ ۶ — دریافت و برش شد (`art/tools/slice_ch1_v6.py`، اصل‌ها `art/raw/ch1_v6/`)
+☑ جهش رو به پایین و بالا رفتن (کایرو/ایلارا) → `art_drop/{kairo,ilara}/home/anim/{leap_down,climb_up}_*` (بوم climb ۱۹۲) · ☑ سکوی شکننده → `art_drop/hazards_ch1_topdown/fragile_platform/` · ☑ بولت احساس از بالا → `art_drop/bolt/emotions_topdown/` · ☑ صحنهٔ سکوی پرتاب/جدایی → `art_drop/scenes/ch1/launch_platform_1280x720.png`
+⚠ دو دوربین (D-ART-05، `art/CAMERA_SETS.md`): هنر نمای کناری برگردانده شد و کنار نسخهٔ سه‌چهارم می‌ماند.
