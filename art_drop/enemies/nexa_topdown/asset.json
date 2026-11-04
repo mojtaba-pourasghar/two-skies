@@ -1,0 +1,17 @@
+{
+ "status": "draft-until-user-approval",
+ "camera": "topdown",
+ "frame_size": [
+  93,
+  82
+ ],
+ "scale": 0.2,
+ "frames": [
+  "guard_idle",
+  "guard_step",
+  "guard_scan",
+  "crawler_0",
+  "crawler_1",
+  "suicide_explode"
+ ]
+}
