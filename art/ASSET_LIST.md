@@ -181,3 +181,14 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 ### وضعیت: شیت‌های انیمیشن Canva رسید و فریم‌به‌فریم بریده شد (CONCEPT)
 `art/raw/anim/*_full.png` و `art_drop/anim_concept/{kairo,ilara}/<anim>_NN.png` + `<anim>_strip.png` (kairo: run×7، dash×4 [۱۹۲×۱۲۸]، hack×4، hop×4، death×6؛ ilara: run×8، stay×4، come×4، hop×4). ابزار: `art/tools/slice_anim_sheets.py`.
 محدودیت‌ها: سبک chibi و ساده‌تر از برگهٔ تأییدشده؛ مقیاس هر شیت جداگانه نرمال شده و بین انیمیشن‌ها اندازهٔ بدن کمی متفاوت است (مثلاً مرگ کوچک‌تر، پرش بزرگ‌تر)؛ نمای فقط کنار/جلو (جهت‌های بالا/پایین ندارد). فقط برای پروتوتایپ/مرجع هنرمند؛ هنوز «نهایی» نیست.
+
+## انیمیشن نسخهٔ ۲ (با مرجع برگهٔ کاراکتر Canva: MAHZ2kQ7SvY کایرو، MAHZ2o8BDr8 ایلارا) — پیش‌نمایش؛ منتظر دانلود و مقایسه
+| آیتم | Canva id | لینک |
+|---|---|---|
+| کایرو دویدن (کنار) | MAHZ9HP_jV8 | https://www.canva.com/M/MAHZ9HP_jV8 |
+| کایرو راه رفتن (جلو) | MAHZ9KnvtMk | https://www.canva.com/M/MAHZ9KnvtMk |
+| کایرو راه رفتن (پشت) | MAHZ9Okt_e0 | https://www.canva.com/M/MAHZ9Okt_e0 |
+| ایلارا دویدن (کنار) | MAHZ9Bq-Rbo | https://www.canva.com/M/MAHZ9Bq-Rbo |
+| ایلارا راه رفتن (جلو) | MAHZ9Drj9kw | https://www.canva.com/M/MAHZ9Drj9kw |
+| ایلارا راه رفتن (پشت) | MAHZ9HrZ1yw | https://www.canva.com/M/MAHZ9HrZ1yw |
+هشدار: مرجع ایلارا (MAHZ2o8BDr8) ممکن است دقیقاً همان برگهٔ تأییدشدهٔ کاربر نباشد؛ در پیش‌نمایش ایلارا شبیه تأییدشده نیست (حلقه/کمان روی سر، رنگ‌ها). پس از دانلود با برگهٔ تأییدشده مقایسه شود.
