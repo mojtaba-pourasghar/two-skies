@@ -163,3 +163,6 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 
 ### وضعیت: استور و منو رسید
 `art_drop/screens/{menu_bg,retry,loading}_1280x720.png`، `art_drop/store/feature_banner_1024x500.png` (بدون لوگو)، `art_drop/app_icon/adaptive_{foreground,background}_1024.png` + `adaptive_preview.png`.
+
+### لوگوی فارسی و فونت (تکمیل)
+`art_drop/logo/logo_fa.png` (فونت Vazirmatn Black، گرادیان نارنجی→فیروزه‌ای، لبهٔ تیره + درخشش)، نسخهٔ بنر و عنوان با لوگو. لوگوی نهایی تجاری را بعداً می‌شود با خط‌نوشتهٔ دست‌ساز جایگزین کرد.

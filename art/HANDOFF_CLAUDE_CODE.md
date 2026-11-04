@@ -13,3 +13,5 @@
 4. **هشدارهای محتوا (از `art/ASSET_LIST.md`):** `ui/portrait_frame` فقط قاب استفاده شود (چهرهٔ غریبه حذف)؛ آیکون‌های سگ/روباه کنار نشانه‌های ایلارا جایگزین شوند؛ `skill_*`/`slot_*` فصل ۱ نیست؛ `hazards/` قدیمی مورب است و منسوخ؛ از `hazards_topdown/` استفاده شود و اندازهٔ اشیاء روی شبکهٔ ۳۲ تنظیم شود.
 5. **هنوز نیست (جای‌نگهدار بگذار):** انیمیشن‌های دویدن/دش/هک/مرگ/پرش، لایهٔ پیش‌زمینهٔ برگ شفاف، parallax بندر.
 6. همهٔ هنر کدی فقط `art/drafts/` است؛ کامیت «گام N:» و پوش روی شاخهٔ خودت.
+7. **فونت فارسی:** `game/assets/fonts/Vazirmatn-NL-{Regular,Bold,Black}.ttf` (مجوز OFL کنار آن‌هاست). در Godot برای همهٔ متن رابط، `TextServerAdvanced` فعال و `base_direction=RTL` / `language=fa` بگذار. لوگوی فارسی آماده: `art_drop/logo/logo_fa.png`، بنر با لوگو: `art_drop/store/feature_banner_with_logo_1024x500.png`، عنوان با لوگو: `art_drop/title/title_with_logo_1280x720.png`.
+8. **صادرات آیکون adaptive:** foreground/background در `art_drop/app_icon/` (۱۰۲۴) → ۴۳۲ پیکسل برای xxxhdpi.
