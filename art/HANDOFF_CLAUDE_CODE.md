@@ -16,5 +16,8 @@
 7. **فونت فارسی:** `game/assets/fonts/Vazirmatn-NL-{Regular,Bold,Black}.ttf` (مجوز OFL کنار آن‌هاست). در Godot برای همهٔ متن رابط، `TextServerAdvanced` فعال و `base_direction=RTL` / `language=fa` بگذار. لوگوی فارسی آماده: `art_drop/logo/logo_fa.png`، بنر با لوگو: `art_drop/store/feature_banner_with_logo_1024x500.png`، عنوان با لوگو: `art_drop/title/title_with_logo_1280x720.png`.
 8. **صادرات آیکون adaptive:** foreground/background در `art_drop/app_icon/` (۱۰۲۴) → ۴۳۲ پیکسل برای xxxhdpi.
 
+## فونت
+فونت پیکسلی فارسی: `game/assets/fonts/Erfan-Pixel-Regular.ttf` (D-ART-03؛ اندازه‌های مضرب ۱۶، Nearest).
+
 ## انیمیشن‌های v2 (`art_drop/{kairo,ilara}/anim/`)
 فریم‌ها `<anim>_NN.png` (۱۲۸×۱۲۸ یا ۱۹۲×۱۲۸ طبق `art_drop/anim_v2_asset.json` → `*_frame_w`)، خط پا y=124، fps ~۹. کایرو: walk_down/up، walk_side، run_side، dash، hack، hop، death، respawn. ایلارا: walk_down/up، run_side، signal_stay، signal_come، hop. چپ = آینهٔ راست. پرتره‌های درست ایلارا در `art_drop/portraits/ilara/` (`_obsolete_ilara_v1` را نادیده بگیر). همه draft تا تأیید کاربر.
