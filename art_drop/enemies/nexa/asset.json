@@ -1,0 +1,16 @@
+{
+ "status": "draft-until-user-approval",
+ "frame_size": [
+  140,
+  98
+ ],
+ "scale": 0.25,
+ "frames": [
+  "guard_idle",
+  "guard_step",
+  "guard_scan",
+  "crawler_0",
+  "crawler_1",
+  "suicide_explode"
+ ]
+}
