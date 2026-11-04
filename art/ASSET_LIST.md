@@ -105,3 +105,6 @@
 | پس‌زمینهٔ عنوان فصل ۱ | MAHZ6qWLGj8 | https://www.canva.com/M/MAHZ6qWLGj8 |
 | صحنهٔ پایان نسخهٔ ۱ (دروازهٔ نور) | MAHZ6lv_RKM | https://www.canva.com/M/MAHZ6lv_RKM |
 | آیکون برنامه (مربع) | MAHZ6ivILm8 | https://www.canva.com/M/MAHZ6ivILm8 |
+
+### وضعیت: صحنه‌ها و آیکون برنامه رسید
+`art_drop/scenes/` (مقدمه، پس‌زمینهٔ عنوان فصل، پایان v1 — ۱۲۸۰×۷۲۰) و `art_drop/app_icon/` (مربع ۱۰۲۴/۵۱۲؛ گوشه‌گرد اصلی در raw). صحنه‌ها ظاهر پیکسلی‌تر از صفحهٔ عنوان دارند و برای ورود به بازی مناسب‌اند.
