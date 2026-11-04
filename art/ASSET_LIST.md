@@ -119,3 +119,6 @@
 | تصویر فروشگاه | MAHZ6mm7CPo | https://www.canva.com/M/MAHZ6mm7CPo |
 
 توجه: لایه‌های پیش‌زمینه (قاب برگ) با شفافیت لازم‌اند؛ Canva تصویر شفاف نمی‌دهد، پس با برگ‌های props/کد ساخته یا از هنرمند گرفته شود.
+
+### وضعیت: parallax و فروشگاه رسید
+`art_drop/parallax/{coral,cave,plateau}_far_1280x720.png` و `art_drop/scenes/shop_1280x720.png`. هنوز نرسیده: parallax بندر (https://www.canva.com/M/MAHZ6gpUxX4).

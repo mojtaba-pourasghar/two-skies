@@ -1,0 +1,13 @@
+{
+ "type": "parallax_far",
+ "status": "draft",
+ "files": [
+  "coral",
+  "cave",
+  "plateau"
+ ],
+ "missing": [
+  "harbor"
+ ],
+ "note": "far layer only; lower third is empty fog for gameplay area; tile horizontally needs seam check"
+}
