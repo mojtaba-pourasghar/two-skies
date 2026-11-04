@@ -197,3 +197,11 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 `art_drop/{kairo,ilara}/anim/`: kairo `walk_down`/`walk_up` (۶ فریم)؛ ilara `walk_down`/`walk_up`/`run_side` (۶ فریم)، هر کدام فریم‌های جدا ۱۲۸×۱۲۸ + `*_strip.png` + `.gif`؛ تراکم و قد ۸۸px مطابق idle تأییدشده، پالت مشترک ۶۴ رنگ. ابزار: `art/tools/slice_anim_v2.py`. نیمه‌چپ = آینه. هنوز نرسیده: kairo run_side (https://www.canva.com/M/MAHZ9HP_jV8).
 
 ⚠️ **هشدار ناهمخوانی ایلارا:** ایلارای تأییدشده موی کوتاه مشکی، گوشواره، کمان پشتش، ژاکت قهوه‌ای و شال فیروزه‌ای است. موارد زیر با طراحی اشتباه (موی بلند قهوه‌ای بافته) ساخته شده‌اند و **باید بازسازی شوند**: `art_drop/portraits/ilara/*`، `art/refs/canva_previews/anim_concepts/ilara_*` و `art_drop/anim_concept/ilara/*`. آیکون‌های بمان/بیا فقط سیلوئت‌اند و قابل‌قبول‌اند.
+
+### دستهٔ v2 بعدی (با طراحی تأییدشدهٔ ایلارا) — پیش‌نمایش؛ منتظر دانلود
+| آیتم | Canva id | لینک |
+|---|---|---|
+| پرتره‌های ایلارا (۶ حالت، جایگزین نسخهٔ اشتباه) | MAHZ9W-DH-4 | https://www.canva.com/M/MAHZ9W-DH-4 |
+| کایرو: دش/هک/پرش | MAHZ9Xs7An4 | https://www.canva.com/M/MAHZ9Xs7An4 |
+| ایلارا: بمان/بیا/پرش | MAHZ9ZgCGp8 | https://www.canva.com/M/MAHZ9ZgCGp8 |
+| کایرو: مرگ/respawn | MAHZ9Zt4_Ow | https://www.canva.com/M/MAHZ9Zt4_Ow |
