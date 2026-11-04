@@ -238,3 +238,8 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 | کارت‌های فروشگاه (عادی/انتخاب‌شده، دکمهٔ خرید، فروخته‌شده، پلاک قیمت، روبان) | MAHZ98Q7avg | https://www.canva.com/M/MAHZ98Q7avg |
 | گره‌های نقشهٔ مراحل (باز، قفل، تمام‌شده، انتخاب‌شده، ستاره‌ها) | MAHZ9-5SUgk | https://www.canva.com/M/MAHZ9-5SUgk |
 نکته: در شیت مکث، قطعهٔ تیره/پلکانی بالا-راست (همپوشانی) احتمالاً بی‌فایده است؛ پس از دانلود بررسی شود. پس از دریافت فول‌رز، برش با ابزار magenta-key و ثبت در `art_drop/ui/`.
+
+### ✅ UI v2 رسید و بریده شد → `art_drop/ui/v2/<گروه>/<نام>.png` (+`asset.json`)
+گروه‌ها: `level_nodes`, `shop_cards`, `profile_parts`, `pause_menu`, `settings_controls`, `menu_buttons`. ابزار: `art/tools/slice_ui_v2.py`؛ اصل‌ها: `art/raw/ui_v2/`. بدون متن؛ متن با فونت عرفان (D-ART-03). draft تا تأیید.
+قطعهٔ تیرهٔ پلکانی شیت مکث (`overlay_corner`) استفاده نشد.
+شکاف‌های فصل ۱ نسبت به کتاب هنر: `art/GAP_ANALYSIS_CH1.md`.

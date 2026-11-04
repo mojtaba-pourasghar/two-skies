@@ -1,0 +1,187 @@
+{
+ "status": "draft-until-user-approval",
+ "source": "Canva UI v2 (no text; text uses Erfan pixel font D-ART-03)",
+ "note": "اندازه‌ها در رزولوشن اصلی شیت (۱۶۸۰×۹۴۴)؛ برای بازی ۱۲۸۰×۷۲۰ حدود ×0.76 و برای 9-slice پنل‌ها/دکمه‌ها لبه‌ها حفظ شود.",
+ "items": {
+  "level_nodes": {
+   "node_unlocked": [
+    261,
+    260
+   ],
+   "node_locked": [
+    259,
+    259
+   ],
+   "node_done": [
+    259,
+    260
+   ],
+   "node_selected": [
+    263,
+    268
+   ],
+   "node_locked_alt": [
+    259,
+    259
+   ],
+   "stars_0": [
+    364,
+    165
+   ],
+   "stars_1": [
+    361,
+    165
+   ],
+   "stars_2": [
+    363,
+    165
+   ],
+   "stars_3": [
+    364,
+    165
+   ]
+  },
+  "shop_cards": {
+   "card": [
+    426,
+    563
+   ],
+   "card_selected": [
+    429,
+    563
+   ],
+   "price_tag": [
+    414,
+    98
+   ],
+   "ribbon_new": [
+    128,
+    128
+   ],
+   "btn_buy": [
+    441,
+    169
+   ],
+   "btn_soldout": [
+    439,
+    165
+   ]
+  },
+  "profile_parts": {
+   "panel": [
+    781,
+    459
+   ],
+   "avatar_frame": [
+    318,
+    403
+   ],
+   "level_star": [
+    131,
+    134
+   ],
+   "btn_edit": [
+    129,
+    136
+   ],
+   "stat_row_1": [
+    558,
+    93
+   ],
+   "stat_row_2": [
+    558,
+    94
+   ],
+   "stat_row_3": [
+    559,
+    93
+   ],
+   "medal_gold": [
+    214,
+    273
+   ],
+   "medal_silver": [
+    214,
+    272
+   ],
+   "medal_locked": [
+    215,
+    273
+   ]
+  },
+  "pause_menu": {
+   "panel": [
+    684,
+    836
+   ],
+   "btn_resume": [
+    206,
+    227
+   ],
+   "btn_restart": [
+    206,
+    227
+   ],
+   "btn_home": [
+    206,
+    227
+   ]
+  },
+  "settings_controls": {
+   "panel": [
+    719,
+    767
+   ],
+   "slider_empty": [
+    546,
+    74
+   ],
+   "slider_half": [
+    547,
+    75
+   ],
+   "toggle_on": [
+    166,
+    76
+   ],
+   "toggle_off": [
+    165,
+    76
+   ],
+   "check_on": [
+    121,
+    129
+   ],
+   "check_off": [
+    120,
+    130
+   ],
+   "arrow_left": [
+    121,
+    131
+   ],
+   "arrow_right": [
+    120,
+    131
+   ]
+  },
+  "menu_buttons": {
+   "btn_normal": [
+    730,
+    214
+   ],
+   "btn_pressed": [
+    731,
+    214
+   ],
+   "btn_disabled": [
+    730,
+    213
+   ],
+   "btn_highlight": [
+    731,
+    213
+   ]
+  }
+ }
+}
