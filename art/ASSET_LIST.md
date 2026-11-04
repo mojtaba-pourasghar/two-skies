@@ -151,3 +151,12 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 
 ### وضعیت: نقشهٔ انتخاب مرحله و parallax بندر رسید
 `art_drop/scenes/level_select_map_1280x720.png`، `art_drop/parallax/harbor_far_1280x720.png`. پرتره‌ها نسخهٔ `*_alpha.png` (پس‌زمینهٔ شفاف) دارند و آیکون‌های بمان/بیا در ۱۲۸ و ۶۴ ساخته شد. نقشه سه نقطهٔ مرحله دارد (آبشار، غار، بندر).
+
+## استور و منو (پیش‌نمایش؛ منتظر دانلود کامل) — به ترتیب
+| # | آیتم | Canva id | لینک | توضیح |
+|---|---|---|---|---|
+| ۱ | بنر استور (۲:۱ → ۱۰۲۴×۵۰۰) | MAHZ8518cRU | https://www.canva.com/M/MAHZ8518cRU | لوگو بعداً با فونت فارسی |
+| ۲ | پیش‌زمینهٔ آیکون adaptive | MAHZ87MkBJ4 | https://www.canva.com/M/MAHZ87MkBJ4 | پس‌زمینهٔ #FF00FF → شفاف؛ پس‌زمینهٔ آیکون از icon_1024 |
+| ۳ | صفحهٔ لودینگ | MAHZ8zq26FQ | https://www.canva.com/M/MAHZ8zq26FQ | |
+| ۴ | صفحهٔ تلاش مجدد | MAHZ80wJWbo | https://www.canva.com/M/MAHZ80wJWbo | |
+| ۵ | پس‌زمینهٔ منو/تنظیمات | MAHZ85wdPeA | https://www.canva.com/M/MAHZ85wdPeA | |
