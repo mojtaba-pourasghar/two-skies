@@ -7,8 +7,9 @@
 3. **محتوای آمادهٔ استفاده در `art_drop/`:**
    - `env/` ۴ محیط، `parallax/` (coral, cave, plateau؛ بندر نرسیده)، `scenes/` (intro, chapter1_title_bg, end_v1, shop), `title/`, `app_icon/`
    - `props/` ۱۲ شیء شفاف، `terrain/` ۱۸ کاشی (۳۲ و ۶۴ و کامل)
+   - `hazards_topdown/` (۸)، `hackables/` (۸)، `checkpoint_exit/` (۹)، `overlays/leaf_frame_1280x720.png`، `ui/portrait_frame_empty.png`، `scenes/chapter_complete`
    - `portraits/{kairo,ilara}/` ۶ حالت چهره، `icons/ilara_signals/{stay,come}.png`
    - `kairo/`, `ilara/` اسپرایت idle (۳ جهت)، `ui/`, `icons/`, `hazards/`, `fx/`
-4. **هشدارهای محتوا (از `art/ASSET_LIST.md`):** `ui/portrait_frame` فقط قاب استفاده شود (چهرهٔ غریبه حذف)؛ آیکون‌های سگ/روباه کنار نشانه‌های ایلارا جایگزین شوند؛ `skill_*`/`slot_*` فصل ۱ نیست؛ hazards مورب‌اند و باید به کاشی ۳۲×۳۲ برسند.
+4. **هشدارهای محتوا (از `art/ASSET_LIST.md`):** `ui/portrait_frame` فقط قاب استفاده شود (چهرهٔ غریبه حذف)؛ آیکون‌های سگ/روباه کنار نشانه‌های ایلارا جایگزین شوند؛ `skill_*`/`slot_*` فصل ۱ نیست؛ `hazards/` قدیمی مورب است و منسوخ؛ از `hazards_topdown/` استفاده شود و اندازهٔ اشیاء روی شبکهٔ ۳۲ تنظیم شود.
 5. **هنوز نیست (جای‌نگهدار بگذار):** انیمیشن‌های دویدن/دش/هک/مرگ/پرش، لایهٔ پیش‌زمینهٔ برگ شفاف، parallax بندر.
 6. همهٔ هنر کدی فقط `art/drafts/` است؛ کامیت «گام N:» و پوش روی شاخهٔ خودت.

@@ -1,0 +1,14 @@
+{
+ "status": "draft",
+ "names": [
+  "floor_plate",
+  "spikes",
+  "laser_emitter",
+  "patrol_drone",
+  "cracked_floor",
+  "falling_platform",
+  "security_door",
+  "trap_vent"
+ ],
+ "note": "3/4 top-down, bg removed by floodfill; size per object must be fitted to 32px tile grid"
+}

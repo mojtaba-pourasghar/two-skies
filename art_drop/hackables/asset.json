@@ -1,0 +1,14 @@
+{
+ "status": "draft",
+ "names": [
+  "terminal",
+  "drone_hackable",
+  "door_lock_panel",
+  "bridge_pedestal",
+  "crystal_relay",
+  "wall_turret",
+  "platform_controller",
+  "hack_ring"
+ ],
+ "note": "3/4 top-down, bg removed by floodfill; size per object must be fitted to 32px tile grid"
+}

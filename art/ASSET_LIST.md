@@ -142,3 +142,6 @@
 | چک‌پوینت / خروج / در / گوهر | MAHZ7hkmPaM | https://www.canva.com/M/MAHZ7hkmPaM |
 | نقشهٔ انتخاب مرحلهٔ فصل ۱ | MAHZ7tU486g | https://www.canva.com/M/MAHZ7tU486g |
 | اسپلش پایان فصل | MAHZ7vm20D0 | https://www.canva.com/M/MAHZ7vm20D0 |
+
+### وضعیت: دستهٔ نهایی فصل ۱ رسید
+`art_drop/hazards_topdown/` (۸)، `art_drop/hackables/` (۸)، `art_drop/checkpoint_exit/` (۹)، `art_drop/scenes/chapter_complete_1280x720.png`. هر شیء با پس‌زمینهٔ شفاف؛ اندازهٔ هر کدام باید روی شبکهٔ ۳۲ پیکسلی تنظیم شود. هنوز نرسیده: نقشهٔ انتخاب مرحله (https://www.canva.com/M/MAHZ7tU486g) و parallax بندر.

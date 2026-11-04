@@ -1,0 +1,15 @@
+{
+ "status": "draft",
+ "names": [
+  "checkpoint_off",
+  "checkpoint_on",
+  "exit_closed",
+  "exit_open",
+  "doorway_closed",
+  "doorway_open",
+  "gem_cluster",
+  "lore_tablet",
+  "respawn_pad"
+ ],
+ "note": "3/4 top-down, bg removed by floodfill; size per object must be fitted to 32px tile grid"
+}
