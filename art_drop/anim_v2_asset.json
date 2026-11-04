@@ -1,0 +1,26 @@
+{
+ "status": "v2-from-approved-sheet-reference",
+ "frame_size": [
+  128,
+  128
+ ],
+ "feet_baseline_y": 124,
+ "palette": 64,
+ "fps": 9,
+ "anims": {
+  "kairo": {
+   "scale": 0.1972,
+   "idle_h": 88,
+   "walk_down": 6,
+   "walk_up": 6
+  },
+  "ilara": {
+   "scale": 0.2115,
+   "idle_h": 88,
+   "walk_down": 6,
+   "walk_up": 6,
+   "run_side": 6
+  }
+ },
+ "note": "side_left = mirror. تراکم و قد مطابق idle تأییدشده؛ هنوز draft تا تأیید کاربر."
+}
