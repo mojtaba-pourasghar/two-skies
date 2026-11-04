@@ -1,0 +1,16 @@
+{
+ "status": "draft-until-user-approval",
+ "frame_size": [
+  101,
+  84
+ ],
+ "scale": 0.2,
+ "frames": [
+  "electric_floor_0",
+  "electric_floor_1",
+  "electric_floor_2",
+  "security_door_0",
+  "security_door_1",
+  "security_door_2"
+ ]
+}

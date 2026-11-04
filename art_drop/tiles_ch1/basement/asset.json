@@ -1,0 +1,78 @@
+{
+ "status": "draft-until-user-approval",
+ "note": "فقط برش اولیه؛ ترتیب سطری ۶×۳؛ لبهٔ بنفش جایگزین نشده",
+ "tiles_64": {
+  "basement_00": [
+   64,
+   64
+  ],
+  "basement_01": [
+   64,
+   66
+  ],
+  "basement_02": [
+   64,
+   66
+  ],
+  "basement_03": [
+   64,
+   65
+  ],
+  "basement_04": [
+   64,
+   66
+  ],
+  "basement_05": [
+   64,
+   66
+  ],
+  "basement_06": [
+   64,
+   73
+  ],
+  "basement_07": [
+   64,
+   72
+  ],
+  "basement_08": [
+   64,
+   70
+  ],
+  "basement_09": [
+   64,
+   69
+  ],
+  "basement_10": [
+   64,
+   69
+  ],
+  "basement_11": [
+   64,
+   70
+  ],
+  "basement_12": [
+   64,
+   72
+  ],
+  "basement_13": [
+   64,
+   73
+  ],
+  "basement_14": [
+   64,
+   74
+  ],
+  "basement_15": [
+   64,
+   72
+  ],
+  "basement_16": [
+   64,
+   71
+  ],
+  "basement_17": [
+   64,
+   71
+  ]
+ }
+}

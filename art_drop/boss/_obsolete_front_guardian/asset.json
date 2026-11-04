@@ -1,0 +1,14 @@
+{
+ "status": "draft-until-user-approval",
+ "frame_size": [
+  234,
+  142
+ ],
+ "scale": 0.34,
+ "frames": [
+  "phase_1",
+  "phase_2",
+  "phase_3",
+  "phase_4"
+ ]
+}

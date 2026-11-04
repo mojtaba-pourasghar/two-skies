@@ -1,0 +1,16 @@
+{
+ "status": "draft-until-user-approval",
+ "frame_size": [
+  83,
+  73
+ ],
+ "scale": 0.2,
+ "frames": [
+  "hover",
+  "wheel",
+  "spider",
+  "bird",
+  "transform_0",
+  "transform_1"
+ ]
+}
