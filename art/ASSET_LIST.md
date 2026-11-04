@@ -160,3 +160,6 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 | ۳ | صفحهٔ لودینگ | MAHZ8zq26FQ | https://www.canva.com/M/MAHZ8zq26FQ | |
 | ۴ | صفحهٔ تلاش مجدد | MAHZ80wJWbo | https://www.canva.com/M/MAHZ80wJWbo | |
 | ۵ | پس‌زمینهٔ منو/تنظیمات | MAHZ85wdPeA | https://www.canva.com/M/MAHZ85wdPeA | |
+
+### وضعیت: استور و منو رسید
+`art_drop/screens/{menu_bg,retry,loading}_1280x720.png`، `art_drop/store/feature_banner_1024x500.png` (بدون لوگو)، `art_drop/app_icon/adaptive_{foreground,background}_1024.png` + `adaptive_preview.png`.

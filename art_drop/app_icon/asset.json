@@ -1,5 +1,10 @@
 {
  "type": "app_icon",
  "status": "draft",
- "note": "square crops cut inside the baked-in rounded corners (7% each side); Android adaptive icon needs foreground/background split later"
+ "note": "square crops cut inside the baked-in rounded corners (7% each side); Android adaptive icon needs foreground/background split later",
+ "adaptive": {
+  "foreground": "adaptive_foreground_1024.png",
+  "background": "adaptive_background_1024.png",
+  "note": "figures fit in central 61% safe zone; export 432px for xxxhdpi"
+ }
 }
