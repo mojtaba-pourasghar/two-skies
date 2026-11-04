@@ -1,0 +1,22 @@
+{
+ "status": "draft-until-user-approval",
+ "sizes": {
+  "climb": [
+   130,
+   127
+  ],
+  "leap": [
+   129,
+   127
+  ],
+  "dash": [
+   130,
+   129
+  ],
+  "hack": [
+   129,
+   129
+  ]
+ },
+ "scale": 0.32
+}
