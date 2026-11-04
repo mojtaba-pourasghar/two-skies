@@ -1,0 +1,39 @@
+{
+ "status": "PLACEHOLDER-NOT-FINAL",
+ "frame_size": [
+  128,
+  128
+ ],
+ "fps": 9,
+ "note": "جابه‌جایی صحیح پیکسل از روی اسپرایت تأییدشده؛ جایگزین با فریم‌های هنرمند. side_left = آینه.",
+ "anims": {
+  "kairo": {
+   "down": {
+    "idle": 4,
+    "walk": 8
+   },
+   "side": {
+    "idle": 4,
+    "walk": 8
+   },
+   "up": {
+    "idle": 4,
+    "walk": 8
+   }
+  },
+  "ilara": {
+   "down": {
+    "idle": 4,
+    "walk": 8
+   },
+   "side": {
+    "idle": 4,
+    "walk": 8
+   },
+   "up": {
+    "idle": 4,
+    "walk": 8
+   }
+  }
+ }
+}

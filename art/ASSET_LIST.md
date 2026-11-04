@@ -145,3 +145,6 @@
 
 ### وضعیت: دستهٔ نهایی فصل ۱ رسید
 `art_drop/hazards_topdown/` (۸)، `art_drop/hackables/` (۸)، `art_drop/checkpoint_exit/` (۹)، `art_drop/scenes/chapter_complete_1280x720.png`. هر شیء با پس‌زمینهٔ شفاف؛ اندازهٔ هر کدام باید روی شبکهٔ ۳۲ پیکسلی تنظیم شود. هنوز نرسیده: نقشهٔ انتخاب مرحله (https://www.canva.com/M/MAHZ7tU486g) و parallax بندر.
+
+### انیمیشن جای‌نگهدار (کدساخته، موقت، `art/drafts/anim_placeholder/`)
+idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ایلارا؛ فقط جابه‌جایی صحیح پیکسل از روی اسپرایت تأییدشده (بدون بازنقاشی). حرکت پا ندارد و فقط برای تست حس بازی در Godot است؛ نهایی نیست. ابزار: `art/tools/make_placeholder_anim.py`.
