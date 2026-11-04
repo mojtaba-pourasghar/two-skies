@@ -66,3 +66,10 @@
 ## دستهٔ ۶ — دریافت و برش شد (`art/tools/slice_ch1_v6.py`، اصل‌ها `art/raw/ch1_v6/`)
 ☑ جهش رو به پایین و بالا رفتن (کایرو/ایلارا) → `art_drop/{kairo,ilara}/home/anim/{leap_down,climb_up}_*` (بوم climb ۱۹۲) · ☑ سکوی شکننده → `art_drop/hazards_ch1_topdown/fragile_platform/` · ☑ بولت احساس از بالا → `art_drop/bolt/emotions_topdown/` · ☑ صحنهٔ سکوی پرتاب/جدایی → `art_drop/scenes/ch1/launch_platform_1280x720.png`
 ⚠ دو دوربین (D-ART-05، `art/CAMERA_SETS.md`): هنر نمای کناری برگردانده شد و کنار نسخهٔ سه‌چهارم می‌ماند.
+
+## دستهٔ ۷ — دو دوربین، ساخته‌شده در Canva، منتظر دانلود فول‌رز (لینک: https://www.canva.com/M/<id>)
+- راه رفتن روبه‌پایین (سه‌چهارم، لباس خانگی): ایلارا MAHZ-jqsCsE · کایرو ◐ (در صف)
+- راه رفتن روبه‌بالا (پشت): ایلارا MAHZ-hlGxIY · کایرو ◐ (در صف)
+- کایرو dash/hack/hurt سه‌چهارم روبه‌پایین (۳×۳): MAHZ-mr9hsw
+- نمای کناری: سکوی شکننده + کف برقی + لیزر: MAHZ-pLmbso
+- نمای کناری: کارگاه: MAHZ-px8YF0 · سکوی پرتاب: MAHZ-oQYlU0 · اتاق ایلارا: MAHZ-h77aXI
