@@ -4,9 +4,7 @@
  "files": [
   "coral",
   "cave",
-  "plateau"
- ],
- "missing": [
+  "plateau",
   "harbor"
  ],
  "note": "far layer only; lower third is empty fog for gameplay area; tile horizontally needs seam check"
