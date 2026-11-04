@@ -9,6 +9,9 @@ from scipy import ndimage
 RAW = "art/raw/anim_v2"
 # فایل -> (شخصیت، ستون×ردیف، {انیمیشن: [اندیس سلول‌ها]})
 SHEETS = {
+ "kairo_walk_side": ("kairo", (3, 2), {"walk_side": [0, 1, 2, 3, 4, 5]}),
+ "ilara_walk_side": ("ilara", (3, 2), {"walk_side": [0, 1, 2, 3, 4, 5]}),
+ "ilara_death_respawn": ("ilara", (3, 2), {"death": [0, 1, 2], "respawn": [3, 4, 5]}),
  "kairo_run_side": ("kairo", (3, 2), {"run_side": [0, 1, 2, 3, 4, 5]}),
  "kairo_death_respawn": ("kairo", (3, 2), {"death": [0, 1, 2], "respawn": [3, 4, 5]}),
  "kairo_dash_hack_hop": ("kairo", (3, 3), {"dash": [0, 1, 2], "hack": [3, 4, 5], "hop": [6, 7, 8]}),
@@ -67,7 +70,7 @@ def run():
             sc[an] = [(f.resize((max(1, round(f.width * s * m)), max(1, round(f.height * s * m))), Image.BOX), round((base - b) * s * m) if an in AIR else 0) for f, b, m in fs]
         px = np.concatenate([np.array(f)[np.array(f)[..., 3] > 0][:, :3] for v in sc.values() for f, _ in v]); side = int(np.ceil(np.sqrt(len(px))))
         src = Image.fromarray(np.pad(px, ((0, side * side - len(px)), (0, 0)), mode="edge").reshape(side, side, 3).astype(np.uint8), "RGB")
-        pal = src.quantize(96 if who == "kairo" else 64, method=Image.MEDIANCUT, dither=Image.NONE)
+        pal = src.quantize(96, method=Image.MEDIANCUT, dither=Image.NONE)
         meta["anims"].setdefault(who, {}); outd = f"art_drop/{who}/anim"; os.makedirs(outd, exist_ok=True)
         for an, fs in sc.items():
             w = 128 if max(f.width for f, _ in fs) <= 120 else 192; strip = Image.new("RGBA", (w * len(fs), 128), (0, 0, 0, 0))

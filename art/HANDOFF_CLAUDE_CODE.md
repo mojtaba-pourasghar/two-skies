@@ -17,4 +17,4 @@
 8. **صادرات آیکون adaptive:** foreground/background در `art_drop/app_icon/` (۱۰۲۴) → ۴۳۲ پیکسل برای xxxhdpi.
 
 ## انیمیشن‌های v2 (`art_drop/{kairo,ilara}/anim/`)
-فریم‌ها `<anim>_NN.png` (۱۲۸×۱۲۸ یا ۱۹۲×۱۲۸ طبق `art_drop/anim_v2_asset.json` → `*_frame_w`)، خط پا y=124، fps ~۹. کایرو: walk_down/up، run_side، dash، hack، hop، death، respawn. ایلارا: walk_down/up، run_side، signal_stay، signal_come، hop. چپ = آینهٔ راست. پرتره‌های درست ایلارا در `art_drop/portraits/ilara/` (`_obsolete_ilara_v1` را نادیده بگیر). همه draft تا تأیید کاربر.
+فریم‌ها `<anim>_NN.png` (۱۲۸×۱۲۸ یا ۱۹۲×۱۲۸ طبق `art_drop/anim_v2_asset.json` → `*_frame_w`)، خط پا y=124، fps ~۹. کایرو: walk_down/up، walk_side، run_side، dash، hack، hop، death، respawn. ایلارا: walk_down/up، run_side، signal_stay، signal_come، hop. چپ = آینهٔ راست. پرتره‌های درست ایلارا در `art_drop/portraits/ilara/` (`_obsolete_ilara_v1` را نادیده بگیر). همه draft تا تأیید کاربر.

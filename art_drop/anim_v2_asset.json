@@ -24,7 +24,9 @@
    "hack": 3,
    "hack_frame_w": 128,
    "hop": 3,
-   "hop_frame_w": 128
+   "hop_frame_w": 128,
+   "walk_side": 6,
+   "walk_side_frame_w": 128
   },
   "ilara": {
    "scale": 0.2115,
@@ -37,7 +39,13 @@
    "signal_come": 3,
    "signal_come_frame_w": 128,
    "hop": 3,
-   "hop_frame_w": 128
+   "hop_frame_w": 128,
+   "walk_side": 6,
+   "walk_side_frame_w": 128,
+   "death": 3,
+   "death_frame_w": 128,
+   "respawn": 3,
+   "respawn_frame_w": 128
   }
  },
  "note": "side_left = mirror. تراکم و قد مطابق idle تأییدشده؛ هنوز draft تا تأیید کاربر."
