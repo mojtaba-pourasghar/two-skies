@@ -108,3 +108,14 @@
 
 ### وضعیت: صحنه‌ها و آیکون برنامه رسید
 `art_drop/scenes/` (مقدمه، پس‌زمینهٔ عنوان فصل، پایان v1 — ۱۲۸۰×۷۲۰) و `art_drop/app_icon/` (مربع ۱۰۲۴/۵۱۲؛ گوشه‌گرد اصلی در raw). صحنه‌ها ظاهر پیکسلی‌تر از صفحهٔ عنوان دارند و برای ورود به بازی مناسب‌اند.
+
+## لایه‌های parallax پس‌زمینه و تصویر فروشگاه (پیش‌نمایش؛ منتظر دانلود کامل)
+| آیتم | Canva id | لینک |
+|---|---|---|
+| parallax فلات آبشار | MAHZ6lRzL18 | https://www.canva.com/M/MAHZ6lRzL18 |
+| parallax غار شب | MAHZ6mEoXHA | https://www.canva.com/M/MAHZ6mEoXHA |
+| parallax بندر | MAHZ6gpUxX4 | https://www.canva.com/M/MAHZ6gpUxX4 |
+| parallax خلیج مرجانی | MAHZ6rig_uk | https://www.canva.com/M/MAHZ6rig_uk |
+| تصویر فروشگاه | MAHZ6mm7CPo | https://www.canva.com/M/MAHZ6mm7CPo |
+
+توجه: لایه‌های پیش‌زمینه (قاب برگ) با شفافیت لازم‌اند؛ Canva تصویر شفاف نمی‌دهد، پس با برگ‌های props/کد ساخته یا از هنرمند گرفته شود.
