@@ -205,3 +205,12 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 | کایرو: دش/هک/پرش | MAHZ9Xs7An4 | https://www.canva.com/M/MAHZ9Xs7An4 |
 | ایلارا: بمان/بیا/پرش | MAHZ9ZgCGp8 | https://www.canva.com/M/MAHZ9ZgCGp8 |
 | کایرو: مرگ/respawn | MAHZ9Zt4_Ow | https://www.canva.com/M/MAHZ9Zt4_Ow |
+
+### وضعیت: دستهٔ v2 بعدی رسید و بریده شد (۱۴۰۵/۰۸/۱۴) — draft تا تأیید کاربر
+ابزار: `art/tools/slice_anim_v2b.py`؛ اصل‌ها در `art/raw/anim_v2/*_full.png`.
+- `art_drop/kairo/anim/`: `run_side` (۶)، `death` (۳: ضربه، افتادن، دراز کشیده)، `respawn` (۳: ذرهٔ آبی، شبح، ایستاده)، `dash` (۳، بوم ۱۹۲ پهن)، `hack` (۳، حلقهٔ آبی)، `hop` (۳: خم، اوج، فرود؛ ارتفاع نسبی حفظ شده).
+- `art_drop/ilara/anim/`: `signal_stay` (۳)، `signal_come` (۳)، `hop` (۳).
+- فریم‌ها ۱۲۸×۱۲۸ (dash و hack/stay… که پهن‌ترند ۱۹۲ یا ۱۲۸ طبق `*_frame_w` در `anim_v2_asset.json`)، خط پا y=124، پالت مشترک (کایرو ۹۶ رنگ به‌خاطر افکت‌های درخشان، ایلارا ۶۴).
+- شیت‌های ۳×۳ کوچک‌تر کشیده شده بودند؛ ضریب مقیاس برای هر شیت (کایرو ×1.42، ایلارا ×1.31) تا قد ~۸۴–۸۸px شود.
+- **پرتره‌های ایلارا (طراحی درست)**: `art_drop/portraits/ilara/{neutral,angry,shocked,sad,happy,crying}.png` + `_alpha.png`. نسخهٔ اشتباه قبلی به `art_drop/portraits/_obsolete_ilara_v1/` منتقل شد (استفاده نشود).
+- هنوز نامطمئن: ترتیب دقیق فریم‌های dash/hop برای حلقه‌ی انیمیشن را در بازی باید دید؛ `art_drop/anim_concept/ilara/*` منسوخ است.

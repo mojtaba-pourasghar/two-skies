@@ -12,14 +12,32 @@
    "scale": 0.1972,
    "idle_h": 88,
    "walk_down": 6,
-   "walk_up": 6
+   "walk_up": 6,
+   "run_side": 6,
+   "run_side_frame_w": 128,
+   "death": 3,
+   "death_frame_w": 128,
+   "respawn": 3,
+   "respawn_frame_w": 128,
+   "dash": 3,
+   "dash_frame_w": 128,
+   "hack": 3,
+   "hack_frame_w": 128,
+   "hop": 3,
+   "hop_frame_w": 128
   },
   "ilara": {
    "scale": 0.2115,
    "idle_h": 88,
    "walk_down": 6,
    "walk_up": 6,
-   "run_side": 6
+   "run_side": 6,
+   "signal_stay": 3,
+   "signal_stay_frame_w": 128,
+   "signal_come": 3,
+   "signal_come_frame_w": 128,
+   "hop": 3,
+   "hop_frame_w": 128
   }
  },
  "note": "side_left = mirror. تراکم و قد مطابق idle تأییدشده؛ هنوز draft تا تأیید کاربر."
