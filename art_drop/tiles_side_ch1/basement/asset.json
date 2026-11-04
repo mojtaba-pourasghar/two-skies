@@ -1,0 +1,88 @@
+{
+ "status": "draft-until-user-approval",
+ "camera": "side",
+ "scale": 0.265,
+ "rows": [
+  7,
+  6,
+  6
+ ],
+ "tiles_64": {
+  "basement_side_00": [
+   67,
+   55
+  ],
+  "basement_side_01": [
+   61,
+   61
+  ],
+  "basement_side_02": [
+   60,
+   57
+  ],
+  "basement_side_03": [
+   61,
+   57
+  ],
+  "basement_side_04": [
+   60,
+   19
+  ],
+  "basement_side_05": [
+   26,
+   36
+  ],
+  "basement_side_06": [
+   28,
+   36
+  ],
+  "basement_side_07": [
+   64,
+   63
+  ],
+  "basement_side_08": [
+   61,
+   63
+  ],
+  "basement_side_09": [
+   63,
+   62
+  ],
+  "basement_side_10": [
+   63,
+   63
+  ],
+  "basement_side_11": [
+   64,
+   64
+  ],
+  "basement_side_12": [
+   64,
+   63
+  ],
+  "basement_side_13": [
+   64,
+   63
+  ],
+  "basement_side_14": [
+   61,
+   63
+  ],
+  "basement_side_15": [
+   63,
+   48
+  ],
+  "basement_side_16": [
+   52,
+   51
+  ],
+  "basement_side_17": [
+   65,
+   42
+  ],
+  "basement_side_18": [
+   64,
+   63
+  ]
+ }
+}

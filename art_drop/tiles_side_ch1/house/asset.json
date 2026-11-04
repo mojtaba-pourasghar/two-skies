@@ -1,0 +1,93 @@
+{
+ "status": "draft-until-user-approval",
+ "camera": "side",
+ "scale": 0.265,
+ "rows": [
+  6,
+  6,
+  6,
+  2
+ ],
+ "tiles_64": {
+  "house_side_00": [
+   56,
+   58
+  ],
+  "house_side_01": [
+   56,
+   58
+  ],
+  "house_side_02": [
+   55,
+   58
+  ],
+  "house_side_03": [
+   55,
+   58
+  ],
+  "house_side_04": [
+   56,
+   11
+  ],
+  "house_side_05": [
+   55,
+   23
+  ],
+  "house_side_06": [
+   56,
+   23
+  ],
+  "house_side_07": [
+   55,
+   52
+  ],
+  "house_side_08": [
+   56,
+   53
+  ],
+  "house_side_09": [
+   55,
+   25
+  ],
+  "house_side_10": [
+   17,
+   55
+  ],
+  "house_side_11": [
+   55,
+   55
+  ],
+  "house_side_12": [
+   37,
+   54
+  ],
+  "house_side_13": [
+   42,
+   54
+  ],
+  "house_side_14": [
+   55,
+   47
+  ],
+  "house_side_15": [
+   24,
+   54
+  ],
+  "house_side_16": [
+   56,
+   47
+  ],
+  "house_side_17": [
+   48,
+   52
+  ],
+  "house_side_18": [
+   56,
+   20
+  ],
+  "house_side_19": [
+   56,
+   29
+  ]
+ }
+}

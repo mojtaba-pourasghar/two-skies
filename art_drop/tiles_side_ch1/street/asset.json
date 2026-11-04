@@ -1,0 +1,84 @@
+{
+ "status": "draft-until-user-approval",
+ "camera": "side",
+ "scale": 0.265,
+ "rows": [
+  6,
+  6,
+  6
+ ],
+ "tiles_64": {
+  "street_side_00": [
+   58,
+   48
+  ],
+  "street_side_01": [
+   58,
+   58
+  ],
+  "street_side_02": [
+   29,
+   54
+  ],
+  "street_side_03": [
+   29,
+   54
+  ],
+  "street_side_04": [
+   88,
+   18
+  ],
+  "street_side_05": [
+   56,
+   18
+  ],
+  "street_side_06": [
+   58,
+   54
+  ],
+  "street_side_07": [
+   58,
+   54
+  ],
+  "street_side_08": [
+   60,
+   49
+  ],
+  "street_side_09": [
+   31,
+   54
+  ],
+  "street_side_10": [
+   61,
+   54
+  ],
+  "street_side_11": [
+   49,
+   54
+  ],
+  "street_side_12": [
+   58,
+   54
+  ],
+  "street_side_13": [
+   25,
+   54
+  ],
+  "street_side_14": [
+   57,
+   42
+  ],
+  "street_side_15": [
+   53,
+   45
+  ],
+  "street_side_16": [
+   61,
+   17
+  ],
+  "street_side_17": [
+   49,
+   54
+  ]
+ }
+}
