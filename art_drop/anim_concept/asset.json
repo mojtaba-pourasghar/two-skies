@@ -1,0 +1,82 @@
+{
+ "status": "CONCEPT-NOT-APPROVED",
+ "note": "Canva با مرجع پرتره؛ سبک chibi/ساده‌تر از برگهٔ تأییدشده. جایگزین اسپرایت تأییدشده نیست.",
+ "anims": {
+  "kairo": {
+   "run": {
+    "frames": 7,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.324
+   },
+   "dash": {
+    "frames": 4,
+    "frame_size": [
+     192,
+     128
+    ],
+    "scale": 0.437
+   },
+   "hack": {
+    "frames": 4,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.369
+   },
+   "hop": {
+    "frames": 4,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.388
+   },
+   "death": {
+    "frames": 6,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.242
+   }
+  },
+  "ilara": {
+   "run": {
+    "frames": 8,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.303
+   },
+   "stay": {
+    "frames": 4,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.328
+   },
+   "come": {
+    "frames": 4,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.361
+   },
+   "hop": {
+    "frames": 4,
+    "frame_size": [
+     128,
+     128
+    ],
+    "scale": 0.388
+   }
+  }
+ }
+}
