@@ -1,0 +1,14 @@
+{
+ "status": "draft-until-user-approval",
+ "camera": "side",
+ "frame_size": [
+  93,
+  47
+ ],
+ "scale": 0.2,
+ "frames": [
+  "fragile_platform_0",
+  "fragile_platform_1",
+  "fragile_platform_2"
+ ]
+}

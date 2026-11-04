@@ -1,0 +1,14 @@
+{
+ "status": "draft-until-user-approval",
+ "camera": "side",
+ "frame_size": [
+  92,
+  36
+ ],
+ "scale": 0.2,
+ "frames": [
+  "electric_floor_0",
+  "electric_floor_1",
+  "electric_floor_2"
+ ]
+}
