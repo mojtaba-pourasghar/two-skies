@@ -1,0 +1,26 @@
+{
+ "type": "terrain",
+ "status": "draft",
+ "tile": 32,
+ "names": [
+  "grass",
+  "dirt_path",
+  "mossy_stone",
+  "ancient_rune_stone",
+  "sand_shore",
+  "shallow_water",
+  "deep_water",
+  "cliff_edge",
+  "stairs",
+  "plank_bridge",
+  "moss_wall",
+  "flowers_lavender",
+  "flowers_wild",
+  "flowers_pink",
+  "flowers_white",
+  "flowers_orange",
+  "flowers_blue",
+  "flowers_yellow"
+ ],
+ "note": "top-face crop; cliff/stairs/bridge/flower tiles are decorative variants, check seams before use"
+}

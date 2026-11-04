@@ -1,0 +1,19 @@
+{
+ "type": "props",
+ "status": "draft",
+ "names": [
+  "crate",
+  "rune_plate",
+  "data_crystal",
+  "rope_bridge",
+  "signpost",
+  "boulder",
+  "clay_pot",
+  "lantern_post",
+  "lever",
+  "door",
+  "chest",
+  "banner"
+ ],
+ "note": "bg removed by floodfill; glow halos may remain"
+}
