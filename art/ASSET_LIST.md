@@ -243,3 +243,7 @@ idle/walk (سه جهت)، dash، hop، hack، death برای کایرو و ای�
 گروه‌ها: `level_nodes`, `shop_cards`, `profile_parts`, `pause_menu`, `settings_controls`, `menu_buttons`. ابزار: `art/tools/slice_ui_v2.py`؛ اصل‌ها: `art/raw/ui_v2/`. بدون متن؛ متن با فونت عرفان (D-ART-03). draft تا تأیید.
 قطعهٔ تیرهٔ پلکانی شیت مکث (`overlay_corner`) استفاده نشد.
 شکاف‌های فصل ۱ نسبت به کتاب هنر: `art/GAP_ANALYSIS_CH1.md`.
+
+### ✅ دستهٔ ۱ فصل ۱ (مراحل ۱–۳) رسید و بریده شد
+لباس خانگی کایرو/ایلارا (`art_drop/{kairo,ilara}/home/*.png`، ۶ حالت)، ۱۲ پراپ (`props_ch1/`)، دشمن/مانع (`hazards_ch1/`: پهپاد ۳، تیغه ۳، گاز آتش ۳، سقف ریزشی ۳)، افکت (`fx_ch1/`)، صحنه‌ها (`scenes/ch1/{house,street,basement}_1280x720.png`). draft تا تأیید. جزئیات و فهرست باقی‌مانده: `art/PRODUCTION_LIST.md`.
+ایلارا در لباس خانگی شلوار سبز دارد؛ اگر «لباس روشن ساده» می‌خواهی دوباره ساخته می‌شود.

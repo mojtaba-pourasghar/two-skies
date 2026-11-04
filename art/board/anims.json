@@ -1,0 +1,275 @@
+{
+ "title": "Two Skies animation board",
+ "anims": [
+  {
+   "group": "kairo",
+   "name": "walk_down",
+   "src": "kairo_walk_down.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 9
+  },
+  {
+   "group": "kairo",
+   "name": "walk_up",
+   "src": "kairo_walk_up.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 9
+  },
+  {
+   "group": "kairo",
+   "name": "run_side",
+   "src": "kairo_run_side.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 11
+  },
+  {
+   "group": "kairo",
+   "name": "death",
+   "src": "kairo_death.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 6
+  },
+  {
+   "group": "kairo",
+   "name": "respawn",
+   "src": "kairo_respawn.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 6
+  },
+  {
+   "group": "kairo",
+   "name": "dash",
+   "src": "kairo_dash.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 10
+  },
+  {
+   "group": "kairo",
+   "name": "hack",
+   "src": "kairo_hack.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 6
+  },
+  {
+   "group": "kairo",
+   "name": "hop",
+   "src": "kairo_hop.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 6
+  },
+  {
+   "group": "kairo",
+   "name": "walk_side",
+   "src": "kairo_walk_side.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 9
+  },
+  {
+   "group": "ilara",
+   "name": "walk_down",
+   "src": "ilara_walk_down.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 9
+  },
+  {
+   "group": "ilara",
+   "name": "walk_up",
+   "src": "ilara_walk_up.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 9
+  },
+  {
+   "group": "ilara",
+   "name": "run_side",
+   "src": "ilara_run_side.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 11
+  },
+  {
+   "group": "ilara",
+   "name": "signal_stay",
+   "src": "ilara_signal_stay.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 4
+  },
+  {
+   "group": "ilara",
+   "name": "signal_come",
+   "src": "ilara_signal_come.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 4
+  },
+  {
+   "group": "ilara",
+   "name": "hop",
+   "src": "ilara_hop.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 6
+  },
+  {
+   "group": "ilara",
+   "name": "walk_side",
+   "src": "ilara_walk_side.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 9
+  },
+  {
+   "group": "ilara",
+   "name": "death",
+   "src": "ilara_death.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 6
+  },
+  {
+   "group": "ilara",
+   "name": "respawn",
+   "src": "ilara_respawn.png",
+   "n": 3,
+   "fw": 128,
+   "fh": 128,
+   "fps": 6
+  },
+  {
+   "group": "kairo",
+   "name": "home_poses (ch1 outfit)",
+   "src": "kairo_home_poses.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 2
+  },
+  {
+   "group": "ilara",
+   "name": "home_poses (ch1 outfit)",
+   "src": "ilara_home_poses.png",
+   "n": 6,
+   "fw": 128,
+   "fh": 128,
+   "fps": 2
+  },
+  {
+   "group": "hazards",
+   "name": "drone",
+   "src": "hz_drone.png",
+   "n": 3,
+   "fw": 61,
+   "fh": 53,
+   "fps": 4
+  },
+  {
+   "group": "hazards",
+   "name": "saw",
+   "src": "hz_saw.png",
+   "n": 3,
+   "fw": 34,
+   "fh": 36,
+   "fps": 12
+  },
+  {
+   "group": "hazards",
+   "name": "fire_vent",
+   "src": "hz_fire_vent.png",
+   "n": 3,
+   "fw": 50,
+   "fh": 58,
+   "fps": 4
+  },
+  {
+   "group": "hazards",
+   "name": "ceiling",
+   "src": "hz_ceiling.png",
+   "n": 3,
+   "fw": 51,
+   "fh": 54,
+   "fps": 4
+  },
+  {
+   "group": "fx",
+   "name": "dash_trail",
+   "src": "fx_dash_trail.png",
+   "n": 3,
+   "fw": 90,
+   "fh": 31,
+   "fps": 6
+  },
+  {
+   "group": "fx",
+   "name": "spark",
+   "src": "fx_spark.png",
+   "n": 4,
+   "fw": 35,
+   "fh": 28,
+   "fps": 10
+  },
+  {
+   "group": "fx",
+   "name": "wire_sparks",
+   "src": "fx_wire_sparks.png",
+   "n": 3,
+   "fw": 64,
+   "fh": 25,
+   "fps": 8
+  },
+  {
+   "group": "fx",
+   "name": "blast",
+   "src": "fx_blast.png",
+   "n": 5,
+   "fw": 48,
+   "fh": 44,
+   "fps": 8
+  },
+  {
+   "group": "fx",
+   "name": "rain_splash",
+   "src": "fx_rain_splash.png",
+   "n": 3,
+   "fw": 67,
+   "fh": 38,
+   "fps": 8
+  },
+  {
+   "group": "fx",
+   "name": "ash",
+   "src": "fx_ash.png",
+   "n": 4,
+   "fw": 41,
+   "fh": 23,
+   "fps": 4
+  }
+ ]
+}

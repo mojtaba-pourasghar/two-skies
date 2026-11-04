@@ -1,0 +1,97 @@
+<title>Two Skies Animation Board</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:wght@600;700&display=swap">
+<style>
+/* Layout: one toolbar, one grid of small stages; each stage loops a sprite strip at integer zoom. */
+:root{
+  --bg:#f3f1ee; --panel:#ffffff; --stage:#dcd8d2; --fg:#23211f; --muted:#6c6760; --line:#d6d1ca; --accent:#c2410c;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15181c; --panel:#1d2127; --stage:#0f1215; --fg:#e8e6e2; --muted:#9a9a9a; --line:#2c3238; --accent:#ff8a3d; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15181c; --panel:#1d2127; --stage:#0f1215; --fg:#e8e6e2; --muted:#9a9a9a; --line:#2c3238; --accent:#ff8a3d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:14px/1.45 var(--mono);padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font:700 26px/1.1 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;max-width:62ch}
+.bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:10px 0;border-block:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+button{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);padding:5px 10px;cursor:pointer;border-radius:3px}
+button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.speed{display:flex;gap:6px;align-items:center;margin-left:auto;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.stage{background:var(--stage);display:flex;align-items:flex-end;justify-content:center;height:250px;padding:8px;overflow:hidden}
+canvas{image-rendering:pixelated;max-width:100%;height:auto}
+.meta{padding:8px 10px;display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line);min-width:0}
+.meta b{font-weight:500;overflow-wrap:anywhere}
+.meta span{color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.grp{font:600 13px var(--display);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:6px 0 -6px}
+@media (prefers-reduced-motion:reduce){.hint{display:block}}
+.hint{display:none;color:var(--muted)}
+</style>
+<main>
+  <header>
+    <h1>Two Skies animation board</h1>
+    <p class="sub">Chapter 1 sprites looping at their working frame rate. Draft assets, pending approval. Zoom is an integer; feet sit on y=124 of each 128 px cell.</p>
+    <p class="hint">Reduced motion is on: animations start paused. Press Play.</p>
+  </header>
+  <div class="bar">
+    <div class="chips" id="chips" role="group" aria-label="Filter"></div>
+    <div class="speed"><span>speed</span><span id="speeds" class="chips"></span><button id="play" aria-pressed="true">Pause</button></div>
+  </div>
+  <div id="boards" class="grid-wrap"></div>
+</main>
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var playing = !reduce, speed = 1, filter = 'all', cards = [];
+  var GROUPS = {kairo:'Kairo', ilara:'Ilara', hazards:'Hazards and enemies', fx:'Effects'};
+  var boards = document.getElementById('boards');
+  function el(t, c, txt){var e=document.createElement(t); if(c) e.className=c; if(txt!=null) e.textContent=txt; return e}
+  function chip(parent, label, val, cur, on){var b=el('button',null,label); b.setAttribute('aria-pressed', String(val===cur)); b.onclick=function(){on(val)}; parent.appendChild(b); return b}
+  function renderChips(){
+    var c=document.getElementById('chips'); c.innerHTML='';
+    [['all','All']].concat(Object.keys(GROUPS).map(function(k){return [k,GROUPS[k]]})).forEach(function(p){chip(c,p[1],p[0],filter,function(v){filter=v;renderChips();applyFilter()})});
+    var s=document.getElementById('speeds'); s.innerHTML='';
+    [0.5,1,2].forEach(function(v){chip(s,v+'x',v,speed,function(x){speed=x;renderChips()})});
+  }
+  function applyFilter(){cards.forEach(function(c){c.node.hidden = !(filter==='all'||c.group===filter)}); document.querySelectorAll('.sec').forEach(function(s){s.hidden = !Array.prototype.some.call(s.querySelectorAll('.card'),function(n){return !n.hidden})})}
+  var playBtn=document.getElementById('play');
+  function setPlay(v){playing=v; playBtn.textContent=v?'Pause':'Play'; playBtn.setAttribute('aria-pressed', String(v))}
+  playBtn.onclick=function(){setPlay(!playing)}; setPlay(playing);
+  renderChips();
+  fetch('anims.json').then(function(r){return r.json()}).then(function(d){
+    var byGroup = {};
+    d.anims.forEach(function(a){(byGroup[a.group]=byGroup[a.group]||[]).push(a)});
+    Object.keys(GROUPS).forEach(function(g){
+      if(!byGroup[g]) return;
+      var sec=el('section','sec'); sec.appendChild(el('div','grp',GROUPS[g])); var grid=el('div','grid'); grid.style.marginTop='14px'; sec.appendChild(grid); boards.appendChild(sec);
+      byGroup[g].forEach(function(a){
+        var img=new Image(); img.src=a.src;
+        var zoom = Math.max(1, Math.min(4, Math.floor(230/Math.max(a.fw,1)), Math.floor(234/Math.max(a.fh,1))));
+        var card=el('div','card'), st=el('div','stage'), cv=document.createElement('canvas');
+        cv.width=a.fw; cv.height=a.fh; cv.style.width=(a.fw*zoom)+'px'; cv.setAttribute('role','img'); cv.setAttribute('aria-label', GROUPS[g]+' '+a.name+' animation');
+        st.appendChild(cv); card.appendChild(st);
+        var m=el('div','meta'); var label=el('b',null,a.name); var info=el('span',null,'1/'+a.n+' · '+a.fps+' fps · '+zoom+'x'); m.appendChild(label); m.appendChild(info); card.appendChild(m);
+        grid.appendChild(card);
+        var ctx=cv.getContext('2d'); ctx.imageSmoothingEnabled=false;
+        var rec={node:card, group:g, a:a, img:img, ctx:ctx, info:info, i:0, t:0};
+        function draw(){ctx.clearRect(0,0,a.fw,a.fh); ctx.drawImage(img, rec.i*a.fw,0,a.fw,a.fh, 0,0,a.fw,a.fh); info.textContent=(rec.i+1)+'/'+a.n+' · '+a.fps+' fps · '+zoom+'x'}
+        rec.draw=draw; img.onload=draw; cards.push(rec);
+        cv.onclick=function(){setPlay(false); rec.i=(rec.i+1)%a.n; draw()};
+      });
+    });
+    applyFilter();
+    var last=performance.now();
+    function tick(now){
+      var dt=(now-last)/1000; last=now;
+      if(playing){cards.forEach(function(r){ if(r.node.hidden||!r.img.complete) return; r.t+=dt*speed*r.a.fps; if(r.t>=1){var step=Math.floor(r.t); r.t-=step; r.i=(r.i+step)%r.a.n; r.draw()} })}
+      requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick);
+  }).catch(function(){boards.appendChild(el('p','sub','The animation list did not load.'))});
+})();
+</script>

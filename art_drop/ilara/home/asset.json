@@ -1,0 +1,29 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "idle_down": [
+   128,
+   128
+  ],
+  "idle_side": [
+   128,
+   128
+  ],
+  "idle_up": [
+   128,
+   128
+  ],
+  "scared": [
+   128,
+   128
+  ],
+  "reach": [
+   128,
+   128
+  ],
+  "reach_glow": [
+   128,
+   128
+  ]
+ }
+}

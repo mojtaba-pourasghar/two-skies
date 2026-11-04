@@ -1,0 +1,53 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "drone_hover": [
+   75,
+   68
+  ],
+  "drone_scan": [
+   75,
+   68
+  ],
+  "drone_explode": [
+   75,
+   68
+  ],
+  "saw_0": [
+   75,
+   68
+  ],
+  "saw_1": [
+   75,
+   68
+  ],
+  "saw_2": [
+   75,
+   68
+  ],
+  "vent_idle": [
+   75,
+   68
+  ],
+  "vent_warn": [
+   75,
+   68
+  ],
+  "vent_burst": [
+   75,
+   68
+  ],
+  "ceiling_warn": [
+   75,
+   68
+  ],
+  "ceiling_fall": [
+   75,
+   68
+  ],
+  "ceiling_hit": [
+   75,
+   68
+  ]
+ }
+}

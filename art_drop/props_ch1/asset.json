@@ -1,0 +1,53 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "family_photo": [
+   71,
+   70
+  ],
+  "wall_clock": [
+   57,
+   57
+  ],
+  "sofa": [
+   97,
+   67
+  ],
+  "armchair": [
+   68,
+   66
+  ],
+  "bookshelf": [
+   69,
+   72
+  ],
+  "lamp": [
+   39,
+   60
+  ],
+  "curtains": [
+   64,
+   64
+  ],
+  "door": [
+   46,
+   72
+  ],
+  "server_rack": [
+   52,
+   76
+  ],
+  "steam_pipe": [
+   75,
+   51
+  ],
+  "power_pole": [
+   60,
+   63
+  ],
+  "neon_sign": [
+   98,
+   52
+  ]
+ }
+}
