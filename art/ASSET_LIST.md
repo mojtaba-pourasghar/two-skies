@@ -133,3 +133,12 @@
 
 ### وضعیت: قاب‌ها رسید و شفاف شد
 `art_drop/overlays/leaf_frame_1280x720.png` و `art_drop/ui/portrait_frame_empty.png` (کلید magenta حذف شد، لبه‌ها despill).
+
+## دستهٔ نهایی فصل ۱ (پیش‌نمایش؛ منتظر دانلود کامل)
+| آیتم | Canva id | لینک |
+|---|---|---|
+| موانع ۳/۴ از بالا (جایگزین hazards مورب) | MAHZ7uEqpvQ | https://www.canva.com/M/MAHZ7uEqpvQ |
+| ابزارهای قابل‌هک (ترمینال، پهپاد، قفل، ...) | MAHZ7uEUDi4 | https://www.canva.com/M/MAHZ7uEUDi4 |
+| چک‌پوینت / خروج / در / گوهر | MAHZ7hkmPaM | https://www.canva.com/M/MAHZ7hkmPaM |
+| نقشهٔ انتخاب مرحلهٔ فصل ۱ | MAHZ7tU486g | https://www.canva.com/M/MAHZ7tU486g |
+| اسپلش پایان فصل | MAHZ7vm20D0 | https://www.canva.com/M/MAHZ7vm20D0 |
