@@ -85,3 +85,10 @@
 | نشانه‌های بمان/بیا (ایلارا) | MAHZ2_uLlSA | https://www.canva.com/M/MAHZ2_uLlSA | پیش‌نمایش ذخیره شد؛ منتظر دانلود کامل کاربر |
 
 شکست‌خورده (quota_exceeded در Canva): ورقهٔ props، ورقهٔ tileset زمین، تصویر صفحهٔ عنوان. پس از شارژ اعتبار دوباره ساخته شود.
+
+## بازسازی پس از شارژ Canva
+| آیتم | Canva id | لینک | وضعیت |
+|---|---|---|---|
+| ورقهٔ props | MAHZ6rImC2Q | https://www.canva.com/M/MAHZ6rImC2Q | پیش‌نمایش؛ منتظر دانلود کامل |
+| ورقهٔ tileset زمین | MAHZ6ntPZcM | https://www.canva.com/M/MAHZ6ntPZcM | پیش‌نمایش؛ منتظر دانلود کامل (کاشی‌ها باید به ۳۲×۳۲ برش و seamless بررسی شوند) |
+| صفحهٔ عنوان | MAHZ6jZxrKs | https://www.canva.com/M/MAHZ6jZxrKs | پیش‌نمایش؛ نقاشی‌وارتر از پیکسل‌آرت تأییدشده است، باید با pixelize.py هم‌سبک شود |
