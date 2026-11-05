@@ -35,14 +35,19 @@ func _ready() -> void:
 func _input_dir() -> Vector2:
 	if use_scripted:
 		return scripted_dir
-	return Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	# از GameMode می‌گذرد نه مستقیم از Input: در توالی اسکریپتی و در فریم
+	# گذار دوربین ورودی باید خاموش باشد (T5/T3).
+	return GameMode.move_vector()
 
 
 func _physics_process(delta: float) -> void:
 	if not use_scripted and state == State.MOVE:
-		if Input.is_action_just_pressed("jump"):
+		# «دو دکمه: عمل (تعامل/هک) و توانایی» (سند ۰۹ §۲). کنش `dash` در
+		# نگاشت ورودی وجود نداشت، پس دش اصلاً در دسترس نبود — آزمون T15
+		# این را بیرون کشید. اکنون جهش روی `jump` و دش روی `ability` است.
+		if GameMode.just_pressed("jump"):
 			start_hop(_input_dir())
-		elif Input.is_action_just_pressed("dash"):
+		elif GameMode.just_pressed("ability"):
 			start_dash(_input_dir())
 	super(delta)
 	_record()

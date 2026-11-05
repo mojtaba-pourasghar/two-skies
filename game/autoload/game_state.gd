@@ -23,7 +23,59 @@ var run := {
 	"deaths": 0,
 	"ilara_falls": 0,
 	"started_msec": 0,
+	## جان بر حسب درصد. سند ۰۲ §۰: «hp در اکتشاف و نبرد مشترک».
+	"hp_pct": 100.0,
+	"respawn_point": Vector2.ZERO,
+	"flags": {},
+	"checkpoint": "",
 }
+
+
+## ----- RPG: جان، چک‌پوینت و پرچم‌ها (T15) -----
+
+## تلهٔ اکتشاف جان می‌گیرد ولی **نمی‌کشد** (سند ۰۹ §۱ قاعدهٔ ۲).
+## جان هرگز زیر صفر نمی‌رود: اکتشاف مرگ ندارد.
+func damage_percent(pct: float) -> void:
+	run["hp_pct"] = maxf(0.0, float(run.get("hp_pct", 100.0)) - absf(pct))
+	progress_changed.emit()
+
+
+func heal_percent(pct: float) -> void:
+	run["hp_pct"] = minf(100.0, float(run.get("hp_pct", 100.0)) + absf(pct))
+	progress_changed.emit()
+
+
+func hp_percent() -> float:
+	return float(run.get("hp_pct", 100.0))
+
+
+## نقطهٔ ذخیره جان و انرژی را پر می‌کند (سند ۰۹ §۱۱).
+func restore_full() -> void:
+	run["hp_pct"] = 100.0
+	progress_changed.emit()
+
+
+func set_respawn_point(where: Vector2) -> void:
+	run["respawn_point"] = where
+
+
+func respawn_point() -> Vector2:
+	return run.get("respawn_point", Vector2.ZERO)
+
+
+func save_checkpoint(id: String) -> void:
+	run["checkpoint"] = id
+	save_game()
+
+
+func set_flag(name: String, value = true) -> void:
+	if name == "":
+		return
+	(run["flags"] as Dictionary)[name] = value
+
+
+func get_flag(name: String, fallback = null):
+	return (run["flags"] as Dictionary).get(name, fallback)
 
 
 ## امضای HMAC سادهٔ ضد دستکاری (§۱۲).

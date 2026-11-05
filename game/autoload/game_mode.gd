@@ -31,7 +31,7 @@ const CONTEXT_NAME := {
 ## همهٔ کنش‌های بازیکن. در غیر PLAY هیچ‌کدام خوانده نمی‌شوند.
 const PLAYER_ACTIONS: Array[String] = [
 	"move_left", "move_right", "move_up", "move_down",
-	"jump", "action", "companion",
+	"jump", "action", "companion", "ability",
 ]
 
 var control: ControlMode = ControlMode.PLAY
