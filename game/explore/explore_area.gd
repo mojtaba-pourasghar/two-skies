@@ -14,6 +14,9 @@ signal pickup_taken(kind: String, total: int)
 
 const TILE: int = 32
 const PROPS_DIR := "res://assets/explore/props/"
+## تیغه: سند ۰۹ §۲ب «تیغهٔ ثابت/چرخان» می‌گوید و art_drop تیغهٔ چرخان دارد
+## (`saw_*`). فریم اول به‌عنوان تیغهٔ ثابت به‌کار می‌رود.
+const SPIKE_PATH := "res://assets/hazards_ch1/saw_0.png"
 const PICKUPS_DIR := "res://assets/explore/pickups/"
 
 ## نماد لایهٔ کف → نقش در `roles.json`.
@@ -21,6 +24,12 @@ const FLOOR_ROLE := {
 	"a": "floor_plank_a", "b": "floor_plank_b", "c": "floor_plank_c",
 	"g": "rug_center", "h": "rug_edge_top", "i": "floor_plank_accent_a",
 }
+## نماد هندسهٔ اتاق چالش → نقش در `tiles_side_ch1`.
+## «#» جامد، «=» یک‌طرفه (از پایین رد می‌شود)، «^» تیغه، «X» خروج.
+const SIDE_ROLE := {
+	"#": "ground_top_a", "=": "platform_thin", "X": "door",
+}
+
 ## نماد لایهٔ دیوار → نقش.
 const WALL_ROLE := {
 	"W": "wall_wainscot_front", "S": "cabinet_corner_a", "C": "cabinet_corner_b",
@@ -64,6 +73,7 @@ func build(data: Dictionary) -> void:
 	_build_pickups()
 	_build_traps()
 	_build_challenge()
+	_build_side_geometry()
 	built.emit(String(data.get("id", "?")))
 
 
@@ -143,6 +153,25 @@ func _build_tiles() -> void:
 	_paint(_wall_layer, layers.get("walls", []), WALL_ROLE, true)
 
 
+## خانه‌هایی که داخل یک ناحیهٔ دوربین **کناری**اند.
+##
+## کاشی سه‌چهارمی نباید زیر هندسهٔ کناری کشیده شود: دو تصویرسازی متفاوتند و
+## روی هم افتادنشان یک پهنهٔ نارنجی بی‌معنا می‌سازد. این را اسکرین‌شات نشان
+## داد، نه هیچ سنجه‌ای. (DECISIONS.md: D-ART-32)
+func _in_side_zone(c: int, r: int) -> bool:
+	for raw in area.get("camera_zones", []):
+		var z: Dictionary = raw
+		if String(z.get("mode", "")) != CameraDirector.MODE_SIDE:
+			continue
+		var rect: Array = z.get("rect", [])
+		if rect.size() != 4:
+			continue
+		if c >= int(rect[0]) and c < int(rect[0]) + int(rect[2]) \
+				and r >= int(rect[1]) and r < int(rect[1]) + int(rect[3]):
+			return true
+	return false
+
+
 func _paint(parent: Node2D, rows: Array, mapping: Dictionary, collide: bool) -> void:
 	var cache: Dictionary = {}
 	for r in rows.size():
@@ -150,6 +179,8 @@ func _paint(parent: Node2D, rows: Array, mapping: Dictionary, collide: bool) -> 
 		for c in line.length():
 			var ch := line[c]
 			if ch == AreaLoader.EMPTY:
+				continue
+			if _in_side_zone(c, r):
 				continue
 			var role := String(mapping.get(ch, ""))
 			if role == "":
@@ -265,13 +296,145 @@ func _build_challenge() -> void:
 		challenge = ChallengeRoom.new()
 		challenge.name = "Challenge_%s" % String(z.get("id", "c"))
 		challenge.room_id = String(z.get("id", "challenge"))
+		var geom: Dictionary = (area.get("side_geometry", {}) as Dictionary).get(
+			String(z.get("id", "")), {})
+		var entry: Array = geom.get("entry", [1, int(rect[3]) - 2])
 		challenge.entry_point = Vector2(
-			int(rect[0]) * TILE + TILE * 0.5,
-			(int(rect[1]) + int(rect[3]) - 2) * TILE)
+			(int(rect[0]) + int(entry[0])) * TILE + TILE * 0.5,
+			(int(rect[1]) + int(entry[1])) * TILE)
+		# افتادن زیر کف اتاق = مرگ؛ یک کاشی زیر پایین‌ترین سطر ناحیه
+		_challenge_floor_y = float((int(rect[1]) + int(rect[3])) * TILE)
 		add_child(challenge)
 		if director != null:
 			challenge.bind(director)
 		break
+
+
+## هندسهٔ نمای کناری اتاق چالش (گام A).
+##
+## روی همان شبکهٔ ناحیه نشانده می‌شود، چون گذار بدون بارگذاری است
+## (D-ART-09d): همه در یک نقشه‌اند، فقط دوربین و فیزیک عوض می‌شوند.
+func _build_side_geometry() -> void:
+	var all: Dictionary = area.get("side_geometry", {})
+	for zone_id in all:
+		var g: Dictionary = all[zone_id]
+		var origin: Array = g.get("origin", [0, 0])
+		var oc := int(origin[0])
+		var orr := int(origin[1])
+		var rows: Array = g.get("tiles", [])
+		var side_path := "res://assets/%s/" % String(area.get("tileset_side", ""))
+		var side_roles := AreaLoader.tile_roles(String(area.get("tileset_side", "")))
+		var by_role: Dictionary = {}
+		for file in (side_roles.get("tiles", {}) as Dictionary):
+			var e: Dictionary = (side_roles["tiles"] as Dictionary)[file]
+			by_role[String(e.get("role", ""))] = {
+				"file": file, "kind": String(e.get("kind", "background"))}
+
+		var cache: Dictionary = {}
+		for r in rows.size():
+			var line := String(rows[r])
+			for c in line.length():
+				var ch := line[c]
+				if ch == AreaLoader.EMPTY:
+					continue
+				var cell_c := oc + c
+				var cell_r := orr + r
+				if ch == "^":
+					_add_spike(cell_c, cell_r)
+					continue
+				var role := String(SIDE_ROLE.get(ch, ""))
+				if role == "" or not by_role.has(role):
+					_note_missing("نقش کناری «%s» برای نماد «%s»" % [role, ch])
+					continue
+				if not cache.has(role):
+					var file := String((by_role[role] as Dictionary)["file"])
+					var fp := side_path + file.replace(".png", "_32.png")
+					if not ResourceLoader.exists(fp):
+						fp = side_path + file
+					cache[role] = load(fp) if ResourceLoader.exists(fp) else null
+					if cache[role] == null:
+						_note_missing(fp)
+				var tex: Texture2D = cache[role]
+				if tex == null:
+					continue
+				var spr := Sprite2D.new()
+				spr.texture = tex
+				spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+				spr.centered = false
+				spr.position = Vector2(cell_c * TILE,
+					cell_r * TILE - (tex.get_height() - TILE))
+				_wall_layer.add_child(spr)
+
+				var kind := String((by_role[role] as Dictionary)["kind"])
+				if kind == "solid":
+					_add_blocker(cell_c, cell_r)
+				elif kind == "oneway":
+					_add_oneway(cell_c, cell_r)
+
+
+## سکوی یک‌طرفه: از پایین رد می‌شود، روی آن می‌ایستی (`art/TILE_ROLES.md`).
+func _add_oneway(c: int, r: int) -> void:
+	var body := StaticBody2D.new()
+	body.collision_layer = Layers.GROUND
+	body.collision_mask = 0
+	var shape := CollisionShape2D.new()
+	var box := RectangleShape2D.new()
+	box.size = Vector2(TILE, 8)
+	shape.shape = box
+	shape.position = Vector2(TILE * 0.5, 4)
+	shape.one_way_collision = true
+	body.add_child(shape)
+	body.position = Vector2(c * TILE, r * TILE)
+	_wall_layer.add_child(body)
+
+
+## تیغهٔ ثابت: در اتاق چالش یک تماس = مرگ (سند ۰۹ §۲ب).
+func _add_spike(c: int, r: int) -> void:
+	var spike := Area2D.new()
+	spike.name = "Spike_%d_%d" % [c, r]
+	spike.collision_layer = Layers.HAZARD
+	spike.collision_mask = Layers.ACTORS
+	spike.add_to_group("challenge_spike")
+	var shape := CollisionShape2D.new()
+	var box := RectangleShape2D.new()
+	box.size = Vector2(TILE - 6, TILE * 0.5)
+	shape.shape = box
+	shape.position = Vector2(TILE * 0.5, TILE * 0.75)
+	spike.add_child(shape)
+	spike.position = Vector2(c * TILE, r * TILE)
+	if ResourceLoader.exists(SPIKE_PATH):
+		var spr := Sprite2D.new()
+		spr.texture = load(SPIKE_PATH)
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.centered = false
+		spike.add_child(spr)
+	else:
+		_note_missing(SPIKE_PATH)
+	spike.body_entered.connect(_on_spike_touched)
+	_object_layer.add_child(spike)
+	spikes.append(spike)
+
+
+func _on_spike_touched(body: Node2D) -> void:
+	if not (body is TdActor):
+		return
+	var actor := body as TdActor
+	# تیغه فقط در اتاق چالش کشنده است. در اکتشاف اصلاً تیغه نمی‌گذاریم،
+	# ولی این نگهبان می‌ماند تا قاعدهٔ سند ۰۹ §۱ هرگز نقض نشود.
+	if actor.movement != TdActor.Movement.SIDE:
+		return
+	actor.die()
+
+
+## آیا این نقطه زیر مرز اتاق چالش است؟ (افتادن = مرگ)
+func below_bounds(p: Vector2) -> bool:
+	if challenge == null or not challenge.is_active:
+		return false
+	return p.y > _challenge_floor_y
+
+
+var spikes: Array[Area2D] = []
+var _challenge_floor_y: float = 1e9
 
 
 ## مرز نقشه بر حسب پیکسل، برای حد دوربین.

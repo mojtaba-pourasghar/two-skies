@@ -47,15 +47,37 @@ func _run() -> void:
 	await _walk(kairo, Vector2(1, 0), 240)
 	await _shot("a1_05_corridor")
 
-	# ۶) داخل اتاق چالش: دوربین باید به side رفته باشد
-	await _walk(kairo, Vector2(1, 0), 180)
+	# ۶) داخل اتاق چالش: دوربین به side می‌رود و فیزیک پلتفرمر می‌شود
+	await _walk(kairo, Vector2(1, 0), 150)
+	await _settle(50)
 	await _shot("a1_06_challenge_side")
+
+	# ۷) داخل اتاق چالش، روی سکوهای میانی.
+	# با ورودی اسکریپتی نمی‌شود پلتفرم‌بازی کرد (پرش از دکمه می‌آید)، پس
+	# کایرو را مستقیم روی سکو می‌گذاریم تا قاب را نشان بدهد.
+	var area_node = _game.get("area_node")
+	var zone: Dictionary = (area_node.area["camera_zones"] as Array)[0]
+	var rect: Array = zone["rect"]
+	kairo.global_position = Vector2(
+		(int(rect[0]) + 12) * 32, (int(rect[1]) + 13) * 32)
+	await _settle(60)
+	await _shot("a1_07_challenge_platforms")
 
 	var director = _game.get("director")
 	print("حالت دوربین در اتاق چالش: %s | ناحیهٔ فعال: %s"
 		% [director.mode, director.active_zone()])
 	print("جان: %.0f٪ | سکه: %d" % [GameState.hp_percent(), GameState.run.get("coins", 0)])
 	get_tree().quit(0)
+
+
+## در حالت کناری پرش با ورودی اسکریپتی ممکن نیست (پرش از دکمه می‌آید)،
+## پس مستقیم سرعت عمودی می‌دهیم تا بالا برود و قاب را نشان بدهد.
+func _hop(actor, dir: Vector2, frames: int) -> void:
+	actor.scripted_dir = dir
+	actor.velocity.y = -612.0
+	for i in frames:
+		await get_tree().physics_frame
+	actor.scripted_dir = Vector2.ZERO
 
 
 func _walk(actor, dir: Vector2, frames: int) -> void:

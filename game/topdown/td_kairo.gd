@@ -32,6 +32,14 @@ func _ready() -> void:
 	hop_started.connect(_on_hop_started)
 
 
+func _wants_jump() -> bool:
+	return not use_scripted and GameMode.just_pressed("jump")
+
+
+func _holds_jump() -> bool:
+	return use_scripted or GameMode.is_pressed("jump")
+
+
 func _input_dir() -> Vector2:
 	if use_scripted:
 		return scripted_dir
@@ -41,7 +49,8 @@ func _input_dir() -> Vector2:
 
 
 func _physics_process(delta: float) -> void:
-	if not use_scripted and state == State.MOVE:
+	# در حالت کناری پرش از مسیر `_wants_jump` می‌آید، نه جهش کمانی
+	if not use_scripted and state == State.MOVE and movement == Movement.TOPDOWN:
 		# «دو دکمه: عمل (تعامل/هک) و توانایی» (سند ۰۹ §۲). کنش `dash` در
 		# نگاشت ورودی وجود نداشت، پس دش اصلاً در دسترس نبود — آزمون T15
 		# این را بیرون کشید. اکنون جهش روی `jump` و دش روی `ability` است.

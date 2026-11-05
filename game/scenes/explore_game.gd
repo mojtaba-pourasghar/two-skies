@@ -49,6 +49,9 @@ func _ready() -> void:
 	_spawn_actors(data)
 	_build_camera(data)
 	_bind_traps()
+	# مدل حرکت تابع حالت دوربین است: اکتشاف بدون گرانش، اتاق چالش با گرانش
+	# و پرش — وسط ناحیه و بدون بارگذاری (D-ART-09d).
+	director.mode_changing.connect(_on_mode_changing)
 
 	GameMode.set_context(GameMode.Context.EXPLORE)
 	GameMode.set_control(GameMode.ControlMode.PLAY)
@@ -100,6 +103,19 @@ func _build_camera(data: Dictionary) -> void:
 	camera.set_bounds(area_node.bounds())
 	camera.make_current()
 	camera.snap_to_target()
+
+
+func _on_mode_changing(_from: String, to: String) -> void:
+	var m := (TdActor.Movement.SIDE if to == CameraDirector.MODE_SIDE
+		else TdActor.Movement.TOPDOWN)
+	for a in [kairo, ilara]:
+		if a != null:
+			a.set_movement(m)
+	# در اتاق چالش ایلارا همراه نمی‌آید: اتاق چالش تک‌نفره است
+	# (سند ۰۹ §۲ب: «اتاق چالش دشمن نوبتی ندارد» و چالشش فردی است).
+	if ilara != null:
+		ilara.visible = to != CameraDirector.MODE_SIDE
+		ilara.set_physics_process(to != CameraDirector.MODE_SIDE)
 
 
 func _bind_traps() -> void:

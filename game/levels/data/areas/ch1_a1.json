@@ -1,5 +1,5 @@
 {
- "_note": "چیدمان از art_drop/scenes/ch1/house_1280x720.png خوانده شده (D-ART-28: تصویر مرجع چیدمان، کاشی مرجع تصویرسازی). ناحیه دو فضا دارد: نشیمن و راهروی پشت طاق (D-ART-27).",
+ "_note": "چیدمان نشیمن و راهرو از art_drop/scenes/ch1/house_1280x720.png (D-ART-28). هندسهٔ اتاق چالش از docs/09 §۲ب و §۵: سکو، شکاف، تیغهٔ ثابت و یک بخش پرش بلند.",
  "id": "ch1_a1",
  "title_key": "c1_a1_title",
  "scene_ref": "scenes/ch1/house_1280x720.png",
@@ -9,7 +9,7 @@
  "tileset_side": "tiles_side_ch1/house",
  "parallax_side": "parallax/ch1/house",
  "size": [
-  80,
+  104,
   30
  ],
  "spawn": [
@@ -18,68 +18,68 @@
  ],
  "layers": {
   "floor": [
-   "................................................................................",
-   ".aaaaabaaaaaacaaabaaaaaaaaaabacaaaaaaaabaaaaaaa.................................",
-   ".baaaaaaacaabaaaaaaaaaabaacaaaaaaabaaaaaaaacaba.................................",
-   ".aaaacabaaaaaaaaaabaaacaaaaaabaaaaaaaaacbaaaaaa.................................",
-   ".cbaaaaaaaaaabaaaacaaaaabaaaaaaaaaabaaaaaaaaaab.................................",
-   ".aaaaaaabaaaaacaaaabaaaaaaaaaabcaaaaaaaaabaaaaa.................................",
-   ".aabaaaaaacaaabaaaaaaaaaabacaaaaaaaabaaaaaaacaa.................................",
-   ".aaaaacaabaaaaaaaaaabaacaaaaaaabaaaaaaaacabaaaa.................................",
-   ".acabaaaaaaaaaabaaacaaaaaabaaaaaaaaacbaaaaaaaaa.................................",
-   ".aaaaaaaaabaaaacaaaaabaaaaaaaaaabaaaaaaaaaabaaa.................................",
-   ".aaaabaaaaacaaaabaaaaaaaaaabcaaaaaaaaabaaaaaaca.................................",
-   ".aaaaaacaaabaaaaaaaaaabacaaaaaaaabaaaaaaacaabaa.................................",
-   ".aacaabaaaahhhhhhhhhhhhhhhhhhhhhhaaaacabaaaaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
-   ".baaaaaaaaaggggggggggggggggggggggcbaaaaaaaaaaba.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
-   ".aaaaaabaaaggggggggggggggggggggggaaaaaaabaaaaac.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
-   ".abaaaaacaaggggggggggggggggggggggaabaaaaaacaaab.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
-   ".aaacaaabaaggggggggggggggggggggggaaaaacaabaaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
-   ".aabaaaaaaaggggggggggggggggggggggacabaaaaaaaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
-   ".aaaaaaaabaggggggggggggggggggggggaaaaaaaaabaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
-   ".aaabaaaacaggggggggggggggggggggggaaaabaaaaacaaa.................................",
-   ".aaaacaaaabggggggggggggggggggggggaaaaaacaaabaaa.................................",
-   ".caaabaaaaaggggggggggggggggggggggaacaabaaaaaaaa.................................",
-   ".aaaaaaaaaaggggggggggggggggggggggbaaaaaaaaaabaa.................................",
-   ".aaaaabaaacggggggggggggggggggggggaaaaaabaaaacaa.................................",
-   ".baaaacaaaaggggggggggggggggggggggabaaaaacaaaaba.................................",
-   ".acaaaabaaaaaaaaaabcaaaaaaaaabaaaaaacaaabaaaaaa.................................",
-   ".abaaaaaaaaaabacaaaaaaaabaaaaaaacaabaaaaaaaaaab.................................",
-   ".aaaaaaabaacaaaaaaabaaaaaaaacabaaaaaaaaaabaaaca.................................",
-   ".aabaaacaaaaaabaaaaaaaaacbaaaaaaaaaabaaaacaaaaa.................................",
-   "................................................................................"
+   "........................................................................................................",
+   ".aaaaabaaaaaacaaabaaaaaaaaaabacaaaaaaaabaaaaaaa.........................................................",
+   ".baaaaaaacaabaaaaaaaaaabaacaaaaaaabaaaaaaaacaba.........................................................",
+   ".aaaacabaaaaaaaaaabaaacaaaaaabaaaaaaaaacbaaaaaa.........................................................",
+   ".cbaaaaaaaaaabaaaacaaaaabaaaaaaaaaabaaaaaaaaaab.........................................................",
+   ".aaaaaaabaaaaacaaaabaaaaaaaaaabcaaaaaaaaabaaaaa.........................................................",
+   ".aabaaaaaacaaabaaaaaaaaaabacaaaaaaaabaaaaaaacaa.........................................................",
+   ".aaaaacaabaaaaaaaaaabaacaaaaaaabaaaaaaaacabaaaa.........................................................",
+   ".acabaaaaaaaaaabaaacaaaaaabaaaaaaaaacbaaaaaaaaa.........................................................",
+   ".aaaaaaaaabaaaacaaaaabaaaaaaaaaabaaaaaaaaaabaaa.........................................................",
+   ".aaaabaaaaacaaaabaaaaaaaaaabcaaaaaaaaabaaaaaaca.........................................................",
+   ".aaaaaacaaabaaaaaaaaaabacaaaaaaaabaaaaaaacaabaa.........................................................",
+   ".aacaabaaaahhhhhhhhhhhhhhhhhhhhhhaaaacabaaaaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
+   ".baaaaaaaaaggggggggggggggggggggggcbaaaaaaaaaaba.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
+   ".aaaaaabaaaggggggggggggggggggggggaaaaaaabaaaaac.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
+   ".abaaaaacaaggggggggggggggggggggggaabaaaaaacaaab.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
+   ".aaacaaabaaggggggggggggggggggggggaaaaacaabaaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
+   ".aabaaaaaaaggggggggggggggggggggggacabaaaaaaaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
+   ".aaaaaaaabaggggggggggggggggggggggaaaaaaaaabaaaa.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.",
+   ".aaabaaaacaggggggggggggggggggggggaaaabaaaaacaaa.........................................................",
+   ".aaaacaaaabggggggggggggggggggggggaaaaaacaaabaaa.........................................................",
+   ".caaabaaaaaggggggggggggggggggggggaacaabaaaaaaaa.........................................................",
+   ".aaaaaaaaaaggggggggggggggggggggggbaaaaaaaaaabaa.........................................................",
+   ".aaaaabaaacggggggggggggggggggggggaaaaaabaaaacaa.........................................................",
+   ".baaaacaaaaggggggggggggggggggggggabaaaaacaaaaba.........................................................",
+   ".acaaaabaaaaaaaaaabcaaaaaaaaabaaaaaacaaabaaaaaa.........................................................",
+   ".abaaaaaaaaaabacaaaaaaaabaaaaaaacaabaaaaaaaaaab.........................................................",
+   ".aaaaaaabaacaaaaaaabaaaaaaaacabaaaaaaaaaabaaaca.........................................................",
+   ".aabaaacaaaaaabaaaaaaaaacbaaaaaaaaaabaaaacaaaaa.........................................................",
+   "........................................................................................................"
   ],
   "walls": [
-   "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-   "WWWWWWWWWWWWWWWWWWSSSSSWWWWCCCCCWWWWWWWWWWWWWWWW...............................W",
-   "WWWWWWWWWWWWWWWWWWSSSSSWWWWCCCCCWWWWWWWWWWWWWWWW...............................W",
-   "W.................SSSSS....CCCCC...............W...............................W",
-   "N..............................................W...............................W",
-   "N..............................................W...............................W",
-   "N..............................................W...............................W",
-   "N..............................................W...............................W",
-   "N..............................................W...............................W",
-   "N..............................................W...............................W",
-   "N..............................................W...............................W",
-   "N..............................................WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-   "N..............................................P.........CC....................W",
-   "N........................................................CC....................W",
-   "N........................................................CC....................W",
-   "N........................................................CC....................W",
-   "W.............FFFFFF...........................................................W",
-   "W.............FFFFFF...........................................................W",
-   "W.............FFFFFF...........................P...............................W",
-   "W..............................................WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-   "W..............................................W...............................W",
-   "W..............................................W...............................W",
-   "W..............................................W...............................W",
-   "W..............................................W...............................W",
-   "W..............................................W...............................W",
-   "WTT........................................TTT.W...............................W",
-   "WTT........................................TTT.W...............................W",
-   "W..............................................W...............................W",
-   "W..............................................W...............................W",
-   "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+   "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWSSSSSWWWWCCCCCWWWWWWWWWWWWWWWW.......................................................W",
+   "WWWWWWWWWWWWWWWWWWSSSSSWWWWCCCCCWWWWWWWWWWWWWWWW.......................................................W",
+   "W.................SSSSS....CCCCC...............W.......................................................W",
+   "N..............................................W.......................................................W",
+   "N..............................................W.......................................................W",
+   "N..............................................W.......................................................W",
+   "N..............................................W.......................................................W",
+   "N..............................................W.......................................................W",
+   "N..............................................W.......................................................W",
+   "N..............................................W.......................................................W",
+   "N..............................................WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "N..............................................P.........CC............................................W",
+   "N........................................................CC............................................W",
+   "N........................................................CC............................................W",
+   "N........................................................CC............................................W",
+   "W.............FFFFFF...................................................................................W",
+   "W.............FFFFFF...................................................................................W",
+   "W.............FFFFFF...........................P.......................................................W",
+   "W..............................................WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "W..............................................W.......................................................W",
+   "W..............................................W.......................................................W",
+   "W..............................................W.......................................................W",
+   "W..............................................W.......................................................W",
+   "W..............................................W.......................................................W",
+   "WTT........................................TTT.W.......................................................W",
+   "WTT........................................TTT.W.......................................................W",
+   "W..............................................W.......................................................W",
+   "W..............................................W.......................................................W",
+   "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
   ]
  },
  "props": [
@@ -89,15 +89,14 @@
     8,
     6
    ],
-   "note": "مجسمهٔ کوچک روشن — نقطهٔ ذخیره (سند ۰۹ §۱۱)"
+   "note": "نقطهٔ ذخیره (سند ۰۹ §۱۱)"
   },
   {
    "id": "leap_pad",
    "at": [
     51,
     15
-   ],
-   "note": "پد جهش پیش از شکاف راهرو"
+   ]
   },
   {
    "id": "chest_wood",
@@ -119,7 +118,7 @@
     66,
     15
    ],
-   "note": "نشانگر طلایی ورود به اتاق چالش"
+   "note": "نشانگر طلایی ورود به اتاق چالش (سند ۰۹ §۱۱ بند ۵)"
   }
  ],
  "pickups": [
@@ -215,20 +214,6 @@
    ]
   },
   {
-   "id": "coin",
-   "at": [
-    70,
-    17
-   ]
-  },
-  {
-   "id": "coin",
-   "at": [
-    74,
-    13
-   ]
-  },
-  {
    "id": "gem",
    "at": [
     20,
@@ -260,7 +245,7 @@
     19
    ],
    "sequence": "ch1_a1_trap",
-   "note": "خوشهٔ اولین تله: کف شکسته. آسیب جزئی و بازگشت، نه مرگ (سند ۰۹ §۱ قاعدهٔ ۲)."
+   "note": "کف شکسته: آسیب جزئی و بازگشت، نه مرگ (سند ۰۹ §۱ قاعدهٔ ۲)."
   }
  ],
  "camera_zones": [
@@ -268,14 +253,53 @@
    "id": "challenge_a",
    "mode": "side",
    "rect": [
-    64,
-    11,
-    15,
-    9
+    68,
+    4,
+    34,
+    21
    ],
-   "note": "اتاق چالش اجباری ناحیهٔ ۱: شکاف‌ها و تیغه (سند ۰۹ §۲ب)"
+   "note": "اتاق چالش اجباری ناحیهٔ ۱ (سند ۰۹ §۲ب)"
   }
  ],
+ "side_geometry": {
+  "challenge_a": {
+   "origin": [
+    68,
+    4
+   ],
+   "entry": [
+    1,
+    19
+   ],
+   "exit": [
+    32,
+    2
+   ],
+   "tiles": [
+    "##################################",
+    "..................................",
+    "................................X.",
+    "...............................###",
+    "..............................===.",
+    "..................................",
+    "..................................",
+    "..........................===.....",
+    "........................#.........",
+    "........................#.........",
+    "........................#.........",
+    "................====....#.........",
+    "........................#.........",
+    "............^...........#.........",
+    "..........====..........#.........",
+    "........................#.........",
+    "........................#.........",
+    "....====................#.........",
+    "........................#.........",
+    "......^............^....#.........",
+    "########......########..#....#####"
+   ]
+  }
+ },
  "triggers": [
   {
    "id": "intro",

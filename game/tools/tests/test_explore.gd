@@ -18,6 +18,7 @@ func _ready() -> void:
 	_t_real_area()
 	await _t_trap_rule()
 	await _t_challenge_rule()
+	await _t_side_geometry()
 	_report()
 
 
@@ -181,6 +182,83 @@ func _t_challenge_rule() -> void:
 	actor.queue_free()
 	room.queue_free()
 	d.queue_free()
+
+
+## گام A: هندسهٔ واقعی اتاق چالش.
+func _t_side_geometry() -> void:
+	print("— هندسهٔ اتاق چالش (گام A) —")
+	var l := AreaLoader.new()
+	var area := l.load_area(AREA)
+	if area.is_empty():
+		return
+	var geom: Dictionary = (area.get("side_geometry", {}) as Dictionary).get(
+		"challenge_a", {})
+	_check("هندسهٔ کناری تعریف شده", not geom.is_empty())
+	if geom.is_empty():
+		return
+	var rows: Array = geom.get("tiles", [])
+	var zone: Dictionary = (area["camera_zones"] as Array)[0]
+	var rect: Array = zone["rect"]
+	_check("هندسه هم‌اندازهٔ ناحیهٔ دوربین است",
+		rows.size() == int(rect[3]) and String(rows[0]).length() == int(rect[2]),
+		"= %dx%d در برابر %dx%d" % [String(rows[0]).length(), rows.size(),
+			int(rect[2]), int(rect[3])])
+
+	var joined := "".join(rows)
+	_check("سکوی یک‌طرفه دارد", joined.contains("="), "= %d" % joined.count("="))
+	_check("تیغهٔ ثابت دارد", joined.count("^") >= 3, "= %d تیغه" % joined.count("^"))
+	_check("شکاف کشنده دارد (کف ناپیوسته)",
+		String(rows[rows.size() - 1]).contains("."), "")
+	_check("بخش پرش بلند دارد (دیوار بلند)",
+		_tallest_wall(rows) >= 10, "= %d کاشی" % _tallest_wall(rows))
+	_check("نقطهٔ ورود و خروج دارد",
+		geom.has("entry") and geom.has("exit"))
+
+	var node := ExploreArea.new()
+	add_child(node)
+	node.build(area)
+	_check("تیغه‌ها در صحنه ساخته شدند", node.spikes.size() >= 3,
+		"= %d" % node.spikes.size())
+	_check("سکوی یک‌طرفه و زمین جامد ساخته شدند",
+		node.get_node("Walls").get_child_count() > 200,
+		"= %d گره دیوار" % node.get_node("Walls").get_child_count())
+
+	# قاعدهٔ مرگ: تیغه فقط در حالت کناری می‌کشد
+	var actor := TdKairo.new()
+	add_child(actor)
+	actor.set_movement(TdActor.Movement.TOPDOWN)
+	var before := actor.deaths
+	node._on_spike_touched(actor)
+	_check("تیغه در اکتشاف نمی‌کشد (سند ۰۹ §۱)", actor.deaths == before,
+		"= %d مرگ" % actor.deaths)
+	actor.set_movement(TdActor.Movement.SIDE)
+	node._on_spike_touched(actor)
+	_check("تیغه در اتاق چالش می‌کشد (سند ۰۹ §۲ب)", actor.deaths == before + 1,
+		"= %d مرگ" % actor.deaths)
+
+	# مدل حرکت واقعاً عوض می‌شود
+	_check("حالت کناری motion_mode را زمینی می‌کند",
+		actor.motion_mode == CharacterBody2D.MOTION_MODE_GROUNDED)
+	actor.set_movement(TdActor.Movement.TOPDOWN)
+	_check("حالت سه‌چهارم motion_mode را شناور می‌کند",
+		actor.motion_mode == CharacterBody2D.MOTION_MODE_FLOATING)
+
+	actor.queue_free()
+	node.queue_free()
+
+
+func _tallest_wall(rows: Array) -> int:
+	var best := 0
+	var width := String(rows[0]).length()
+	for c in width:
+		var run := 0
+		for r in rows.size():
+			if String(rows[r])[c] == "#":
+				run += 1
+				best = maxi(best, run)
+			else:
+				run = 0
+	return best
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:

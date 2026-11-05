@@ -13,10 +13,15 @@ signal landed(at: Vector2)
 
 enum State { MOVE, HOP, DASH, DEAD }
 
+## مدل حرکت. با حالت دوربین عوض می‌شود، **وسط ناحیه و بدون بارگذاری**
+## (D-ART-09d): اکتشاف بدون گرانش، اتاق چالش با گرانش و پرش.
+enum Movement { TOPDOWN, SIDE }
+
 @export var actor_name: String = "actor"
 @export var speed: float = 96.0
 
 var state: State = State.MOVE
+var movement: Movement = Movement.TOPDOWN
 var facing := Vector2.DOWN
 var deaths: int = 0
 var spawn_point := Vector2.ZERO
@@ -31,8 +36,23 @@ var _dash_frames_left: int = 0
 var _dash_dir := Vector2.ZERO
 var _dash_cooldown: int = 0
 var _dead_frames: int = 0
+var _coyote: float = 0.0
+var _jump_buffer: int = 0
 var _visual: Node2D = null
 var _shadow: Node2D = null
+
+
+## مدل حرکت را عوض می‌کند. `motion_mode` هم با آن عوض می‌شود، وگرنه در
+## حالت کناری بازیگر روی زمین «سُر» می‌خورد و هرگز `is_on_floor` نمی‌شود.
+func set_movement(to: Movement) -> void:
+	if to == movement:
+		return
+	movement = to
+	motion_mode = (CharacterBody2D.MOTION_MODE_FLOATING if to == Movement.TOPDOWN
+		else CharacterBody2D.MOTION_MODE_GROUNDED)
+	velocity = Vector2.ZERO
+	if state == State.HOP or state == State.DASH:
+		state = State.MOVE
 
 
 func _ready() -> void:
@@ -80,6 +100,9 @@ func _physics_process(_delta: float) -> void:
 
 
 func _tick_move() -> void:
+	if movement == Movement.SIDE:
+		_tick_move_side()
+		return
 	var wish := TdConst.snap8(_input_dir())
 	if wish != Vector2.ZERO:
 		facing = wish
@@ -88,6 +111,56 @@ func _tick_move() -> void:
 	velocity = velocity.move_toward(target, accel / float(TdConst.FPS))
 	move_and_slide()
 	_check_ground()
+
+
+## حرکت کناری: گرانش، پرش، و فقط محور افقی از ورودی.
+##
+## اعداد از پروفایل `challenge_side` می‌آیند (همان نگاشت `CameraDirector`)،
+## پس حالت دوربین و اعداد فیزیک هرگز واگرا نمی‌شوند (D-ART-14).
+func _tick_move_side() -> void:
+	var raw := _input_dir()
+	var dir := signf(raw.x) if absf(raw.x) > 0.2 else 0.0
+	if dir != 0.0:
+		facing = Vector2(dir, 0.0)
+
+	var target_x := dir * KairoConst.RUN_SPEED
+	var accel := KairoConst.GROUND_ACCEL if dir != 0.0 else KairoConst.GROUND_DECEL
+	if not is_on_floor():
+		accel = KairoConst.AIR_ACCEL if dir != 0.0 else KairoConst.AIR_DECEL
+	velocity.x = move_toward(velocity.x, target_x, accel / float(TdConst.FPS))
+
+	if is_on_floor():
+		_coyote = KairoConst.COYOTE_TIME
+	else:
+		_coyote = maxf(0.0, _coyote - 1.0 / float(TdConst.FPS))
+		var g := KairoConst.GRAVITY
+		if velocity.y > 0.0:
+			g *= KairoConst.FALL_GRAVITY_MULT
+		velocity.y = minf(velocity.y + g / float(TdConst.FPS), KairoConst.MAX_FALL)
+
+	if _jump_buffer > 0:
+		_jump_buffer -= 1
+	if _wants_jump():
+		_jump_buffer = TdConst.frames(KairoConst.JUMP_BUFFER)
+	if _jump_buffer > 0 and _coyote > 0.0:
+		velocity.y = KairoConst.JUMP_VELOCITY
+		_jump_buffer = 0
+		_coyote = 0.0
+	# پرش متغیر: رها کردن دکمه اوج را کوتاه می‌کند (§۳)
+	if velocity.y < 0.0 and not _holds_jump():
+		velocity.y *= KairoConst.JUMP_CUT
+
+	move_and_slide()
+	_check_ground()
+
+
+## زیرکلاس‌ها بازنویسی می‌کنند (بازیکن، همراه، روبات).
+func _wants_jump() -> bool:
+	return false
+
+
+func _holds_jump() -> bool:
+	return true
 
 
 func _tick_hop() -> void:
@@ -174,6 +247,10 @@ func _check_ground() -> void:
 	if state == State.HOP or state == State.DEAD or room == null:
 		return
 	if room.has_method("is_deadly_at") and room.is_deadly_at(foot_position()):
+		die()
+	# در اتاق چالش، افتادن بیرون از مرز هم مرگ است (سند ۰۹ §۲ب)
+	elif movement == Movement.SIDE and room.has_method("below_bounds") \
+			and room.below_bounds(foot_position()):
 		die()
 
 
