@@ -1,0 +1,104 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "spike_off": [
+   107,
+   76
+  ],
+  "spike_on": [
+   110,
+   88
+  ],
+  "pit_ember": [
+   117,
+   82
+  ],
+  "floor_cracked": [
+   116,
+   82
+  ],
+  "floor_fallen": [
+   116,
+   82
+  ],
+  "saw_0": [
+   98,
+   84
+  ],
+  "saw_1": [
+   98,
+   84
+  ],
+  "saw_2": [
+   97,
+   84
+  ],
+  "saw_3": [
+   98,
+   84
+  ],
+  "laser_emitter_l": [
+   36,
+   40
+  ],
+  "laser_emitter_r": [
+   36,
+   40
+  ],
+  "laser_beam_h": [
+   113,
+   22
+  ],
+  "laser_beam_v": [
+   20,
+   110
+  ],
+  "elec_panel_off": [
+   90,
+   63
+  ],
+  "elec_panel_on": [
+   90,
+   64
+  ],
+  "gas_vent": [
+   136,
+   77
+  ],
+  "plate_up": [
+   81,
+   62
+  ],
+  "plate_down": [
+   82,
+   60
+  ],
+  "checkpoint_off": [
+   65,
+   80
+  ],
+  "checkpoint_on": [
+   65,
+   84
+  ],
+  "gate_locked": [
+   82,
+   88
+  ],
+  "gate_open": [
+   82,
+   88
+  ],
+  "death_mark": [
+   56,
+   84
+  ],
+  "respawn_ring": [
+   77,
+   64
+  ]
+ },
+ "camera": "topdown",
+ "scale": 0.5,
+ "note": "خار/گودال/کاشی/دروازه/چک‌پوینت 3/4؛ لیزر h/v برای کشیدن"
+}
