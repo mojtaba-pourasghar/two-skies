@@ -109,3 +109,21 @@ HUD کم: جان، انرژی رشته، سکه/زمرد، آیکن ابزار. 
 10. **تعویض رهبر:** ضربه روی صورت همراه؛ هر کدام ابزار خودش (نور/بذر یا هک/دش).
 11. **آمار و جایزه:** درصد کشف ناحیه، هدف‌های اختیاری، S-rank اتاق‌های چالش.
 هنر این موارد: `art/PRODUCTION_LIST.md` دستهٔ ۱۲.
+
+## ۱۲. قاعدهٔ الزامی: سناریو و چیدمان باید بر اساس دوربین‌ها و تصاویر تأییدشده باشد (تأکید کاربر ۱۴۰۵/۰۸/۱۵)
+هر ناحیه/اتاق/صحنه‌ای که ساخته یا نوشته می‌شود **باید از همین سه منبع بیاید و با آن‌ها نخواند** وگرنه ساخته نشود:
+1. **دوربین‌های توافق‌شده:** اکتشاف و نقشه و نبرد و پایگاه = `topdown` سه‌چهارم؛ اتاق چالش (بخش مانع‌دار) = `side` روبرو با مرگ بی‌نهایت؛ تغییر **خودکار و نرم** با `camera_zone` وسط ناحیه (D-ART-09d)؛ دوربین نبرد = صحنهٔ ثابت سه‌چهارمی. ناحیه‌ای که `camera_zone`های لازمش را ندارد ناقص است.
+2. **تصاویر صحنه‌ها و پس‌زمینه‌ها:** هر ناحیه از تصویر خودش ساخته می‌شود و چیدمانش باید همان را نشان دهد (نه برعکس):
+| ناحیه | تصویر مرجع سه‌چهارمی (`art_drop/scenes/ch1/`) | تصویر مرجع کناری | پس‌زمینهٔ نبرد (`art_drop/battle_bg/`) | کاشی |
+|---|---|---|---|---|
+| ۱ خانهٔ خالی | `house_*`, `intro_*` | `parallax/ch1/house_*` + `tiles_side_ch1/house` | `battle_bg_house` | `tiles_ch1_v2/house` |
+| ۲ خیابان سوخته | `street_*` | `tiles_side_ch1/street` (اتاق اختیاری) | `battle_bg_street` | `tiles_ch1_v2/street` |
+| ۳ پهپاد گشتی | `street_*` + `hazards_ch1_topdown` | `tiles_side_ch1/street` | `battle_bg_street` | همان |
+| ۴ زیرزمین | `basement_*` | `tiles_side_ch1/basement` | `battle_bg_basement` | `tiles_ch1_v2/basement` |
+| ۵ کف برقی | `parallax/ch1/electric_*` | همان + side | — | side basement |
+| ۶ بولت | `workshop_*` | `workshop_side_*` | `battle_bg_workshop` | `tiles_ch1_v2` |
+| ۷ جادهٔ پرتاب | `launch_road_*` | `launch_platform_side_*` | `battle_bg_launch` | side street |
+| ۸ باس | `launch_platform_*` | `launch_platform_side_*` | `battle_bg_launch` + `boss/guardian_battle` | — |
+| مخفی اتاق ایلارا | `ilara_bedroom_*` | `ilara_bedroom_side_*` | — | `tiles_ch1_v2/house` |
+3. **نقشهٔ جهان و اکتشاف:** گره‌ها و مسیرها فقط از `art_drop/overworld/ch1/*`؛ اشیا از `explore/props`، جمع‌شدنی‌ها از `explore/pickups`، دشمن‌ها از `enemies/*` و `hazards_ch1_*`.
+**اگر نوشتهٔ سناریو با تصویر یا دوربین نمی‌خواند، تصویر و دوربین برنده‌اند و سناریو اصلاح می‌شود** (و در DECISIONS.md ثبت می‌شود). اگر هنر لازم نیست یا کم است، به مدیر پروژه بگو تا بسازد؛ هنر از کد ساخته نمی‌شود.
