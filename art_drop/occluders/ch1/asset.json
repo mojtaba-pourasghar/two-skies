@@ -1,0 +1,56 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "arch_gothic": [
+   136,
+   186
+  ],
+  "doorframe_wood": [
+   123,
+   168
+  ],
+  "column_stone": [
+   70,
+   170
+  ],
+  "curtains_velvet": [
+   168,
+   178
+  ],
+  "chandelier": [
+   138,
+   138
+  ],
+  "branch_leafy": [
+   155,
+   132
+  ],
+  "beam_fallen": [
+   156,
+   103
+  ],
+  "railing_wood": [
+   146,
+   104
+  ],
+  "bookshelf_tall": [
+   98,
+   166
+  ],
+  "window_frame_glow": [
+   102,
+   162
+  ],
+  "cables_hanging": [
+   140,
+   142
+  ],
+  "rubble_pile": [
+   174,
+   112
+  ]
+ },
+ "camera": "topdown",
+ "scale": 0.5,
+ "usage": "پیش‌زمینه؛ شخصیت از پشتشان رد می‌شود (Y-sort بالاتر)"
+}

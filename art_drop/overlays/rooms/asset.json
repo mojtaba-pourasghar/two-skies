@@ -1,0 +1,56 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "window_light_0": [
+   193,
+   85
+  ],
+  "window_light_1": [
+   177,
+   125
+  ],
+  "window_light_2": [
+   173,
+   112
+  ],
+  "window_light_3": [
+   178,
+   89
+  ],
+  "moon_shaft_0": [
+   145,
+   100
+  ],
+  "moon_shaft_1": [
+   133,
+   110
+  ],
+  "moon_shaft_2": [
+   144,
+   110
+  ],
+  "lamp_glow_0": [
+   130,
+   54
+  ],
+  "lamp_glow_1": [
+   127,
+   55
+  ],
+  "lamp_glow_2": [
+   119,
+   52
+  ],
+  "city_glow_0": [
+   158,
+   145
+  ],
+  "city_glow_1": [
+   248,
+   155
+  ]
+ },
+ "camera": "topdown",
+ "scale": 0.6,
+ "todo": "ذرات گرد و اخگر (فریم‌ها) کم‌رنگ‌اند و کلید ماجنتا آن‌ها را نگرفت؛ باید روی پس‌زمینهٔ سیاه بازتولید شوند (additive)"
+}
