@@ -74,6 +74,7 @@ func _normalize(level: Dictionary) -> void:
 	level["companion"] = bool(level.get("companion", true))
 	level["par_time"] = float(level.get("par_time", 0.0))
 	_normalize_camera(level)
+	_normalize_triggers(level)
 	var rooms: Array = level.get("rooms", [])
 	if rooms.is_empty():
 		errors.append("مرحلهٔ «%s» هیچ اتاقی ندارد." % level["id"])
@@ -81,6 +82,42 @@ func _normalize(level: Dictionary) -> void:
 	level["start_room"] = String(level.get("start_room", String(rooms[0].get("id", "r1"))))
 	for room in rooms:
 		_normalize_room(level, room)
+
+
+## ماشه‌های توالی اسکریپتی (T5، BUILD_BRIEF §۴).
+##
+##   triggers: [{"id": "intro", "sequence": "ch1_a1_intro",
+##               "rect": [c, r, w, h], "once": true}]
+##
+## `rect` بر حسب کاشی است، مثل `camera_zones`. `once` پیش‌فرض true است: بیشتر
+## توالی‌ها داستانی‌اند و تکرارشان آزاردهنده است.
+func _normalize_triggers(level: Dictionary) -> void:
+	var out: Array = []
+	var seen: Dictionary = {}
+	for raw in level.get("triggers", []):
+		var t: Dictionary = raw
+		var tid := String(t.get("id", ""))
+		if tid == "":
+			errors.append("مرحلهٔ «%s»: یک trigger شناسه ندارد." % level["id"])
+			continue
+		if seen.has(tid):
+			errors.append("مرحلهٔ «%s»: شناسهٔ trigger تکراری «%s»." % [level["id"], tid])
+			continue
+		seen[tid] = true
+		var seq := String(t.get("sequence", ""))
+		if seq == "":
+			errors.append("مرحلهٔ «%s»: trigger «%s» توالی ندارد." % [level["id"], tid])
+			continue
+		var rect: Array = t.get("rect", [])
+		if rect.size() != 4 or float(rect[2]) <= 0.0 or float(rect[3]) <= 0.0:
+			errors.append("مرحلهٔ «%s»: trigger «%s» باید rect معتبر [c, r, w, h] داشته باشد."
+				% [level["id"], tid])
+			continue
+		out.append({
+			"id": tid, "sequence": seq, "rect": rect,
+			"once": bool(t.get("once", true)),
+		})
+	level["triggers"] = out
 
 
 ## فیلدهای دوربین (T3، D-ART-09d).

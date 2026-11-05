@@ -14,6 +14,10 @@ signal player_died(who: String)            ## "kairo" یا "ilara"
 signal level_completed(level_id: String, result: Dictionary)
 signal companion_command(command: String)  ## "stay" یا "come"
 signal tool_used(tool_id: String)
+## توالی اسکریپتی لرزش می‌خواهد؛ دوربین (T6) گوش می‌دهد.
+signal camera_shake_requested(pixels: float)
+## ماشهٔ مرحله یک توالی را شروع کرد.
+signal sequence_triggered(sequence_id: String)
 
 ## نوشتن رویدادها در user://events.log — در نسخهٔ نهایی خاموش می‌شود (§۱۶)
 var log_events: bool = OS.is_debug_build()

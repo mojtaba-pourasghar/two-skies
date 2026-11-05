@@ -18,6 +18,7 @@ TESTS=(
   "res://tools/tests/test_compile.tscn"
   "res://tools/tests/test_art.tscn"
   "res://tools/tests/test_camera.tscn"
+  "res://tools/tests/test_sequence.tscn"
   "res://tools/tests/test_physics.tscn"
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_companion.tscn"

@@ -1,0 +1,15 @@
+{
+ "_note": "ورود به ناحیهٔ ۱ — نور از در، کایرو چند قدم جلو می‌رود (سند ۰۹ §۵).",
+ "id": "ch1_a1_intro",
+ "steps": [
+  {"step": "fade", "seconds": 0.6},
+  {"step": "camera_to", "marker": "marker_door", "seconds": 0.8},
+  {"step": "move_to", "actor": "kairo", "marker": "marker_hall", "seconds": 1.6},
+  {"step": "play_anim", "actor": "kairo", "anim": "idle_down", "seconds": 0.4},
+  {"step": "dialogue", "key": "c1_a1_01", "seconds": 2.0},
+  {"step": "camera_to", "marker": "marker_kairo_start", "seconds": 0.6},
+  {"step": "set_flag", "flag": "ch1_a1_seen_intro", "value": true},
+  {"step": "checkpoint", "id": "ch1_a1_start"},
+  {"step": "give_control"}
+ ]
+}
