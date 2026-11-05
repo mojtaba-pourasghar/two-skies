@@ -1,0 +1,47 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "upgrade_panel": [
+   1117,
+   590
+  ],
+  "icon_blade": [
+   67,
+   67
+  ],
+  "icon_shield": [
+   67,
+   66
+  ],
+  "icon_leafstaff": [
+   67,
+   66
+  ],
+  "icon_chip": [
+   67,
+   67
+  ],
+  "icon_boot": [
+   67,
+   67
+  ],
+  "icon_battery": [
+   67,
+   67
+  ],
+  "icon_heart": [
+   68,
+   67
+  ],
+  "icon_lens": [
+   68,
+   67
+  ],
+  "icon_amulet": [
+   68,
+   67
+  ]
+ },
+ "camera": "ui",
+ "note": "پنل با ۳ جایگاه کارت؛ آیکن‌ها ۰٫۴"
+}

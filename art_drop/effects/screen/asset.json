@@ -1,0 +1,191 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "flash_0": [
+   38,
+   38
+  ],
+  "flash_1": [
+   60,
+   54
+  ],
+  "flash_2": [
+   74,
+   62
+  ],
+  "flash_3": [
+   90,
+   90
+  ],
+  "vortex_0": [
+   100,
+   91
+  ],
+  "vortex_1": [
+   101,
+   91
+  ],
+  "vortex_2": [
+   102,
+   91
+  ],
+  "laser_0": [
+   168,
+   61
+  ],
+  "laser_1": [
+   202,
+   61
+  ],
+  "laser_2": [
+   276,
+   63
+  ],
+  "shockwave_0": [
+   105,
+   58
+  ],
+  "shockwave_1": [
+   143,
+   76
+  ],
+  "shockwave_2": [
+   176,
+   86
+  ],
+  "shockwave_3": [
+   160,
+   86
+  ],
+  "banner_victory": [
+   251,
+   58
+  ],
+  "banner_defeat": [
+   251,
+   58
+  ],
+  "digit_white_0": [
+   28,
+   35
+  ],
+  "digit_white_1": [
+   21,
+   35
+  ],
+  "digit_white_2": [
+   28,
+   35
+  ],
+  "digit_white_3": [
+   28,
+   35
+  ],
+  "digit_white_4": [
+   29,
+   35
+  ],
+  "digit_white_5": [
+   28,
+   34
+  ],
+  "digit_white_6": [
+   28,
+   35
+  ],
+  "digit_white_7": [
+   27,
+   35
+  ],
+  "digit_white_8": [
+   28,
+   35
+  ],
+  "digit_white_9": [
+   28,
+   35
+  ],
+  "digit_gold_0": [
+   28,
+   34
+  ],
+  "digit_gold_1": [
+   20,
+   33
+  ],
+  "digit_gold_2": [
+   28,
+   34
+  ],
+  "digit_gold_3": [
+   28,
+   34
+  ],
+  "digit_gold_4": [
+   29,
+   34
+  ],
+  "digit_gold_5": [
+   28,
+   33
+  ],
+  "digit_gold_6": [
+   28,
+   34
+  ],
+  "digit_gold_7": [
+   27,
+   34
+  ],
+  "digit_gold_8": [
+   28,
+   34
+  ],
+  "digit_gold_9": [
+   28,
+   34
+  ],
+  "digit_red_0": [
+   28,
+   34
+  ],
+  "digit_red_1": [
+   21,
+   34
+  ],
+  "digit_red_2": [
+   27,
+   34
+  ],
+  "digit_red_3": [
+   28,
+   34
+  ],
+  "digit_red_4": [
+   28,
+   34
+  ],
+  "digit_red_5": [
+   28,
+   34
+  ],
+  "digit_red_6": [
+   28,
+   34
+  ],
+  "digit_red_7": [
+   27,
+   34
+  ],
+  "digit_red_8": [
+   28,
+   34
+  ],
+  "digit_red_9": [
+   28,
+   34
+  ]
+ },
+ "camera": "battle-3q",
+ "note": "vignette_dark.png: سیاه با آلفا (نمایشی)؛ ارقام ۳ رنگ؛ بنرها بدون متن"
+}
