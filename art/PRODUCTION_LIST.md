@@ -144,3 +144,7 @@
 - battle_enemies_1: خزنده/نگهبان/پهپاد/انتحاری در حالت‌های idle/attack/hurt/انفجار — ۴:۳
 - battle_bg_workshop، battle_bg_basement — ۱۶:۹
 - هنوز نفرستاده: پس‌زمینهٔ نبرد خانه و جادهٔ پرتاب، باس غول نگهبان نبرد نوبتی (idle/attack/phase)، مینی‌مپ UI، پیوند دو آسمان.
+
+### دستهٔ ۱۳ — وضعیت: **برش و پوش شد** (art/tools/slice_ch1_v13.py)
+`art_drop/battle_bg/` (زیرزمین و کارگاه ۱۲۸۰×۷۲۰)، `art_drop/enemies/battle_nexa/` (۱۲: crawler/guard/drone/kamikaze × idle/attack/hurt؛ kamikaze: idle/charge/explode)، `art_drop/npc/survivors/` (۸). پیش‌نویس تا تأیید.
+## دستهٔ ۱۴ — ارسال‌شده به Canva: پس‌زمینهٔ نبرد خانه، پس‌زمینهٔ نبرد جادهٔ پرتاب، باس غول نگهبان (نبرد)، پیوند دو آسمان (افکت تمام‌صفحه)، مینی‌مپ/HUD اکتشاف.

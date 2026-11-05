@@ -1,0 +1,41 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "mechanic": [
+   51,
+   88
+  ],
+  "scavenger": [
+   40,
+   88
+  ],
+  "nurse": [
+   39,
+   89
+  ],
+  "merchant": [
+   82,
+   89
+  ],
+  "child": [
+   39,
+   74
+  ],
+  "watchman": [
+   55,
+   96
+  ],
+  "scholar": [
+   47,
+   93
+  ],
+  "soldier_wounded": [
+   56,
+   90
+  ]
+ },
+ "camera": "topdown",
+ "height_px_approx": 88,
+ "scale": 0.19,
+ "source": "art/raw/ch1_v13/npc_survivors_full.png"
+}

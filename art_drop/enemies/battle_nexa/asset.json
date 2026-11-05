@@ -1,0 +1,56 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "crawler_idle": [
+   136,
+   91
+  ],
+  "crawler_attack": [
+   162,
+   91
+  ],
+  "crawler_hurt": [
+   156,
+   95
+  ],
+  "guard_idle": [
+   83,
+   99
+  ],
+  "guard_attack": [
+   133,
+   100
+  ],
+  "guard_hurt": [
+   83,
+   96
+  ],
+  "drone_idle": [
+   119,
+   76
+  ],
+  "drone_attack": [
+   129,
+   87
+  ],
+  "drone_hurt": [
+   112,
+   70
+  ],
+  "kamikaze_idle": [
+   84,
+   68
+  ],
+  "kamikaze_charge": [
+   105,
+   81
+  ],
+  "kamikaze_explode": [
+   134,
+   86
+  ]
+ },
+ "camera": "battle-3q",
+ "scale": 0.4,
+ "source": "art/raw/ch1_v13/battle_enemies_full.png"
+}
