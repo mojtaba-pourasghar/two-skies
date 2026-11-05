@@ -57,7 +57,7 @@
 ## ۶. نقشهٔ هنر → بازی (`tools/import_art.py`)
 - هر `art_drop/<نام>/asset.json` → `game/assets/<نام>/` + فایل Import؛ `draft-until-user-approval` فقط هشدار.
 - انیمیشن‌های شخصیت در `art_drop/{kairo,ilara}/home/anim/`، نام‌گذاری `<anim>_NN.png` (۱۲۸×۱۲۸؛ `climb_up` ۱۹۲×۱۹۲)، خط پا y=124، ~۹fps. `side`: `walk_side run_side hop dash hack wall_jump death`. `topdown`: `walk_{down,up,left}` (راست=آینه)، `leap_down climb_up`، `{dash,hack,hurt}_{down,up,left}`، `emotions_topdown` (ایلارا).
-- کاشی سه‌چهارم: **`tiles_ch1_v2`** (نه `tiles_ch1` قدیمی)؛ کاشی نمای کناری: `tiles_side_ch1`. هر دو ۶۴px + `_32`؛ ۱۸–۲۰ کاشی به ترتیب سطری (نام نقش هر کاشی عددی است؛ برچسب‌گذاری با توست).
+- کاشی سه‌چهارم: **`tiles_ch1_v2`** (نه `tiles_ch1` قدیمی)؛ کاشی نمای کناری: `tiles_side_ch1`. هر دو ۶۴px + `_32`؛ ۱۸–۲۰ کاشی به ترتیب سطری ؛ نقش و نوع برخورد هر کاشی در `names.json` کنار آن و جدول `art/TILE_ROLES.md`.
 - پارالکس: `art_drop/parallax/ch1/<صحنه>_{far,mid,fore}_1280x720.png` برای `house street basement electric workshop launch`؛ `fore`/`mid` شفاف.
 - UI/آیکن‌ها: `art_drop/icons/tools_v2/{climb,leap,dash,hack}.png`؛ فونت `Erfan-Pixel-Regular.ttf` (مضرب ۱۶، Nearest)؛ متن‌های فارسی RTL.
 
@@ -77,4 +77,4 @@
 شاخه‌ها: `feat/topdown-3q` یا شاخهٔ هنر؛ پوش مستقیم به `master` ممنوع. تصمیم تازه در `DECISIONS.md`. اگر مشخصات تناقض داشت **بایست و بپرس**. هنر ساخته‌شده با کد فقط `art/drafts/` است.
 
 ## ۹. باز مانده (از کاربر)
-ابطال توکن‌های Cloudflare؛ لباس سبز ایلارا در خانه؛ برچسب نقش کاشی‌ها؛ تأیید نهایی هنر (همه draft).
+ابطال توکن‌های Cloudflare؛ لباس سبز ایلارا در خانه؛ تأیید نهایی هنر (همه draft).

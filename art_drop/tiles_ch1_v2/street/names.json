@@ -1,0 +1,135 @@
+{
+ "camera": "topdown",
+ "scene": "street",
+ "levels": "مرحلهٔ ۲",
+ "tile_px": 64,
+ "count": 18,
+ "roles": [
+  {
+   "index": 0,
+   "file": "street_00.png",
+   "role": "asphalt_lane_marking",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 1,
+   "file": "street_01.png",
+   "role": "asphalt_lane_cross",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 2,
+   "file": "street_02.png",
+   "role": "crosswalk",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 3,
+   "file": "street_03.png",
+   "role": "asphalt_cracked",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 4,
+   "file": "street_04.png",
+   "role": "curb_corner_drain",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 5,
+   "file": "street_05.png",
+   "role": "paving_tiles",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 6,
+   "file": "street_06.png",
+   "role": "asphalt_dark",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 7,
+   "file": "street_07.png",
+   "role": "rubble_pile",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 8,
+   "file": "street_08.png",
+   "role": "plate_damaged_hatch",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 9,
+   "file": "street_09.png",
+   "role": "manhole",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 10,
+   "file": "street_10.png",
+   "role": "wall_corner_vent",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 11,
+   "file": "street_11.png",
+   "role": "wall_corner_rubble",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 12,
+   "file": "street_12.png",
+   "role": "wall_corner_c",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 13,
+   "file": "street_13.png",
+   "role": "wall_corner_d",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 14,
+   "file": "street_14.png",
+   "role": "wall_corner_plain",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 15,
+   "file": "street_15.png",
+   "role": "wall_corner_brick_break",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 16,
+   "file": "street_16.png",
+   "role": "wall_corner_grate",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 17,
+   "file": "street_17.png",
+   "role": "wall_corner_vent_b",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  }
+ ]
+}

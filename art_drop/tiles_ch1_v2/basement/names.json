@@ -1,0 +1,135 @@
+{
+ "camera": "topdown",
+ "scene": "basement",
+ "levels": "مراحل ۴ و ۶",
+ "tile_px": 64,
+ "count": 18,
+ "roles": [
+  {
+   "index": 0,
+   "file": "basement_00.png",
+   "role": "floor_a",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 1,
+   "file": "basement_01.png",
+   "role": "floor_b",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 2,
+   "file": "basement_02.png",
+   "role": "grate_quad",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 3,
+   "file": "basement_03.png",
+   "role": "grate_long",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 4,
+   "file": "basement_04.png",
+   "role": "cable_grate",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 5,
+   "file": "basement_05.png",
+   "role": "emblem_hatch",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 6,
+   "file": "basement_06.png",
+   "role": "floor_c",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 7,
+   "file": "basement_07.png",
+   "role": "cables_cross",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 8,
+   "file": "basement_08.png",
+   "role": "grate_octagon",
+   "kind": "walkable_decor",
+   "kind_fa": "کف قابل راه‌رفتن با نقش (تله/هک/دریچه را روی آن می‌گذار)"
+  },
+  {
+   "index": 9,
+   "file": "basement_09.png",
+   "role": "floor_d",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 10,
+   "file": "basement_10.png",
+   "role": "floor_cracked",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 11,
+   "file": "basement_11.png",
+   "role": "floor_e",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 12,
+   "file": "basement_12.png",
+   "role": "wall_corner_lamp",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 13,
+   "file": "basement_13.png",
+   "role": "wall_corner_server_lamp",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 14,
+   "file": "basement_14.png",
+   "role": "wall_corner_pipes",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 15,
+   "file": "basement_15.png",
+   "role": "wall_archway_lit",
+   "kind": "passage",
+   "kind_fa": "ورودی/طاق قابل عبور"
+  },
+  {
+   "index": 16,
+   "file": "basement_16.png",
+   "role": "wall_corner_vent",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 17,
+   "file": "basement_17.png",
+   "role": "wall_terminal_green",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  }
+ ]
+}

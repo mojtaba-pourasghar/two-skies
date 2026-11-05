@@ -1,0 +1,149 @@
+{
+ "camera": "side",
+ "scene": "house",
+ "levels": "مرحلهٔ ۱ و اتاق‌های داخلی",
+ "tile_px": 64,
+ "count": 20,
+ "roles": [
+  {
+   "index": 0,
+   "file": "house_side_00.png",
+   "role": "ground_top_a",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 1,
+   "file": "house_side_01.png",
+   "role": "ground_top_b",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 2,
+   "file": "house_side_02.png",
+   "role": "ground_end_right",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 3,
+   "file": "house_side_03.png",
+   "role": "ground_end_left",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 4,
+   "file": "house_side_04.png",
+   "role": "platform_thin",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 5,
+   "file": "house_side_05.png",
+   "role": "platform_bracket_right",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 6,
+   "file": "house_side_06.png",
+   "role": "platform_bracket_left",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 7,
+   "file": "house_side_07.png",
+   "role": "wall_wainscot_a",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 8,
+   "file": "house_side_08.png",
+   "role": "wall_wainscot_b",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 9,
+   "file": "house_side_09.png",
+   "role": "platform_shelf_left",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 10,
+   "file": "house_side_10.png",
+   "role": "pillar",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 11,
+   "file": "house_side_11.png",
+   "role": "window_curtain",
+   "kind": "decor",
+   "kind_fa": "تزئینی بدون برخورد"
+  },
+  {
+   "index": 12,
+   "file": "house_side_12.png",
+   "role": "door",
+   "kind": "door",
+   "kind_fa": "در/گذرگاه"
+  },
+  {
+   "index": 13,
+   "file": "house_side_13.png",
+   "role": "door_frame",
+   "kind": "door",
+   "kind_fa": "در/گذرگاه"
+  },
+  {
+   "index": 14,
+   "file": "house_side_14.png",
+   "role": "stairs",
+   "kind": "slope",
+   "kind_fa": "پله/شیب"
+  },
+  {
+   "index": 15,
+   "file": "house_side_15.png",
+   "role": "ladder",
+   "kind": "ladder",
+   "kind_fa": "نردبان (جای‌نگهدار؛ مکانیک نردبان در نسخهٔ ۱ نیست)"
+  },
+  {
+   "index": 16,
+   "file": "house_side_16.png",
+   "role": "railing_balustrade",
+   "kind": "foreground",
+   "kind_fa": "جلوی شخصیت (لایهٔ بالا)"
+  },
+  {
+   "index": 17,
+   "file": "house_side_17.png",
+   "role": "rug",
+   "kind": "decor",
+   "kind_fa": "تزئینی بدون برخورد"
+  },
+  {
+   "index": 18,
+   "file": "house_side_18.png",
+   "role": "baseboard_strip",
+   "kind": "decor",
+   "kind_fa": "تزئینی بدون برخورد"
+  },
+  {
+   "index": 19,
+   "file": "house_side_19.png",
+   "role": "wall_corner_inner",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  }
+ ]
+}

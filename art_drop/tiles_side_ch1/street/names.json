@@ -1,0 +1,135 @@
+{
+ "camera": "side",
+ "scene": "street",
+ "levels": "مراحل ۳ و ۷ (و ۸)",
+ "tile_px": 64,
+ "count": 18,
+ "roles": [
+  {
+   "index": 0,
+   "file": "street_side_00.png",
+   "role": "ground_top_rubble",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 1,
+   "file": "street_side_01.png",
+   "role": "ground_fill",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 2,
+   "file": "street_side_02.png",
+   "role": "ground_end_left",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 3,
+   "file": "street_side_03.png",
+   "role": "ground_end_right",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 4,
+   "file": "street_side_04.png",
+   "role": "platform_metal_long",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 5,
+   "file": "street_side_05.png",
+   "role": "platform_metal_short",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 6,
+   "file": "street_side_06.png",
+   "role": "wall_planks",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 7,
+   "file": "street_side_07.png",
+   "role": "wall_graffiti",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 8,
+   "file": "street_side_08.png",
+   "role": "ceiling_hanging_cables",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 9,
+   "file": "street_side_09.png",
+   "role": "pillar_scaffold",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 10,
+   "file": "street_side_10.png",
+   "role": "window_frame",
+   "kind": "decor",
+   "kind_fa": "تزئینی بدون برخورد"
+  },
+  {
+   "index": 11,
+   "file": "street_side_11.png",
+   "role": "doorway_dark",
+   "kind": "door",
+   "kind_fa": "در/گذرگاه"
+  },
+  {
+   "index": 12,
+   "file": "street_side_12.png",
+   "role": "stairs",
+   "kind": "slope",
+   "kind_fa": "پله/شیب"
+  },
+  {
+   "index": 13,
+   "file": "street_side_13.png",
+   "role": "ladder",
+   "kind": "ladder",
+   "kind_fa": "نردبان (جای‌نگهدار؛ مکانیک نردبان در نسخهٔ ۱ نیست)"
+  },
+  {
+   "index": 14,
+   "file": "street_side_14.png",
+   "role": "railing",
+   "kind": "foreground",
+   "kind_fa": "جلوی شخصیت (لایهٔ بالا)"
+  },
+  {
+   "index": 15,
+   "file": "street_side_15.png",
+   "role": "rubble_slope",
+   "kind": "slope",
+   "kind_fa": "پله/شیب"
+  },
+  {
+   "index": 16,
+   "file": "street_side_16.png",
+   "role": "curb_slab",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 17,
+   "file": "street_side_17.png",
+   "role": "corner_support_bracket",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  }
+ ]
+}

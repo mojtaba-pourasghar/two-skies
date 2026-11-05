@@ -1,0 +1,142 @@
+{
+ "camera": "side",
+ "scene": "basement",
+ "levels": "مرحلهٔ ۵",
+ "tile_px": 64,
+ "count": 19,
+ "roles": [
+  {
+   "index": 0,
+   "file": "basement_side_00.png",
+   "role": "ground_top",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 1,
+   "file": "basement_side_01.png",
+   "role": "ground_fill",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 2,
+   "file": "basement_side_02.png",
+   "role": "ground_end_left",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 3,
+   "file": "basement_side_03.png",
+   "role": "ground_end_right",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 4,
+   "file": "basement_side_04.png",
+   "role": "platform_grate_long",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 5,
+   "file": "basement_side_05.png",
+   "role": "platform_bracket_left",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 6,
+   "file": "basement_side_06.png",
+   "role": "platform_bracket_right",
+   "kind": "oneway",
+   "kind_fa": "پلتفرم یک‌طرفه (از پایین رد می‌شود)"
+  },
+  {
+   "index": 7,
+   "file": "basement_side_07.png",
+   "role": "wall_brick",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 8,
+   "file": "basement_side_08.png",
+   "role": "wall_pipes",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 9,
+   "file": "basement_side_09.png",
+   "role": "ceiling_slab",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 10,
+   "file": "basement_side_10.png",
+   "role": "pillar_stone",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  },
+  {
+   "index": 11,
+   "file": "basement_side_11.png",
+   "role": "window_arched_lit",
+   "kind": "decor",
+   "kind_fa": "تزئینی بدون برخورد"
+  },
+  {
+   "index": 12,
+   "file": "basement_side_12.png",
+   "role": "door_security",
+   "kind": "door",
+   "kind_fa": "در/گذرگاه"
+  },
+  {
+   "index": 13,
+   "file": "basement_side_13.png",
+   "role": "stairs",
+   "kind": "slope",
+   "kind_fa": "پله/شیب"
+  },
+  {
+   "index": 14,
+   "file": "basement_side_14.png",
+   "role": "ladder",
+   "kind": "ladder",
+   "kind_fa": "نردبان (جای‌نگهدار؛ مکانیک نردبان در نسخهٔ ۱ نیست)"
+  },
+  {
+   "index": 15,
+   "file": "basement_side_15.png",
+   "role": "railing_slab",
+   "kind": "foreground",
+   "kind_fa": "جلوی شخصیت (لایهٔ بالا)"
+  },
+  {
+   "index": 16,
+   "file": "basement_side_16.png",
+   "role": "crate",
+   "kind": "solid",
+   "kind_fa": "سطح جامد (برخورد کامل)"
+  },
+  {
+   "index": 17,
+   "file": "basement_side_17.png",
+   "role": "baseboard_strip",
+   "kind": "decor",
+   "kind_fa": "تزئینی بدون برخورد"
+  },
+  {
+   "index": 18,
+   "file": "basement_side_18.png",
+   "role": "corner_pillar",
+   "kind": "background",
+   "kind_fa": "پس‌زمینهٔ بدون برخورد"
+  }
+ ]
+}

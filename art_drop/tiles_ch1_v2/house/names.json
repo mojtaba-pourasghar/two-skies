@@ -1,0 +1,135 @@
+{
+ "camera": "topdown",
+ "scene": "house",
+ "levels": "اتاق مخفی ایلارا",
+ "tile_px": 64,
+ "count": 18,
+ "roles": [
+  {
+   "index": 0,
+   "file": "house_00.png",
+   "role": "floor_plank_a",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 1,
+   "file": "house_01.png",
+   "role": "floor_plank_b",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 2,
+   "file": "house_02.png",
+   "role": "floor_plank_accent_a",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 3,
+   "file": "house_03.png",
+   "role": "floor_plank_b2",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 4,
+   "file": "house_04.png",
+   "role": "floor_plank_c",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 5,
+   "file": "house_05.png",
+   "role": "floor_plank_d",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 6,
+   "file": "house_06.png",
+   "role": "rug_center",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 7,
+   "file": "house_07.png",
+   "role": "rug_edge_diag",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 8,
+   "file": "house_08.png",
+   "role": "rug_edge_top",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 9,
+   "file": "house_09.png",
+   "role": "floor_plank_accent_b",
+   "kind": "walkable",
+   "kind_fa": "کف قابل راه‌رفتن"
+  },
+  {
+   "index": 10,
+   "file": "house_10.png",
+   "role": "cabinet_corner_a",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 11,
+   "file": "house_11.png",
+   "role": "cabinet_corner_b",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 12,
+   "file": "house_12.png",
+   "role": "wall_wainscot_front",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 13,
+   "file": "house_13.png",
+   "role": "wall_post_edge",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 14,
+   "file": "house_14.png",
+   "role": "wall_corner_inner_a",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 15,
+   "file": "house_15.png",
+   "role": "wall_corner_inner_b",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 16,
+   "file": "house_16.png",
+   "role": "wall_post_corner",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  },
+  {
+   "index": 17,
+   "file": "house_17.png",
+   "role": "wall_post_door",
+   "kind": "wall",
+   "kind_fa": "دیوار/مانع با Y-sort"
+  }
+ ]
+}
