@@ -96,3 +96,6 @@
 
 ## ۱۱. مسیر هنر تازه برای RPG (برای tools/import_art.py)
 `art_drop/overworld/ch1/*` (گره‌ها/مسیر/دروازه/نشانگر)، `art_drop/explore/props/*` (اشیای تعاملی)، `art_drop/explore/pickups/*` (جمع‌شدنی/نشانگر/افکت اکتشاف)، بعداً `art_drop/battle_fx|battle_ui|battle_bg|npc|enemies_battle`. هر پوشه `asset.json` دارد؛ نام فایل = شناسهٔ دارایی. همه پیش‌نویس تا تأیید کاربرند.
+
+### مسیرهای هنر RPG (به‌روز، دستهٔ ۱۲–۱۴)
+`art_drop/battle_bg/` (basement, workshop, house, launch)، `art_drop/enemies/battle_nexa/`، `art_drop/boss/guardian_battle/`، `art_drop/effects/bond_two_skies/`، `art_drop/ui/explore_hud/`، `art_drop/npc/survivors/`، `art_drop/explore/{props,pickups}/`، `art_drop/overworld/ch1/`. در انتظار: `battle_fx`, `battle_ui`, پس‌زمینهٔ نبرد خیابان (دستهٔ ۱۱).

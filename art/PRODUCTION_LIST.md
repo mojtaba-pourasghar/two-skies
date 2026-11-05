@@ -148,3 +148,7 @@
 ### دستهٔ ۱۳ — وضعیت: **برش و پوش شد** (art/tools/slice_ch1_v13.py)
 `art_drop/battle_bg/` (زیرزمین و کارگاه ۱۲۸۰×۷۲۰)، `art_drop/enemies/battle_nexa/` (۱۲: crawler/guard/drone/kamikaze × idle/attack/hurt؛ kamikaze: idle/charge/explode)، `art_drop/npc/survivors/` (۸). پیش‌نویس تا تأیید.
 ## دستهٔ ۱۴ — ارسال‌شده به Canva: پس‌زمینهٔ نبرد خانه، پس‌زمینهٔ نبرد جادهٔ پرتاب، باس غول نگهبان (نبرد)، پیوند دو آسمان (افکت تمام‌صفحه)، مینی‌مپ/HUD اکتشاف.
+
+### دستهٔ ۱۴ — وضعیت: **برش و پوش شد** (art/tools/slice_ch1_v14.py)
+`art_drop/battle_bg/` (+ خانه و جادهٔ پرتاب؛ اکنون ۴ پس‌زمینه)، `art_drop/boss/guardian_battle/` (۶ حالت)، `art_drop/effects/bond_two_skies/` (۴ مرحله)، `art_drop/ui/explore_hud/` (جان، انرژی، شمارنده‌ها، چرخ ابزار، قاب مینی‌مپ، پیکان هدف). پیش‌نویس تا تأیید.
+**هنوز نرسیده (دستهٔ ۱۱):** افکت ضربه ×۲ برگه، رابط نبرد، پس‌زمینهٔ نبرد خیابان.
