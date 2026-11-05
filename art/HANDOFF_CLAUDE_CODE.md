@@ -1,3 +1,5 @@
+> **به‌روزرسانی ۱۴۰۵/۰۸/۱۴:** این سند فقط جزئیات هنر است. ابتدا `game/BUILD_BRIEF.md` (مرجع ورودی). مسیرهای تازه: `kairo/ilara/home/anim/`، `tiles_ch1_v2/`، `tiles_side_ch1/`، `parallax/ch1/`، `hazards_ch1_{topdown,sideview}/`، `enemies/nexa_topdown/`، `icons/tools_v2/` و `art/CAMERA_SETS.md`.
+
 # دستور تحویل به Claude Code (هنر فصل ۱)
 
 شاخهٔ `art/style-pipeline` را در شاخهٔ کاری‌ات (`feat/topdown-3q`) merge کن (به `master` پوش نکن)، سپس:
