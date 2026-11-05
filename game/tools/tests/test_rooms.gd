@@ -1,0 +1,167 @@
+## آزمون موتور اتاق نقاشی‌شده — M1
+##
+##   godot --headless res://tools/tests/test_rooms.tscn
+##
+## سه چیز را می‌سنجد که اگر بشکنند بازیکن در دیوار گیر می‌کند یا بازی
+## بی‌صدا خالی می‌شود: اعتبارسنجی ماسک، خواندن ماسک از تصویر، و ترتیب
+## لایه‌ها (occluder باید **روی** بازیگر باشد).
+extends Node2D
+
+const ROOM := "r1a_living"
+
+var _failures: Array[String] = []
+var _checks: int = 0
+
+
+func _ready() -> void:
+	_t_validation()
+	_t_real_room()
+	_t_mask_queries()
+	_t_layers()
+	_report()
+
+
+func _t_validation() -> void:
+	print("— اعتبارسنجی دادهٔ اتاق —")
+	var l := RoomData.new()
+	var room := l.load_room(ROOM)
+	_check("اتاق %s بار شد" % ROOM, not room.is_empty(),
+		"" if room.is_empty() else "= %dx%d" % [room["size"][0], room["size"][1]])
+	if room.is_empty():
+		for e in l.errors:
+			print("      %s" % e)
+		return
+	_check("هیچ خطایی ندارد", l.errors.is_empty(), "= %s" % str(l.errors))
+	_check("تصویر پس‌زمینه دارد", String(room["bg"]) != "", "= %s" % room["bg"])
+	_check("رفتار دوربین room است", String(room["camera"]) == "room")
+
+	# دادهٔ خراب باید خطا بدهد، نه بی‌صدا رد شود
+	var bad := RoomData.new()
+	var fake := {
+		"id": "bad", "bg": "", "size": [1280, 720], "camera": "isometric",
+		"walkable": [[0, 0, 10, 0]],
+		"doors": [
+			{"id": "d", "rect": [0, 0, 10, 10], "to": "", "spawn": [1, 1]},
+			{"id": "d", "rect": [0, 0, 10, 10], "to": "x", "spawn": [1, 1]},
+		],
+		"spawn": [5000, 5000],
+	}
+	bad._normalize(fake)
+	bad._validate(fake)
+	var msgs := " | ".join(bad.errors)
+	_check("رفتار دوربین نامعتبر خطا داد", msgs.contains("دوربین"), "")
+	_check("نبودن تصویر خطا داد", msgs.contains("پس‌زمینه"), "")
+	_check("چندضلعی ۲ نقطه‌ای خطا داد", msgs.contains("walkable[0]"), "")
+	_check("در بی‌مقصد و شناسهٔ تکراری خطا دادند",
+		msgs.contains("مقصد") and msgs.contains("تکراری"), "")
+	_check("نقطهٔ شروع بیرون ماسک خطا داد", msgs.contains("شروع"), "")
+
+
+func _t_real_room() -> void:
+	print("— ساخت اتاق با هنر واقعی —")
+	var l := RoomData.new()
+	var room := l.load_room(ROOM)
+	if room.is_empty():
+		return
+	var node := PaintedRoom.new()
+	add_child(node)
+	node.build(room)
+	_check("هیچ دارایی هنری گم نشد", node.missing_art.is_empty(),
+		"= %s" % str(node.missing_art))
+	_check("مرز اتاق از اندازهٔ تصویر می‌آید",
+		node.bounds().size == Vector2(1280, 720), "= %s" % str(node.bounds().size))
+	_check("پس‌زمینه کشیده شد",
+		node.get_node("World/Background").get_child_count() == 1)
+	_check("پراپ‌ها کشیده شدند",
+		node.get_node("World/Props").get_child_count() >= 1,
+		"= %d" % node.get_node("World/Props").get_child_count())
+	_check("occluderها کشیده شدند",
+		node.get_node("World/Occluders").get_child_count() >= 2,
+		"= %d" % node.get_node("World/Occluders").get_child_count())
+	_check("لایهٔ نور کشیده شد",
+		node.get_node("World/Light").get_child_count() >= 1,
+		"= %d" % node.get_node("World/Light").get_child_count())
+	node.queue_free()
+
+
+func _t_mask_queries() -> void:
+	print("— ماسک از روی تصویر خوانده می‌شود —")
+	var l := RoomData.new()
+	var room := l.load_room(ROOM)
+	if room.is_empty():
+		return
+	var spawn := Vector2(float(room["spawn"][0]), float(room["spawn"][1]))
+	_check("نقطهٔ شروع روی زمین است", RoomData.point_walkable(room, spawn),
+		"= %s" % str(spawn))
+	_check("بیرون قاب روی زمین نیست",
+		not RoomData.point_walkable(room, Vector2(-50, -50)))
+	_check("دیوار پنجره (بالا-چپ) روی زمین نیست",
+		not RoomData.point_walkable(room, Vector2(300, 150)))
+
+	# سوراخ‌ها: مبل جایی است که ماسک **دارد** ولی نباید رفت
+	var sofa := Vector2(380, 430)
+	var inside_walk := false
+	for flat in room["walkable"]:
+		if Geometry2D.is_point_in_polygon(sofa, RoomData.to_polygon(flat)):
+			inside_walk = true
+	_check("مبل داخل چندضلعی قابل‌راه‌رفتن است", inside_walk)
+	_check("ولی سوراخ `blocked` جلویش را می‌گیرد",
+		not RoomData.point_walkable(room, sofa), "= %s" % str(sofa))
+
+	var hz := RoomData.hazard_at(room, Vector2(640, 515))
+	_check("ماسک خطر کف شکسته خوانده می‌شود", not hz.is_empty(),
+		"= %s" % String(hz.get("id", "-")))
+	_check("خطر آسیب ۱۰٪ دارد، نه مرگ",
+		is_equal_approx(float(hz.get("damage_pct", 0.0)), 10.0),
+		"= %.0f٪" % float(hz.get("damage_pct", 0.0)))
+	_check("جای امن خطر بیرون خودش است",
+		not RoomData.hazard_at(room,
+			Vector2(float(hz["safe"][0]), float(hz["safe"][1]))).has("id"))
+
+	var dr := RoomData.door_at(room, Vector2(930, 460))
+	_check("در طاق خوانده می‌شود", not dr.is_empty(),
+		"= %s → %s" % [dr.get("id", "-"), dr.get("to", "-")])
+
+
+## ترتیب لایه‌ها اهمیت دارد: اگر occluder زیر بازیگر بیاید، شخصیت روی ستون
+## کشیده می‌شود؛ اگر نور زیر occluder بیاید، هاله پشت پرده گیر می‌کند.
+func _t_layers() -> void:
+	print("— ترتیب لایه‌ها —")
+	var l := RoomData.new()
+	var room := l.load_room(ROOM)
+	if room.is_empty():
+		return
+	var node := PaintedRoom.new()
+	add_child(node)
+	node.build(room)
+	var bg: Node2D = node.get_node("World/Background")
+	var props: Node2D = node.get_node("World/Props")
+	var actors: Node2D = node.actors
+	var occ: Node2D = node.get_node("World/Occluders")
+	var light: Node2D = node.get_node("World/Light")
+	_check("نقاشی زیر همه است", bg.z_index < props.z_index)
+	_check("پراپ زیر بازیگر است", props.z_index < actors.z_index)
+	_check("occluder روی بازیگر است", occ.z_index > actors.z_index)
+	_check("نور روی occluder است", light.z_index > occ.z_index)
+	_check("Y-sort روی دنیا و بازیگران روشن است",
+		node.world.y_sort_enabled and actors.y_sort_enabled)
+	node.queue_free()
+
+
+func _check(label: String, ok: bool, detail: String = "") -> void:
+	_checks += 1
+	if ok:
+		print("  ✔ %s %s" % [label, detail])
+	else:
+		_failures.append("%s %s" % [label, detail])
+		print("  ✘ %s %s" % [label, detail])
+
+
+func _report() -> void:
+	print("")
+	if _failures.is_empty():
+		print("همهٔ %d سنجه قبول شد." % _checks)
+		get_tree().quit(0)
+	else:
+		print("%d از %d سنجه رد شد." % [_failures.size(), _checks])
+		get_tree().quit(1)

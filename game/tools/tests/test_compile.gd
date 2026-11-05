@@ -48,6 +48,12 @@ func _walk(dir: String) -> Array[String]:
 			continue
 		var full := dir.path_join(entry)
 		if d.current_is_dir():
+			# پوشه‌ای که `.gdignore` دارد بایگانی است: خود موتور هم آن را
+			# وارد نمی‌کند، پس کامپایل کردنش هم معنا ندارد و فقط خطای
+			# کلاس‌های برداشته‌شده می‌دهد.
+			if FileAccess.file_exists(full.path_join(".gdignore")):
+				entry = d.get_next()
+				continue
 			out.append_array(_walk(full))
 		elif entry.ends_with(".gd"):
 			out.append(full)

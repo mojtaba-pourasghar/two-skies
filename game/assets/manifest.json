@@ -115,6 +115,16 @@
    "unchanged": 4
   },
   {
+   "path": "challenge/traps",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 24,
+   "bytes": 220011,
+   "copied": 24,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
    "path": "checkpoint_exit",
    "status": "draft",
    "approved": false,
@@ -131,6 +141,16 @@
    "bytes": 407599,
    "copied": 0,
    "unchanged": 4,
+   "camera": "battle-3q"
+  },
+  {
+   "path": "effects/screen",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 47,
+   "bytes": 274398,
+   "copied": 47,
+   "unchanged": 0,
    "camera": "battle-3q"
   },
   {
@@ -443,6 +463,36 @@
    "camera": "topdown"
   },
   {
+   "path": "occluders/ch1",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 12,
+   "bytes": 225722,
+   "copied": 12,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "overlays/particles",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 15,
+   "bytes": 182585,
+   "copied": 15,
+   "unchanged": 0,
+   "camera": "any"
+  },
+  {
+   "path": "overlays/rooms",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 12,
+   "bytes": 105377,
+   "copied": 12,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
    "path": "overworld/ch1",
    "status": "draft-until-user-approval",
    "approved": false,
@@ -489,6 +539,16 @@
    "unchanged": 12
   },
   {
+   "path": "rooms/ch1",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 7,
+   "bytes": 12116816,
+   "copied": 7,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
    "path": "scenes",
    "status": "draft",
    "approved": false,
@@ -505,6 +565,16 @@
    "bytes": 4149065,
    "copied": 0,
    "unchanged": 3
+  },
+  {
+   "path": "side_ch1/platforms",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 13,
+   "bytes": 64626,
+   "copied": 13,
+   "unchanged": 0,
+   "camera": "side"
   },
   {
    "path": "store",
@@ -634,6 +704,16 @@
    "bytes": 93920,
    "copied": 0,
    "unchanged": 7,
+   "camera": "ui"
+  },
+  {
+   "path": "ui/upgrade_choice",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 10,
+   "bytes": 644242,
+   "copied": 10,
+   "unchanged": 0,
    "camera": "ui"
   },
   {

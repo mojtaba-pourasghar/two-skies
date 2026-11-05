@@ -84,7 +84,7 @@ func _test_constants() -> void:
 	# (CLAUDE.md قانون ۳) و سنجهٔ دست‌نویس شکست، در حالی که رفتار درست بود.
 	# چیزی که §۵ می‌گوید «ایلارا ثابت‌های خودش را دارد» است، نه یک عدد خاص.
 	var prof: Dictionary = Settings.tuning.get("profiles", {}).get(
-		CameraDirector.PROFILE[CameraDirector.MODE_SIDE], {})
+		CameraDirector.PROFILE, {})
 	var want_speed := float((prof.get("ilara", {}) as Dictionary).get("RUN_SPEED", 0.0))
 	var want_jump := float((prof.get("ilara", {}) as Dictionary).get("JUMP_VELOCITY", 0.0))
 	_check("سرعت دویدن ایلارا از پروفایل می‌آید",

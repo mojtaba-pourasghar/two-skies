@@ -10,6 +10,9 @@ signal died
 signal respawned
 signal hop_started(from: Vector2, to: Vector2)
 signal landed(at: Vector2)
+## پا روی ماسک خطر افتاد. اتاق تصمیم می‌گیرد آسیب بزند یا بکشد — قاعدهٔ
+## مرگ در اکتشاف و اتاق چالش فرق دارد (سند ۰۹ §۱ در برابر §۲ب).
+signal hazard_hit(hazard: Dictionary)
 
 enum State { MOVE, HOP, DASH, DEAD }
 
@@ -109,8 +112,29 @@ func _tick_move() -> void:
 	var target := wish * speed
 	var accel: float = TdConst.GROUND_ACCEL if wish != Vector2.ZERO else TdConst.GROUND_DECEL
 	velocity = velocity.move_toward(target, accel / float(TdConst.FPS))
-	move_and_slide()
+	_move_on_mask()
 	_check_ground()
+
+
+## حرکت **ماسک‌محور**: دیوار در خود تصویر نقاشی شده و جسم فیزیکی ندارد
+## (سند ۱۱ §۱)، پس به‌جای برخورد، جای پای قدم بعدی سنجیده می‌شود.
+##
+## هر محور جدا سنجیده می‌شود تا کنار دیوار بشود لغزید؛ با سنجش هم‌زمان،
+## بازیکن در هر گوشه‌ای می‌چسبد و حس بازی خراب می‌شود.
+func _move_on_mask() -> void:
+	if room == null or not room.has_method("is_walkable"):
+		move_and_slide()
+		return
+	var step := velocity / float(TdConst.FPS)
+	var foot_offset := Vector2(0, TdConst.FOOT_OFFSET_Y)
+	var here := global_position
+	var try_x := here + Vector2(step.x, 0.0)
+	if step.x != 0.0 and room.is_walkable(try_x + foot_offset):
+		here = try_x
+	var try_y := here + Vector2(0.0, step.y)
+	if step.y != 0.0 and room.is_walkable(try_y + foot_offset):
+		here = try_y
+	global_position = here
 
 
 ## حرکت کناری: گرانش، پرش، و فقط محور افقی از ورودی.
@@ -248,6 +272,10 @@ func _check_ground() -> void:
 		return
 	if room.has_method("is_deadly_at") and room.is_deadly_at(foot_position()):
 		die()
+	elif room.has_method("hazard_at"):
+		var h: Dictionary = room.hazard_at(foot_position())
+		if not h.is_empty():
+			hazard_hit.emit(h)
 	# در اتاق چالش، افتادن بیرون از مرز هم مرگ است (سند ۰۹ §۲ب)
 	elif movement == Movement.SIDE and room.has_method("below_bounds") \
 			and room.below_bounds(foot_position()):

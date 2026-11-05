@@ -13,21 +13,12 @@ extends Camera2D
 const FOLLOW := "follow"
 const ROOM := "room"
 
-## ناحیهٔ بی‌اثر: تا وقتی هدف درونش است دوربین تکان نمی‌خورد.
-const DEAD_ZONE := {
-	CameraDirector.MODE_TOPDOWN: Vector2(192, 128),
-	CameraDirector.MODE_SIDE: Vector2(80, 48),
-}
-## نگاه به جلو در جهت حرکت.
-const LOOK_AHEAD := {
-	CameraDirector.MODE_TOPDOWN: 96.0,
-	CameraDirector.MODE_SIDE: 64.0,
-}
-## نرمی دنبال کردن (ثانیه تا ~۶۳٪ راه).
-const SMOOTH_TIME := {
-	CameraDirector.MODE_TOPDOWN: 0.15,
-	CameraDirector.MODE_SIDE: 0.12,
-}
+## عددهای «مقدار دوربین» سند ۰۴، ستون سه‌چهارم، در WORLD_SCALE=2.
+## ستون کناری با D-ART-32 بی‌موضوع شد.
+const DEAD_ZONE := Vector2(192, 128)
+const LOOK_AHEAD: float = 96.0
+## نرمی دنبال کردن: ۰٫۱۵ ثانیه تا ~۶۳٪ راه. زمان است، پس مقیاس نمی‌خورد.
+const SMOOTH_TIME: float = 0.15
 ## شخصیت ۴۵٪ از بالای قاب می‌نشیند، نه وسط (سند ۰۴).
 const VERTICAL_BIAS: float = 0.05
 
@@ -88,10 +79,6 @@ func shake(pixels: float, seconds: float = 0.12) -> void:
 	_shake_frames = maxi(_shake_frames, int(round(seconds * FPS)))
 
 
-func _mode() -> String:
-	return director.mode if director != null else CameraDirector.MODE_TOPDOWN
-
-
 func _physics_process(_delta: float) -> void:
 	if target == null:
 		return
@@ -115,10 +102,9 @@ func _target_point() -> Vector2:
 
 ## نقطهٔ مطلوب با ناحیهٔ بی‌اثر و نگاه به جلو، سپس هموارسازی نمایی.
 func _follow_point() -> Vector2:
-	var mode := _mode()
 	var goal := _target_point()
 
-	var ahead: float = float(LOOK_AHEAD.get(mode, 96.0))
+	var ahead := LOOK_AHEAD
 	var vel := Vector2.ZERO
 	if target is CharacterBody2D:
 		vel = (target as CharacterBody2D).velocity
@@ -126,7 +112,7 @@ func _follow_point() -> Vector2:
 		goal += vel.normalized() * ahead
 
 	# ناحیهٔ بی‌اثر: فقط به اندازهٔ بیرون‌زدگی حرکت کن
-	var dz: Vector2 = DEAD_ZONE.get(mode, Vector2(192, 128))
+	var dz := DEAD_ZONE
 	var delta := goal - global_position
 	var pull := Vector2.ZERO
 	if absf(delta.x) > dz.x * 0.5:
@@ -135,7 +121,7 @@ func _follow_point() -> Vector2:
 		pull.y = delta.y - signf(delta.y) * dz.y * 0.5
 
 	# هموارسازی نمایی با گام ثابت ۱/۶۰ — قطعی و مستقل از نرخ فریم واقعی
-	var tau: float = float(SMOOTH_TIME.get(mode, 0.15))
+	var tau := SMOOTH_TIME
 	var k: float = 1.0 - exp(-(1.0 / FPS) / maxf(0.0001, tau))
 	return global_position + pull * k
 
@@ -173,11 +159,7 @@ func _shake_offset() -> Vector2:
 	return Vector2(randf_range(-a, a), randf_range(-a, a)).round()
 
 
-## زوم و جابه‌جایی را از کارگردان می‌گیرد تا گذار حالت نرم دیده شود.
+## زوم ثابت است: کل بازی یک حالت دارد (D-ART-32). زوم صحنه‌ها را
+## `ScriptedSequence` با گام `zoom` عوض می‌کند، نه دوربین خودش.
 func _apply_presentation() -> void:
-	if director == null:
-		return
-	var p := director.presentation()
-	var z := float(p["zoom"])
-	zoom = Vector2(z, z)
-	offset = Vector2(0.0, float(p["offset_y"]))
+	pass
