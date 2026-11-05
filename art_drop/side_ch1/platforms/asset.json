@@ -1,0 +1,59 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "platform_wood_long": [
+   240,
+   28
+  ],
+  "platform_wood_medium": [
+   193,
+   28
+  ],
+  "platform_stone_ledge": [
+   126,
+   44
+  ],
+  "platform_wood_short": [
+   142,
+   28
+  ],
+  "platform_bookshelf": [
+   168,
+   45
+  ],
+  "platform_crumble_0": [
+   62,
+   43
+  ],
+  "platform_crumble_1": [
+   66,
+   43
+  ],
+  "platform_crumble_2": [
+   70,
+   43
+  ],
+  "ladder": [
+   29,
+   110
+  ],
+  "spikes_floor": [
+   147,
+   26
+  ],
+  "saw_rail": [
+   219,
+   48
+  ],
+  "chain_hanging": [
+   19,
+   94
+  ],
+  "lantern_checkpoint": [
+   29,
+   54
+  ]
+ },
+ "camera": "side",
+ "scale": 0.3
+}
