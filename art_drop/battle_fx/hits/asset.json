@@ -1,0 +1,43 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "hit_normal_0": [
+   56,
+   64
+  ],
+  "hit_normal_1": [
+   109,
+   91
+  ],
+  "hit_normal_2": [
+   156,
+   120
+  ],
+  "hit_good_0": [
+   74,
+   66
+  ],
+  "hit_good_1": [
+   114,
+   97
+  ],
+  "hit_good_2": [
+   144,
+   128
+  ],
+  "hit_perfect_0": [
+   101,
+   100
+  ],
+  "hit_perfect_1": [
+   140,
+   136
+  ],
+  "hit_perfect_2": [
+   174,
+   164
+  ]
+ },
+ "camera": "battle-3q",
+ "scale": 0.4
+}

@@ -1,0 +1,79 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "timing_ring_0": [
+   91,
+   93
+  ],
+  "timing_ring_1": [
+   71,
+   80
+  ],
+  "timing_ring_2": [
+   61,
+   71
+  ],
+  "timing_ring_3": [
+   51,
+   59
+  ],
+  "timing_success_flash": [
+   72,
+   76
+  ],
+  "shield_block_0": [
+   91,
+   74
+  ],
+  "shield_block_1": [
+   72,
+   70
+  ],
+  "shield_block_2": [
+   53,
+   69
+  ],
+  "hack_0": [
+   101,
+   62
+  ],
+  "hack_1": [
+   96,
+   57
+  ],
+  "hack_2": [
+   84,
+   48
+  ],
+  "light_leaf_0": [
+   100,
+   69
+  ],
+  "light_leaf_1": [
+   89,
+   69
+  ],
+  "light_leaf_2": [
+   79,
+   53
+  ],
+  "fragile_overlay": [
+   89,
+   71
+  ],
+  "intent_badge": [
+   65,
+   64
+  ],
+  "interrupt_shatter_0": [
+   70,
+   75
+  ],
+  "interrupt_shatter_1": [
+   61,
+   65
+  ]
+ },
+ "camera": "battle-3q",
+ "scale": 0.35
+}

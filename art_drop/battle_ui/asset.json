@@ -1,0 +1,55 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "intent_strike": [
+   79,
+   79
+  ],
+  "intent_explosion": [
+   79,
+   79
+  ],
+  "intent_antihack": [
+   79,
+   79
+  ],
+  "intent_scan": [
+   79,
+   79
+  ],
+  "intent_heal": [
+   79,
+   79
+  ],
+  "intent_summon": [
+   79,
+   79
+  ],
+  "intent_charge": [
+   79,
+   79
+  ],
+  "intent_stun": [
+   78,
+   79
+  ],
+  "menu_frame": [
+   218,
+   99
+  ],
+  "bar_health": [
+   299,
+   45
+  ],
+  "bar_energy": [
+   298,
+   45
+  ],
+  "turn_order_strip": [
+   524,
+   60
+  ]
+ },
+ "camera": "ui",
+ "scale": "icons 0.3 / others 0.4"
+}

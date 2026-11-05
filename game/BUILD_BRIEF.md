@@ -99,3 +99,5 @@
 
 ### مسیرهای هنر RPG (به‌روز، دستهٔ ۱۲–۱۴)
 `art_drop/battle_bg/` (basement, workshop, house, launch)، `art_drop/enemies/battle_nexa/`، `art_drop/boss/guardian_battle/`، `art_drop/effects/bond_two_skies/`، `art_drop/ui/explore_hud/`، `art_drop/npc/survivors/`، `art_drop/explore/{props,pickups}/`، `art_drop/overworld/ch1/`. در انتظار: `battle_fx`, `battle_ui`, پس‌زمینهٔ نبرد خیابان (دستهٔ ۱۱).
+
+> **به‌روز:** هنر نبرد کامل رسید: `art_drop/battle_fx/{hits,skills}`, `art_drop/battle_ui`, `art_drop/battle_bg/*` (street, workshop, basement, house, launch). T13 دیگر جای‌نگهدار لازم ندارد.

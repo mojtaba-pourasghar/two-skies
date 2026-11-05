@@ -152,3 +152,6 @@
 ### دستهٔ ۱۴ — وضعیت: **برش و پوش شد** (art/tools/slice_ch1_v14.py)
 `art_drop/battle_bg/` (+ خانه و جادهٔ پرتاب؛ اکنون ۴ پس‌زمینه)، `art_drop/boss/guardian_battle/` (۶ حالت)، `art_drop/effects/bond_two_skies/` (۴ مرحله)، `art_drop/ui/explore_hud/` (جان، انرژی، شمارنده‌ها، چرخ ابزار، قاب مینی‌مپ، پیکان هدف). پیش‌نویس تا تأیید.
 **هنوز نرسیده (دستهٔ ۱۱):** افکت ضربه ×۲ برگه، رابط نبرد، پس‌زمینهٔ نبرد خیابان.
+
+### دستهٔ ۱۱ — وضعیت: **برش و پوش شد** (art/tools/slice_ch1_v15.py)
+`art_drop/battle_fx/hits/` (۹: hit_{normal,good,perfect}_{0..2})، `art_drop/battle_fx/skills/` (۱۸: حلقهٔ زمان‌بندی، فلاش موفقیت، سپر، هک، نور/برگ، شکننده، قطع‌کردن)، `art_drop/battle_ui/` (۱۲: ۸ آیکن قصد، قاب منو، نوار جان/انرژی، نوار ترتیب)، `art_drop/battle_bg/battle_bg_street_1280x720.png`. **با این، هنر v1 کامل است (پیش‌نویس تا تأیید).**
