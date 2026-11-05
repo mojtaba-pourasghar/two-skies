@@ -30,6 +30,15 @@ const SKIP_INPUT_FRAMES: int = 1
 
 const FPS: int = 60
 
+## حاشیهٔ هیسترزیس مرز ناحیه، بر حسب پیکسل.
+##
+## بدون آن، ایستادن **دقیقاً روی لبه** حالت را هر فریم عوض می‌کند: بازیکن
+## یک پیکسل تکان می‌خورد، داخل می‌شود، گذار ۰٫۶ث شروع می‌شود، یک پیکسل
+## برمی‌گردد، گذار برعکس… و دوربین می‌لرزد. با این حاشیه، ناحیهٔ فعال تا
+## وقتی رها نمی‌شود که پا واقعاً از آن دور شود.
+## (DECISIONS.md: D-ART-23)
+const ZONE_HYSTERESIS: float = 12.0
+
 ## نمای هر حالت. دوربین واقعی (T6) این‌ها را درون‌یابی می‌کند.
 const PRESENTATION := {
 	MODE_TOPDOWN: {"rotation": 0.0, "zoom": 1.0, "offset_y": 0.0},
@@ -105,7 +114,11 @@ func update(foot_position: Vector2) -> void:
 	var want := default_mode
 	var zone_id := ""
 	for z in zones:
-		if (z["rect"] as Rect2).has_point(foot_position):
+		var r: Rect2 = z["rect"]
+		# ناحیه‌ای که همین حالا فعال است، مرز بزرگ‌ترِ خروج دارد
+		if String(z["id"]) == _active_zone:
+			r = r.grow(ZONE_HYSTERESIS)
+		if r.has_point(foot_position):
 			want = String(z["mode"])
 			zone_id = String(z["id"])
 			break

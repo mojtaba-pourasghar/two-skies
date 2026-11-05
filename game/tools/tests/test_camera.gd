@@ -20,6 +20,8 @@ func _ready() -> void:
 	_t_profile()
 	_t_loader()
 	_t_scale()
+	await _t_follow()
+	await _t_no_jitter()
 	_report()
 
 
@@ -198,6 +200,147 @@ func _t_scale() -> void:
 		ProjectSettings.get_setting("display/window/size/viewport_height", 0))
 	_check("رزولوشن پایه ۱۲۸۰×۷۲۰ است (CLAUDE.md قانون ۳)",
 		vp == WorldScale.VIEWPORT, "= %dx%d" % [vp.x, vp.y])
+
+
+# ----------------------------- T6: دوربین نرم -----------------------------
+
+func _make_camera(bounds: Rect2, mode: String) -> Array:
+	var d := CameraDirector.new()
+	add_child(d)
+	d.setup("topdown", [], TILE)
+	var body := CharacterBody2D.new()
+	add_child(body)
+	var cam := GameCamera.new()
+	cam.follow_mode = mode
+	cam.director = d
+	cam.target = body
+	add_child(cam)
+	cam.set_bounds(bounds)
+	return [d, body, cam]
+
+
+func _t_follow() -> void:
+	print("— دنبال کردن نرم و حد لبهٔ مرحله —")
+	# نقشه باید از صفحه (۱۲۸۰×۷۲۰) **به‌قدر کافی** بزرگ‌تر باشد، وگرنه
+	# دوربین هیچ آزادی حرکتی ندارد و آزمون چیزی را نمی‌سنجد.
+	# ۶۰×۴۰ کاشی = ۱۹۲۰×۱۲۸۰، یعنی ۶۴۰ پیکسل آزادی در هر محور.
+	var map := Rect2(0, 0, 60 * TILE, 40 * TILE)
+	var made := _make_camera(map, GameCamera.FOLLOW)
+	var body: CharacterBody2D = made[1]
+	var cam: GameCamera = made[2]
+
+	body.global_position = map.get_center()
+	cam.snap_to_target()
+	var start := cam.global_position
+
+	# هدف را دور می‌بریم ولی **درون مرز**، تا دوربین واقعاً بتواند برسد
+	body.global_position = map.get_center() + Vector2(400, 0)
+	# به‌جای «یک فریم» پرش هر فریم را در ۳۰ فریم نمونه می‌گیریم: قرارداد
+	# واقعی این است که دوربین **نرم** برود، یعنی هیچ فریمی پرش بزرگ نداشته
+	# باشد و مجموع حرکت صفر نماند. سنجهٔ تک‌فریمی به ترتیب اجرای فریم اول
+	# حساس بود، که چیزی دربارهٔ نرمی نمی‌گوید.
+	var prev := start
+	var max_step := 0.0
+	var moved := 0.0
+	for i in 30:
+		await _frames(1)
+		var step := cam.global_position.distance_to(prev)
+		max_step = maxf(max_step, step)
+		moved += step
+		prev = cam.global_position
+	_check("هیچ فریمی پرش بزرگ ندارد", max_step < 60.0,
+		"= بیشینهٔ %.1f px در یک فریم" % max_step)
+	_check("ولی در مجموع حرکت کرد", moved > 1.0, "= %.0f px در ۳۰ فریم" % moved)
+
+	await _frames(90)
+	_check("پس از ۹۰ فریم به هدف رسید",
+		cam.global_position.distance_to(body.global_position) < 160.0,
+		"= %.0f px فاصله" % cam.global_position.distance_to(body.global_position))
+
+	# حد لبه: هدف را به گوشه ببر
+	body.global_position = Vector2(0, 0)
+	await _frames(240)
+	var half := cam.get_viewport_rect().size * 0.5 / cam.zoom.x
+	_check("دوربین از لبهٔ چپ نقشه بیرون نمی‌زند",
+		cam.global_position.x >= half.x - 1.0,
+		"= %.0f (حد %.0f)" % [cam.global_position.x, half.x])
+	_check("دوربین از لبهٔ بالای نقشه بیرون نمی‌زند",
+		cam.global_position.y >= half.y - 1.0,
+		"= %.0f (حد %.0f)" % [cam.global_position.y, half.y])
+
+	# نقشهٔ کوچک‌تر از صفحه: وسطش را نشان بده نه لبه‌اش
+	var small := Rect2(0, 0, 10 * TILE, 6 * TILE)
+	cam.set_bounds(small)
+	body.global_position = Vector2(0, 0)
+	await _frames(120)
+	_check("نقشهٔ کوچک‌تر از صفحه وسط‌چین می‌شود",
+		cam.global_position.is_equal_approx(small.get_center().round()),
+		"= %s (مرکز %s)" % [str(cam.global_position), str(small.get_center())])
+
+	_check("موقعیت دوربین عدد صحیح است (نیم‌پیکسل ممنوع)",
+		is_equal_approx(cam.global_position.x, roundf(cam.global_position.x))
+		and is_equal_approx(cam.global_position.y, roundf(cam.global_position.y)),
+		"= %s" % str(cam.global_position))
+
+	# حالت room: قفل روی مرکز اتاق، بی‌اعتنا به هدف
+	var made2 := _make_camera(map, GameCamera.ROOM)
+	var body2: CharacterBody2D = made2[1]
+	var cam2: GameCamera = made2[2]
+	var room := Rect2(0, 0, 30 * TILE, 17 * TILE)
+	cam2.set_room(room)
+	body2.global_position = room.get_center() + Vector2(300, 200)
+	await _frames(30)
+	_check("حالت room روی مرکز اتاق قفل است",
+		cam2.global_position.is_equal_approx(_clamp_center(room, map, cam2)),
+		"= %s" % str(cam2.global_position))
+
+	for n in [made[0], body, cam, made2[0], body2, cam2]:
+		n.queue_free()
+
+
+func _clamp_center(room: Rect2, map: Rect2, cam: GameCamera) -> Vector2:
+	var half := cam.get_viewport_rect().size * 0.5 / cam.zoom.x
+	var c := room.get_center()
+	c.x = clampf(c.x, map.position.x + half.x, map.position.x + map.size.x - half.x)
+	c.y = clampf(c.y, map.position.y + half.y, map.position.y + map.size.y - half.y)
+	return c.round()
+
+
+func _t_no_jitter() -> void:
+	print("— مرز camera_zone نمی‌لرزد (هیسترزیس) —")
+	var d := CameraDirector.new()
+	add_child(d)
+	d.setup("topdown", [{"id": "z", "mode": "side", "rect": [10, 5, 6, 4]}], TILE)
+
+	# دقیقاً روی لبهٔ چپ ناحیه، با نوسان یک‌پیکسلی — بدترین حالت
+	var edge := float(10 * TILE)
+	var changes := [0]
+	d.mode_changing.connect(func(_f, _t): changes[0] += 1)
+
+	# اول وارد ناحیه شو و بگذار گذار تمام شود
+	for i in CameraDirector.blend_frames() + 2:
+		d.update(Vector2(edge + 20.0, 6 * TILE))
+	_check("ورود به ناحیه یک گذار داشت", changes[0] == 1, "= %d" % changes[0])
+
+	# حالا روی لبه بلرز: یک پیکسل داخل، یک پیکسل بیرون، ۶۰ بار
+	for i in 60:
+		var x := edge + (1.0 if i % 2 == 0 else -1.0)
+		d.update(Vector2(x, 6 * TILE))
+	_check("نوسان یک‌پیکسلی روی لبه گذار تازه نساخت", changes[0] == 1,
+		"= %d گذار (باید ۱ بماند)" % changes[0])
+	_check("حالت همچنان side است", d.mode == "side", "= %s" % d.mode)
+
+	# دور شدن واقعی باید حالت را برگرداند
+	for i in CameraDirector.blend_frames() + 2:
+		d.update(Vector2(edge - CameraDirector.ZONE_HYSTERESIS - 8.0, 6 * TILE))
+	_check("دور شدن واقعی حالت را برگرداند", d.mode == "topdown", "= %s" % d.mode)
+	_check("و گذار دوم ثبت شد", changes[0] == 2, "= %d" % changes[0])
+	d.queue_free()
+
+
+func _frames(count: int) -> void:
+	for i in count:
+		await get_tree().physics_frame
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:
