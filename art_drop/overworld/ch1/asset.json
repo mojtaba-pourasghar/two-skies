@@ -1,0 +1,68 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "node_house": [
+   97,
+   94
+  ],
+  "node_street": [
+   92,
+   84
+  ],
+  "node_drone_tower": [
+   80,
+   98
+  ],
+  "node_basement": [
+   101,
+   69
+  ],
+  "node_electric_floor": [
+   99,
+   67
+  ],
+  "node_workshop": [
+   104,
+   80
+  ],
+  "node_launch_pad": [
+   91,
+   88
+  ],
+  "path_straight": [
+   72,
+   48
+  ],
+  "path_curve": [
+   63,
+   52
+  ],
+  "path_junction": [
+   80,
+   50
+  ],
+  "gate_locked_fog": [
+   77,
+   57
+  ],
+  "gate_open": [
+   77,
+   57
+  ],
+  "marker_treasure": [
+   51,
+   44
+  ],
+  "marker_player": [
+   51,
+   52
+  ],
+  "icon_guardian_boss": [
+   66,
+   54
+  ]
+ },
+ "camera": "topdown",
+ "scale": 0.3,
+ "source": "art/raw/ch1_v12/overworld_pieces_full.png"
+}

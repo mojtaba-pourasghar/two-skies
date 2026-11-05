@@ -1,0 +1,60 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "save_statue": [
+   92,
+   110
+  ],
+  "chest_wood": [
+   95,
+   77
+  ],
+  "chest_metal": [
+   98,
+   79
+  ],
+  "lever": [
+   88,
+   93
+  ],
+  "plate_up": [
+   102,
+   58
+  ],
+  "plate_pressed": [
+   102,
+   63
+  ],
+  "push_block": [
+   86,
+   79
+  ],
+  "crate_breakable": [
+   96,
+   88
+  ],
+  "door_security": [
+   81,
+   100
+  ],
+  "camera_zone_marker": [
+   78,
+   66
+  ],
+  "climb_marker": [
+   79,
+   85
+  ],
+  "leap_pad": [
+   80,
+   76
+  ],
+  "wall_cracked": [
+   85,
+   84
+  ]
+ },
+ "camera": "topdown",
+ "scale": 0.3,
+ "source": "art/raw/ch1_v12/explore_props_full.png"
+}

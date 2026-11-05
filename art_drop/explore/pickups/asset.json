@@ -1,0 +1,120 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "coin_0": [
+   34,
+   40
+  ],
+  "coin_1": [
+   29,
+   40
+  ],
+  "coin_2": [
+   29,
+   40
+  ],
+  "coin_3": [
+   28,
+   40
+  ],
+  "gem_0": [
+   28,
+   40
+  ],
+  "gem_1": [
+   29,
+   40
+  ],
+  "gem_2": [
+   28,
+   40
+  ],
+  "gem_3": [
+   28,
+   40
+  ],
+  "chip_0": [
+   36,
+   38
+  ],
+  "chip_1": [
+   36,
+   38
+  ],
+  "chip_2": [
+   36,
+   38
+  ],
+  "chip_3": [
+   35,
+   37
+  ],
+  "part_battery": [
+   30,
+   60
+  ],
+  "part_drone": [
+   88,
+   46
+  ],
+  "note_scroll": [
+   74,
+   66
+  ],
+  "pickup_heart": [
+   62,
+   59
+  ],
+  "prompt_bubble": [
+   53,
+   60
+  ],
+  "alert_enemy": [
+   58,
+   96
+  ],
+  "vision_cone_s": [
+   46,
+   56
+  ],
+  "vision_cone_m": [
+   70,
+   71
+  ],
+  "vision_cone_l": [
+   138,
+   91
+  ],
+  "backhit_flash": [
+   108,
+   82
+  ],
+  "dust_0": [
+   46,
+   24
+  ],
+  "dust_1": [
+   58,
+   26
+  ],
+  "dust_2": [
+   63,
+   34
+  ],
+  "splash_0": [
+   68,
+   38
+  ],
+  "splash_1": [
+   74,
+   49
+  ],
+  "splash_2": [
+   82,
+   58
+  ]
+ },
+ "camera": "topdown",
+ "scale": 0.4,
+ "source": "art/raw/ch1_v12/explore_pickups_full.png"
+}
