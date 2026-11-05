@@ -13,3 +13,11 @@ secrets.json
 # کش تولید هنر (تصویر خام مدل؛ بازتولیدشدنی)
 tools/art_gen/cache/
 tools/art_gen/logs/ledger.json
+
+# هنر ایمپورت‌شده (tools/import_art.py). منبع یکتا `art_drop/` است که خودش در
+# مخزن هست؛ کپی دوم ۱۰۶ مگابایت تکراری به گیت اضافه می‌کرد بدون هیچ سودی.
+# فایل‌های JSON تولیدشده (manifest/roles/anims) کوچک و قراردادی‌اند و می‌مانند.
+game/assets/**/*.png
+game/assets/**/*.png.import
+game/assets/**/*.webp
+game/assets/**/*.webp.import

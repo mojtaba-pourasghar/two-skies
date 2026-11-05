@@ -1,0 +1,103 @@
+{
+ "camera": "side",
+ "scene": "basement",
+ "tile_px": 64,
+ "count": 19,
+ "tiles": {
+  "basement_side_00.png": {
+   "index": 0,
+   "role": "ground_top",
+   "kind": "solid"
+  },
+  "basement_side_01.png": {
+   "index": 1,
+   "role": "ground_fill",
+   "kind": "solid"
+  },
+  "basement_side_02.png": {
+   "index": 2,
+   "role": "ground_end_left",
+   "kind": "solid"
+  },
+  "basement_side_03.png": {
+   "index": 3,
+   "role": "ground_end_right",
+   "kind": "solid"
+  },
+  "basement_side_04.png": {
+   "index": 4,
+   "role": "platform_grate_long",
+   "kind": "oneway"
+  },
+  "basement_side_05.png": {
+   "index": 5,
+   "role": "platform_bracket_left",
+   "kind": "oneway"
+  },
+  "basement_side_06.png": {
+   "index": 6,
+   "role": "platform_bracket_right",
+   "kind": "oneway"
+  },
+  "basement_side_07.png": {
+   "index": 7,
+   "role": "wall_brick",
+   "kind": "background"
+  },
+  "basement_side_08.png": {
+   "index": 8,
+   "role": "wall_pipes",
+   "kind": "background"
+  },
+  "basement_side_09.png": {
+   "index": 9,
+   "role": "ceiling_slab",
+   "kind": "solid"
+  },
+  "basement_side_10.png": {
+   "index": 10,
+   "role": "pillar_stone",
+   "kind": "background"
+  },
+  "basement_side_11.png": {
+   "index": 11,
+   "role": "window_arched_lit",
+   "kind": "decor"
+  },
+  "basement_side_12.png": {
+   "index": 12,
+   "role": "door_security",
+   "kind": "door"
+  },
+  "basement_side_13.png": {
+   "index": 13,
+   "role": "stairs",
+   "kind": "slope"
+  },
+  "basement_side_14.png": {
+   "index": 14,
+   "role": "ladder",
+   "kind": "ladder"
+  },
+  "basement_side_15.png": {
+   "index": 15,
+   "role": "railing_slab",
+   "kind": "foreground"
+  },
+  "basement_side_16.png": {
+   "index": 16,
+   "role": "crate",
+   "kind": "solid"
+  },
+  "basement_side_17.png": {
+   "index": 17,
+   "role": "baseboard_strip",
+   "kind": "decor"
+  },
+  "basement_side_18.png": {
+   "index": 18,
+   "role": "corner_pillar",
+   "kind": "background"
+  }
+ }
+}

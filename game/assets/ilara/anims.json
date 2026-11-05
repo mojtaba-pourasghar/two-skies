@@ -1,0 +1,59 @@
+{
+ "death": [
+  "anim/death_00.png",
+  "anim/death_01.png",
+  "anim/death_02.png"
+ ],
+ "hop": [
+  "anim/hop_00.png",
+  "anim/hop_01.png",
+  "anim/hop_02.png"
+ ],
+ "respawn": [
+  "anim/respawn_00.png",
+  "anim/respawn_01.png",
+  "anim/respawn_02.png"
+ ],
+ "run_side": [
+  "anim/run_side_00.png",
+  "anim/run_side_01.png",
+  "anim/run_side_02.png",
+  "anim/run_side_03.png",
+  "anim/run_side_04.png",
+  "anim/run_side_05.png"
+ ],
+ "signal_come": [
+  "anim/signal_come_00.png",
+  "anim/signal_come_01.png",
+  "anim/signal_come_02.png"
+ ],
+ "signal_stay": [
+  "anim/signal_stay_00.png",
+  "anim/signal_stay_01.png",
+  "anim/signal_stay_02.png"
+ ],
+ "walk_down": [
+  "anim/walk_down_00.png",
+  "anim/walk_down_01.png",
+  "anim/walk_down_02.png",
+  "anim/walk_down_03.png",
+  "anim/walk_down_04.png",
+  "anim/walk_down_05.png"
+ ],
+ "walk_side": [
+  "anim/walk_side_00.png",
+  "anim/walk_side_01.png",
+  "anim/walk_side_02.png",
+  "anim/walk_side_03.png",
+  "anim/walk_side_04.png",
+  "anim/walk_side_05.png"
+ ],
+ "walk_up": [
+  "anim/walk_up_00.png",
+  "anim/walk_up_01.png",
+  "anim/walk_up_02.png",
+  "anim/walk_up_03.png",
+  "anim/walk_up_04.png",
+  "anim/walk_up_05.png"
+ ]
+}

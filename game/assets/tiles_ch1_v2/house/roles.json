@@ -1,0 +1,98 @@
+{
+ "camera": "topdown",
+ "scene": "house",
+ "tile_px": 64,
+ "count": 18,
+ "tiles": {
+  "house_00.png": {
+   "index": 0,
+   "role": "floor_plank_a",
+   "kind": "walkable"
+  },
+  "house_01.png": {
+   "index": 1,
+   "role": "floor_plank_b",
+   "kind": "walkable"
+  },
+  "house_02.png": {
+   "index": 2,
+   "role": "floor_plank_accent_a",
+   "kind": "walkable"
+  },
+  "house_03.png": {
+   "index": 3,
+   "role": "floor_plank_b2",
+   "kind": "walkable"
+  },
+  "house_04.png": {
+   "index": 4,
+   "role": "floor_plank_c",
+   "kind": "walkable"
+  },
+  "house_05.png": {
+   "index": 5,
+   "role": "floor_plank_d",
+   "kind": "walkable"
+  },
+  "house_06.png": {
+   "index": 6,
+   "role": "rug_center",
+   "kind": "walkable"
+  },
+  "house_07.png": {
+   "index": 7,
+   "role": "rug_edge_diag",
+   "kind": "walkable"
+  },
+  "house_08.png": {
+   "index": 8,
+   "role": "rug_edge_top",
+   "kind": "walkable"
+  },
+  "house_09.png": {
+   "index": 9,
+   "role": "floor_plank_accent_b",
+   "kind": "walkable"
+  },
+  "house_10.png": {
+   "index": 10,
+   "role": "cabinet_corner_a",
+   "kind": "wall"
+  },
+  "house_11.png": {
+   "index": 11,
+   "role": "cabinet_corner_b",
+   "kind": "wall"
+  },
+  "house_12.png": {
+   "index": 12,
+   "role": "wall_wainscot_front",
+   "kind": "wall"
+  },
+  "house_13.png": {
+   "index": 13,
+   "role": "wall_post_edge",
+   "kind": "wall"
+  },
+  "house_14.png": {
+   "index": 14,
+   "role": "wall_corner_inner_a",
+   "kind": "wall"
+  },
+  "house_15.png": {
+   "index": 15,
+   "role": "wall_corner_inner_b",
+   "kind": "wall"
+  },
+  "house_16.png": {
+   "index": 16,
+   "role": "wall_post_corner",
+   "kind": "wall"
+  },
+  "house_17.png": {
+   "index": 17,
+   "role": "wall_post_door",
+   "kind": "wall"
+  }
+ }
+}

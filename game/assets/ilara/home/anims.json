@@ -1,0 +1,84 @@
+{
+ "climb_up": [
+  "anim/climb_up_00.png",
+  "anim/climb_up_01.png",
+  "anim/climb_up_02.png",
+  "anim/climb_up_03.png",
+  "anim/climb_up_04.png",
+  "anim/climb_up_05.png"
+ ],
+ "death": [
+  "anim/death_00.png",
+  "anim/death_01.png",
+  "anim/death_02.png",
+  "anim/death_03.png",
+  "anim/death_04.png",
+  "anim/death_05.png"
+ ],
+ "hop": [
+  "anim/hop_00.png",
+  "anim/hop_01.png",
+  "anim/hop_02.png",
+  "anim/hop_03.png",
+  "anim/hop_04.png",
+  "anim/hop_05.png"
+ ],
+ "leap_down": [
+  "anim/leap_down_00.png",
+  "anim/leap_down_01.png",
+  "anim/leap_down_02.png",
+  "anim/leap_down_03.png",
+  "anim/leap_down_04.png",
+  "anim/leap_down_05.png"
+ ],
+ "run_side": [
+  "anim/run_side_00.png",
+  "anim/run_side_01.png",
+  "anim/run_side_02.png",
+  "anim/run_side_03.png",
+  "anim/run_side_04.png",
+  "anim/run_side_05.png"
+ ],
+ "signal_come": [
+  "anim/signal_come_00.png",
+  "anim/signal_come_01.png",
+  "anim/signal_come_02.png"
+ ],
+ "signal_stay": [
+  "anim/signal_stay_00.png",
+  "anim/signal_stay_01.png",
+  "anim/signal_stay_02.png"
+ ],
+ "walk_down": [
+  "anim/walk_down_00.png",
+  "anim/walk_down_01.png",
+  "anim/walk_down_02.png",
+  "anim/walk_down_03.png",
+  "anim/walk_down_04.png",
+  "anim/walk_down_05.png"
+ ],
+ "walk_left": [
+  "anim/walk_left_00.png",
+  "anim/walk_left_01.png",
+  "anim/walk_left_02.png",
+  "anim/walk_left_03.png",
+  "anim/walk_left_04.png",
+  "anim/walk_left_05.png"
+ ],
+ "walk_side": [
+  "anim/walk_side_00.png",
+  "anim/walk_side_01.png",
+  "anim/walk_side_02.png",
+  "anim/walk_side_03.png",
+  "anim/walk_side_04.png",
+  "anim/walk_side_05.png"
+ ],
+ "walk_up": [
+  "anim/walk_up_00.png",
+  "anim/walk_up_01.png",
+  "anim/walk_up_02.png",
+  "anim/walk_up_03.png",
+  "anim/walk_up_04.png",
+  "anim/walk_up_05.png"
+ ]
+}

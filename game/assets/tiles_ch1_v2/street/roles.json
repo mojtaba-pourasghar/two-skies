@@ -1,0 +1,98 @@
+{
+ "camera": "topdown",
+ "scene": "street",
+ "tile_px": 64,
+ "count": 18,
+ "tiles": {
+  "street_00.png": {
+   "index": 0,
+   "role": "asphalt_lane_marking",
+   "kind": "walkable"
+  },
+  "street_01.png": {
+   "index": 1,
+   "role": "asphalt_lane_cross",
+   "kind": "walkable"
+  },
+  "street_02.png": {
+   "index": 2,
+   "role": "crosswalk",
+   "kind": "walkable"
+  },
+  "street_03.png": {
+   "index": 3,
+   "role": "asphalt_cracked",
+   "kind": "walkable"
+  },
+  "street_04.png": {
+   "index": 4,
+   "role": "curb_corner_drain",
+   "kind": "wall"
+  },
+  "street_05.png": {
+   "index": 5,
+   "role": "paving_tiles",
+   "kind": "walkable"
+  },
+  "street_06.png": {
+   "index": 6,
+   "role": "asphalt_dark",
+   "kind": "walkable"
+  },
+  "street_07.png": {
+   "index": 7,
+   "role": "rubble_pile",
+   "kind": "walkable"
+  },
+  "street_08.png": {
+   "index": 8,
+   "role": "plate_damaged_hatch",
+   "kind": "walkable_decor"
+  },
+  "street_09.png": {
+   "index": 9,
+   "role": "manhole",
+   "kind": "walkable_decor"
+  },
+  "street_10.png": {
+   "index": 10,
+   "role": "wall_corner_vent",
+   "kind": "wall"
+  },
+  "street_11.png": {
+   "index": 11,
+   "role": "wall_corner_rubble",
+   "kind": "wall"
+  },
+  "street_12.png": {
+   "index": 12,
+   "role": "wall_corner_c",
+   "kind": "wall"
+  },
+  "street_13.png": {
+   "index": 13,
+   "role": "wall_corner_d",
+   "kind": "wall"
+  },
+  "street_14.png": {
+   "index": 14,
+   "role": "wall_corner_plain",
+   "kind": "wall"
+  },
+  "street_15.png": {
+   "index": 15,
+   "role": "wall_corner_brick_break",
+   "kind": "wall"
+  },
+  "street_16.png": {
+   "index": 16,
+   "role": "wall_corner_grate",
+   "kind": "wall"
+  },
+  "street_17.png": {
+   "index": 17,
+   "role": "wall_corner_vent_b",
+   "kind": "wall"
+  }
+ }
+}

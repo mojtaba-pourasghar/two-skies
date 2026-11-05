@@ -41,6 +41,12 @@ if ! python3 -I "$ROOT/tools/validate_ch1.py"; then
 fi
 
 echo
+echo "=== ایمپورتر هنر (T2) ==="
+if ! python3 -I "$ROOT/tools/test_import_art.py"; then
+  fail=1
+fi
+
+echo
 echo "=== بازتولیدپذیری هنر موقت ==="
 if ! python3 -I "$ROOT/tools/gen_art.py" --check; then
   fail=1

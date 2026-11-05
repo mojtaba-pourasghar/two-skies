@@ -1,0 +1,98 @@
+{
+ "camera": "side",
+ "scene": "street",
+ "tile_px": 64,
+ "count": 18,
+ "tiles": {
+  "street_side_00.png": {
+   "index": 0,
+   "role": "ground_top_rubble",
+   "kind": "solid"
+  },
+  "street_side_01.png": {
+   "index": 1,
+   "role": "ground_fill",
+   "kind": "solid"
+  },
+  "street_side_02.png": {
+   "index": 2,
+   "role": "ground_end_left",
+   "kind": "solid"
+  },
+  "street_side_03.png": {
+   "index": 3,
+   "role": "ground_end_right",
+   "kind": "solid"
+  },
+  "street_side_04.png": {
+   "index": 4,
+   "role": "platform_metal_long",
+   "kind": "oneway"
+  },
+  "street_side_05.png": {
+   "index": 5,
+   "role": "platform_metal_short",
+   "kind": "oneway"
+  },
+  "street_side_06.png": {
+   "index": 6,
+   "role": "wall_planks",
+   "kind": "background"
+  },
+  "street_side_07.png": {
+   "index": 7,
+   "role": "wall_graffiti",
+   "kind": "background"
+  },
+  "street_side_08.png": {
+   "index": 8,
+   "role": "ceiling_hanging_cables",
+   "kind": "solid"
+  },
+  "street_side_09.png": {
+   "index": 9,
+   "role": "pillar_scaffold",
+   "kind": "background"
+  },
+  "street_side_10.png": {
+   "index": 10,
+   "role": "window_frame",
+   "kind": "decor"
+  },
+  "street_side_11.png": {
+   "index": 11,
+   "role": "doorway_dark",
+   "kind": "door"
+  },
+  "street_side_12.png": {
+   "index": 12,
+   "role": "stairs",
+   "kind": "slope"
+  },
+  "street_side_13.png": {
+   "index": 13,
+   "role": "ladder",
+   "kind": "ladder"
+  },
+  "street_side_14.png": {
+   "index": 14,
+   "role": "railing",
+   "kind": "foreground"
+  },
+  "street_side_15.png": {
+   "index": 15,
+   "role": "rubble_slope",
+   "kind": "slope"
+  },
+  "street_side_16.png": {
+   "index": 16,
+   "role": "curb_slab",
+   "kind": "solid"
+  },
+  "street_side_17.png": {
+   "index": 17,
+   "role": "corner_support_bracket",
+   "kind": "background"
+  }
+ }
+}

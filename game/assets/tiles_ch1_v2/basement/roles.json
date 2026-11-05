@@ -1,0 +1,98 @@
+{
+ "camera": "topdown",
+ "scene": "basement",
+ "tile_px": 64,
+ "count": 18,
+ "tiles": {
+  "basement_00.png": {
+   "index": 0,
+   "role": "floor_a",
+   "kind": "walkable"
+  },
+  "basement_01.png": {
+   "index": 1,
+   "role": "floor_b",
+   "kind": "walkable"
+  },
+  "basement_02.png": {
+   "index": 2,
+   "role": "grate_quad",
+   "kind": "walkable_decor"
+  },
+  "basement_03.png": {
+   "index": 3,
+   "role": "grate_long",
+   "kind": "walkable_decor"
+  },
+  "basement_04.png": {
+   "index": 4,
+   "role": "cable_grate",
+   "kind": "walkable_decor"
+  },
+  "basement_05.png": {
+   "index": 5,
+   "role": "emblem_hatch",
+   "kind": "walkable_decor"
+  },
+  "basement_06.png": {
+   "index": 6,
+   "role": "floor_c",
+   "kind": "walkable"
+  },
+  "basement_07.png": {
+   "index": 7,
+   "role": "cables_cross",
+   "kind": "walkable_decor"
+  },
+  "basement_08.png": {
+   "index": 8,
+   "role": "grate_octagon",
+   "kind": "walkable_decor"
+  },
+  "basement_09.png": {
+   "index": 9,
+   "role": "floor_d",
+   "kind": "walkable"
+  },
+  "basement_10.png": {
+   "index": 10,
+   "role": "floor_cracked",
+   "kind": "walkable"
+  },
+  "basement_11.png": {
+   "index": 11,
+   "role": "floor_e",
+   "kind": "walkable"
+  },
+  "basement_12.png": {
+   "index": 12,
+   "role": "wall_corner_lamp",
+   "kind": "wall"
+  },
+  "basement_13.png": {
+   "index": 13,
+   "role": "wall_corner_server_lamp",
+   "kind": "wall"
+  },
+  "basement_14.png": {
+   "index": 14,
+   "role": "wall_corner_pipes",
+   "kind": "wall"
+  },
+  "basement_15.png": {
+   "index": 15,
+   "role": "wall_archway_lit",
+   "kind": "passage"
+  },
+  "basement_16.png": {
+   "index": 16,
+   "role": "wall_corner_vent",
+   "kind": "wall"
+  },
+  "basement_17.png": {
+   "index": 17,
+   "role": "wall_terminal_green",
+   "kind": "wall"
+  }
+ }
+}

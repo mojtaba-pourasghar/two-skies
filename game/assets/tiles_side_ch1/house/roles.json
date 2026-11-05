@@ -1,0 +1,108 @@
+{
+ "camera": "side",
+ "scene": "house",
+ "tile_px": 64,
+ "count": 20,
+ "tiles": {
+  "house_side_00.png": {
+   "index": 0,
+   "role": "ground_top_a",
+   "kind": "solid"
+  },
+  "house_side_01.png": {
+   "index": 1,
+   "role": "ground_top_b",
+   "kind": "solid"
+  },
+  "house_side_02.png": {
+   "index": 2,
+   "role": "ground_end_right",
+   "kind": "solid"
+  },
+  "house_side_03.png": {
+   "index": 3,
+   "role": "ground_end_left",
+   "kind": "solid"
+  },
+  "house_side_04.png": {
+   "index": 4,
+   "role": "platform_thin",
+   "kind": "oneway"
+  },
+  "house_side_05.png": {
+   "index": 5,
+   "role": "platform_bracket_right",
+   "kind": "oneway"
+  },
+  "house_side_06.png": {
+   "index": 6,
+   "role": "platform_bracket_left",
+   "kind": "oneway"
+  },
+  "house_side_07.png": {
+   "index": 7,
+   "role": "wall_wainscot_a",
+   "kind": "background"
+  },
+  "house_side_08.png": {
+   "index": 8,
+   "role": "wall_wainscot_b",
+   "kind": "background"
+  },
+  "house_side_09.png": {
+   "index": 9,
+   "role": "platform_shelf_left",
+   "kind": "oneway"
+  },
+  "house_side_10.png": {
+   "index": 10,
+   "role": "pillar",
+   "kind": "background"
+  },
+  "house_side_11.png": {
+   "index": 11,
+   "role": "window_curtain",
+   "kind": "decor"
+  },
+  "house_side_12.png": {
+   "index": 12,
+   "role": "door",
+   "kind": "door"
+  },
+  "house_side_13.png": {
+   "index": 13,
+   "role": "door_frame",
+   "kind": "door"
+  },
+  "house_side_14.png": {
+   "index": 14,
+   "role": "stairs",
+   "kind": "slope"
+  },
+  "house_side_15.png": {
+   "index": 15,
+   "role": "ladder",
+   "kind": "ladder"
+  },
+  "house_side_16.png": {
+   "index": 16,
+   "role": "railing_balustrade",
+   "kind": "foreground"
+  },
+  "house_side_17.png": {
+   "index": 17,
+   "role": "rug",
+   "kind": "decor"
+  },
+  "house_side_18.png": {
+   "index": 18,
+   "role": "baseboard_strip",
+   "kind": "decor"
+  },
+  "house_side_19.png": {
+   "index": 19,
+   "role": "wall_corner_inner",
+   "kind": "background"
+  }
+ }
+}
