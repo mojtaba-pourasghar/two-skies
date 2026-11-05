@@ -52,7 +52,14 @@ func _load_tuning() -> void:
 		push_error("Settings: tuning.json خراب است.")
 		return
 	tuning = parsed
-	KairoConst.apply_profile(tuning, String(tuning.get("active_profile", "spec02")))
+	# هر حالت دوربین پروفایل خودش را دارد و **دستی انتخاب نمی‌شود** (T3):
+	#   side     → challenge_side (فیزیک کناری، اتاق چالش)
+	#   topdown  → topdown (اکتشاف، بدون گرانش)
+	# پیش از این یک `active_profile` سراسری هر دو را می‌گرفت؛ با مقیاس تازه
+	# نتیجه‌اش مخلوط شد: سرعت دو برابر ولی پرش در مقیاس قدیم، یعنی برد افقی
+	# ۸٫۲ کاشی به‌جای ۴٫۱. (DECISIONS.md: D-ART-14)
+	KairoConst.apply_profile(tuning, CameraDirector.PROFILE[CameraDirector.MODE_SIDE])
+	TdConst.apply_profile(tuning, CameraDirector.PROFILE[CameraDirector.MODE_TOPDOWN])
 
 
 ## قاعده‌های عدالت که اعتبارسنج مرحله اجبار می‌کند (§۷ و «قاعدهٔ عدالت» سند ۰۱)

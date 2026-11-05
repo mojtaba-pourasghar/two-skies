@@ -113,7 +113,7 @@ func _check_jump_reach() -> void:
 		if kairo.is_on_floor() and kairo.velocity.y >= 0.0 and i > 10:
 			break
 	Input.action_release("jump")
-	var up_tiles := (y0 - apex) / 16.0
+	var up_tiles := (y0 - apex) / float(KairoConst.TILE)
 
 	# برد افقی
 	kairo.reset_to(Vector2(3 * 16, floor_y))
@@ -130,18 +130,18 @@ func _check_jump_reach() -> void:
 		await get_tree().physics_frame
 		if kairo.is_on_floor():
 			break
-	var across_tiles := (kairo.global_position.x - x0) / 16.0
+	var across_tiles := (kairo.global_position.x - x0) / float(KairoConst.TILE)
 	Input.action_release("move_right")
 	Input.action_release("jump")
 
 	print("    اندازه‌گیری: %.2f کاشی بالا، %.2f کاشی افقی" % [up_tiles, across_tiles])
 	print("    سند §۳:     %.2f کاشی بالا، %.2f کاشی افقی"
-		% [KairoConst.jump_height_px() / 16.0, KairoConst.jump_range_px() / 16.0])
+		% [KairoConst.jump_height_px() / float(KairoConst.TILE), KairoConst.jump_range_px() / float(KairoConst.TILE)])
 	print("    فرض مولّد:   4.00 کاشی بالا، 6.00 کاشی افقی")
 
 	# سنجه‌ها به عدد سند بسته‌اند، نه به فرض مولّد (DECISIONS.md: D-008)
 	_check("ارتفاع پرش با §۳ می‌خواند",
-		absf(up_tiles - KairoConst.jump_height_px() / 16.0) <= 0.3,
+		absf(up_tiles - KairoConst.jump_height_px() / float(KairoConst.TILE)) <= 0.3,
 		"= %.2f کاشی" % up_tiles)
 	_check("برد افقی ≥ ۴٫۵ کاشی (حد شکاف §۳)", across_tiles >= 4.5,
 		"= %.2f کاشی" % across_tiles)

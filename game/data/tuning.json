@@ -1,6 +1,6 @@
 {
   "_comment": "هر دو مجموعهٔ اعداد نگه داشته می‌شود. active_profile تعیین می‌کند کدام فعال است؛ عوض کردن همین یک رشته کافی است. منبع: docs/02_godot_spec.md §۳ و §۷، docs/01_main_design_and_screenplay_ch1-8.md (جدول ابزارها و کتاب موانع).",
-  "active_profile": "spec02",
+  "active_profile": "topdown",
   "profiles": {
     "spec02": {
       "_source": "docs/02_godot_spec.md §۳ و §۷ — مرجع فنی اعلام‌شده در README",
@@ -83,29 +83,29 @@
       }
     },
     "topdown": {
-      "_source": "game/TOPDOWN_SPEC.md — تصمیم گام ۱۲ (نمای سه‌چهارم از بالا)",
-      "_note": "بدون گرانش. اعداد پرش و دیوارپرش اینجا نیستند چون حذف شده‌اند.",
+      "_source": "game/TOPDOWN_SPEC.md — تصمیم گام ۱۲، مقیاس‌شده با WORLD_SCALE=2 (CLAUDE.md قانون ۳: ۱۲۸۰×۷۲۰، کاشی ۳۲، قد ~۸۸)",
+      "_note": "بدون گرانش. همهٔ مقدارهای پیکسلی دو برابر مقیاس قدیم ۴۸۰×۲۷۰ هستند؛ نسبت‌ها (کاشی بر ثانیه، فریم) دست‌نخورده‌اند.",
       "kairo": {
-        "RUN_SPEED": 96.0,
-        "GROUND_ACCEL": 900.0,
-        "GROUND_DECEL": 1200.0,
-        "DASH_SPEED": 240.0,
+        "RUN_SPEED": 192.0,
+        "GROUND_ACCEL": 1800.0,
+        "GROUND_DECEL": 2400.0,
+        "DASH_SPEED": 480.0,
         "DASH_TIME": 0.1333,
         "DASH_COOLDOWN": 0.6,
         "RESPAWN_TIME": 0.28
       },
       "ilara": {
-        "RUN_SPEED": 105.0
+        "RUN_SPEED": 210.0
       },
       "topdown": {
-        "HOP_DISTANCE": 48.0,
+        "HOP_DISTANCE": 96.0,
         "HOP_TIME": 0.4,
-        "HOP_ARC_PX": 8.0,
+        "HOP_ARC_PX": 16.0,
         "FOOT_BOX": [
-          10.0,
-          8.0
+          20.0,
+          16.0
         ],
-        "FOOT_OFFSET_Y": 4.0,
+        "FOOT_OFFSET_Y": 8.0,
         "COMPANION_DELAY_FRAMES": 48
       },
       "hazards": {
@@ -121,14 +121,60 @@
         "door_open_duration": 2.0
       },
       "hack": {
-        "range_px": 48.0,
+        "range_px": 96.0,
         "hold_time": 0.6,
         "cooldown": 1.0
       },
       "camera": {
-        "death_shake_px": 2.0,
+        "death_shake_px": 4.0,
         "death_shake_time": 0.12,
-        "dash_shake_px": 1.0,
+        "dash_shake_px": 2.0,
+        "dash_shake_time": 0.06
+      },
+      "world_scale": 2.0,
+      "explore": {
+        "TRAP_DAMAGE_PCT": 10.0,
+        "SAFE_TILE_RETURN": true
+      }
+    },
+    "challenge_side": {
+      "_source": "docs/09 §۲ب — اتاق چالش side، مرگ بی‌نهایت، ریستارت <۰٫۳ث",
+      "_note": "ارث از spec02 با WORLD_SCALE=2؛ فقط مقدارهای پیکسلی دو برابر شدند.",
+      "world_scale": 2.0,
+      "kairo": {
+        "RUN_SPEED": 240.0,
+        "GRAVITY": 1800.0,
+        "MAX_FALL": 720.0,
+        "GROUND_ACCEL": 1800.0,
+        "GROUND_DECEL": 2400.0,
+        "AIR_ACCEL": 1400.0,
+        "AIR_DECEL": 1000.0,
+        "JUMP_VELOCITY": -612.0,
+        "JUMP_CUT": 0.45,
+        "COYOTE_TIME": 0.1,
+        "JUMP_BUFFER": 0.12,
+        "WALL_SLIDE_MAX": 120.0,
+        "WALL_JUMP_VEL_X": 340.0,
+        "WALL_JUMP_VEL_Y": -560.0,
+        "WALL_JUMP_LOCK": 0.15,
+        "DASH_SPEED": 520.0,
+        "DASH_TIME": 0.18,
+        "DASH_COOLDOWN": 0.6,
+        "RESPAWN_TIME": 0.28
+      },
+      "ilara": {
+        "RUN_SPEED": 210.0,
+        "JUMP_VELOCITY": -580.0
+      },
+      "hack": {
+        "range_px": 96.0,
+        "hold_time": 0.6,
+        "cooldown": 1.0
+      },
+      "camera": {
+        "death_shake_px": 4.0,
+        "death_shake_time": 0.12,
+        "dash_shake_px": 2.0,
         "dash_shake_time": 0.06
       }
     }

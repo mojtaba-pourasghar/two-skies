@@ -5,7 +5,10 @@
 class_name TdConst
 extends RefCounted
 
-const TILE: int = 16
+## اندازهٔ کاشی. باید با `WorldScale.TILE` یکی باشد؛ GDScript در مقدار
+## `const` به ثابت کلاس دیگر تکیه نمی‌کند (ترتیب بارگذاری)، پس عدد
+## صریح است و `test_camera.gd` یکی بودنشان را می‌سنجد.
+const TILE: int = 32
 const FPS: int = 60
 
 ## جعبهٔ بدن همان ۱۰×۱۶ §۳ است و هنر بر پایهٔ آن کشیده می‌شود.

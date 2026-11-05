@@ -36,9 +36,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        2,
+        4,
         13
        ],
        "from": [
@@ -49,18 +49,7 @@
       {
        "action": "dash_right",
        "to": [
-        4,
-        13
-       ],
-       "from": [
-        2,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        6,
+        7,
         13
        ],
        "from": [
@@ -71,29 +60,18 @@
       {
        "action": "dash_right",
        "to": [
-        8,
-        13
-       ],
-       "from": [
-        6,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         10,
         13
        ],
        "from": [
-        8,
+        7,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        12,
+        13,
         13
        ],
        "from": [
@@ -104,29 +82,18 @@
       {
        "action": "dash_right",
        "to": [
-        14,
-        13
-       ],
-       "from": [
-        12,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         16,
         13
        ],
        "from": [
-        14,
+        13,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        18,
+        19,
         13
        ],
        "from": [
@@ -137,44 +104,22 @@
       {
        "action": "dash_right",
        "to": [
-        20,
-        13
-       ],
-       "from": [
-        18,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         22,
         13
        ],
        "from": [
-        20,
+        19,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        24,
+        25,
         13
        ],
        "from": [
         22,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        26,
-        13
-       ],
-       "from": [
-        24,
         13
        ]
       },
@@ -185,7 +130,7 @@
         13
        ],
        "from": [
-        26,
+        25,
         13
        ]
       },
@@ -252,7 +197,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 14
+       "micro": 9
       },
       {
        "cell": [
@@ -304,9 +249,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        2,
+        4,
         13
        ],
        "from": [
@@ -317,18 +262,7 @@
       {
        "action": "dash_right",
        "to": [
-        4,
-        13
-       ],
-       "from": [
-        2,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        6,
+        7,
         13
        ],
        "from": [
@@ -339,29 +273,18 @@
       {
        "action": "dash_right",
        "to": [
-        8,
-        13
-       ],
-       "from": [
-        6,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         10,
         13
        ],
        "from": [
-        8,
+        7,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        12,
+        13,
         13
        ],
        "from": [
@@ -372,29 +295,18 @@
       {
        "action": "dash_right",
        "to": [
-        14,
-        13
-       ],
-       "from": [
-        12,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         16,
         13
        ],
        "from": [
-        14,
+        13,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        18,
+        19,
         13
        ],
        "from": [
@@ -405,44 +317,22 @@
       {
        "action": "dash_right",
        "to": [
-        20,
-        13
-       ],
-       "from": [
-        18,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         22,
         13
        ],
        "from": [
-        20,
+        19,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        24,
+        25,
         13
        ],
        "from": [
         22,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        26,
-        13
-       ],
-       "from": [
-        24,
         13
        ]
       },
@@ -453,7 +343,7 @@
         13
        ],
        "from": [
-        26,
+        25,
         13
        ]
       },
@@ -520,7 +410,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 14
+       "micro": 9
       },
       {
        "cell": [
@@ -597,9 +487,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        2,
+        3,
         13
        ],
        "from": [
@@ -610,44 +500,22 @@
       {
        "action": "dash_right",
        "to": [
-        4,
-        13
-       ],
-       "from": [
-        2,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         6,
         13
        ],
        "from": [
-        4,
+        3,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        8,
+        9,
         13
        ],
        "from": [
         6,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        10,
-        13
-       ],
-       "from": [
-        8,
         13
        ]
       },
@@ -658,7 +526,7 @@
         13
        ],
        "from": [
-        10,
+        9,
         13
        ]
       },
@@ -729,9 +597,9 @@
        ]
       },
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        14,
+        16,
         11
        ],
        "from": [
@@ -742,18 +610,7 @@
       {
        "action": "dash_right",
        "to": [
-        16,
-        11
-       ],
-       "from": [
-        14,
-        11
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        18,
+        19,
         11
        ],
        "from": [
@@ -764,66 +621,44 @@
       {
        "action": "fall",
        "to": [
-        18,
+        19,
         12
        ],
        "from": [
-        18,
+        19,
         11
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        19,
         13
        ],
        "from": [
-        18,
+        19,
         12
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        20,
-        13
-       ],
-       "from": [
-        18,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         22,
         13
        ],
        "from": [
-        20,
+        19,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        24,
+        25,
         13
        ],
        "from": [
         22,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        26,
-        13
-       ],
-       "from": [
-        24,
         13
        ]
       },
@@ -834,7 +669,7 @@
         13
        ],
        "from": [
-        26,
+        25,
         13
        ]
       },
@@ -901,7 +736,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 6
+       "micro": 4
       },
       {
        "cell": [
@@ -918,7 +753,7 @@
         11
        ],
        "kind": "walk",
-       "micro": 6
+       "micro": 5
       },
       {
        "cell": [
@@ -926,7 +761,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 8
+       "micro": 6
       },
       {
        "cell": [
@@ -978,9 +813,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        2,
+        3,
         13
        ],
        "from": [
@@ -991,44 +826,22 @@
       {
        "action": "dash_right",
        "to": [
-        4,
-        13
-       ],
-       "from": [
-        2,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         6,
         13
        ],
        "from": [
-        4,
+        3,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        8,
+        9,
         13
        ],
        "from": [
         6,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        10,
-        13
-       ],
-       "from": [
-        8,
         13
        ]
       },
@@ -1039,7 +852,7 @@
         13
        ],
        "from": [
-        10,
+        9,
         13
        ]
       },
@@ -1110,9 +923,9 @@
        ]
       },
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        14,
+        16,
         11
        ],
        "from": [
@@ -1123,18 +936,7 @@
       {
        "action": "dash_right",
        "to": [
-        16,
-        11
-       ],
-       "from": [
-        14,
-        11
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        18,
+        19,
         11
        ],
        "from": [
@@ -1145,66 +947,44 @@
       {
        "action": "fall",
        "to": [
-        18,
+        19,
         12
        ],
        "from": [
-        18,
+        19,
         11
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        19,
         13
        ],
        "from": [
-        18,
+        19,
         12
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        20,
-        13
-       ],
-       "from": [
-        18,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         22,
         13
        ],
        "from": [
-        20,
+        19,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        24,
+        25,
         13
        ],
        "from": [
         22,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        26,
-        13
-       ],
-       "from": [
-        24,
         13
        ]
       },
@@ -1215,7 +995,7 @@
         13
        ],
        "from": [
-        26,
+        25,
         13
        ]
       },
@@ -1282,7 +1062,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 6
+       "micro": 4
       },
       {
        "cell": [
@@ -1299,7 +1079,7 @@
         11
        ],
        "kind": "walk",
-       "micro": 6
+       "micro": 5
       },
       {
        "cell": [
@@ -1307,7 +1087,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 8
+       "micro": 6
       },
       {
        "cell": [
@@ -1397,9 +1177,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        2,
+        4,
         13
        ],
        "from": [
@@ -1410,18 +1190,7 @@
       {
        "action": "dash_right",
        "to": [
-        4,
-        13
-       ],
-       "from": [
-        2,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        6,
+        7,
         13
        ],
        "from": [
@@ -1432,29 +1201,18 @@
       {
        "action": "dash_right",
        "to": [
-        8,
-        13
-       ],
-       "from": [
-        6,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         10,
         13
        ],
        "from": [
-        8,
+        7,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        12,
+        13,
         13
        ],
        "from": [
@@ -1465,29 +1223,18 @@
       {
        "action": "dash_right",
        "to": [
-        14,
-        13
-       ],
-       "from": [
-        12,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         16,
         13
        ],
        "from": [
-        14,
+        13,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        18,
+        19,
         13
        ],
        "from": [
@@ -1498,44 +1245,22 @@
       {
        "action": "dash_right",
        "to": [
-        20,
-        13
-       ],
-       "from": [
-        18,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         22,
         13
        ],
        "from": [
-        20,
+        19,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        24,
+        25,
         13
        ],
        "from": [
         22,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        26,
-        13
-       ],
-       "from": [
-        24,
         13
        ]
       },
@@ -1546,7 +1271,7 @@
         13
        ],
        "from": [
-        26,
+        25,
         13
        ]
       },
@@ -1613,7 +1338,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 14
+       "micro": 9
       },
       {
        "cell": [
@@ -1665,9 +1390,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        2,
+        4,
         13
        ],
        "from": [
@@ -1678,18 +1403,7 @@
       {
        "action": "dash_right",
        "to": [
-        4,
-        13
-       ],
-       "from": [
-        2,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        6,
+        7,
         13
        ],
        "from": [
@@ -1700,29 +1414,18 @@
       {
        "action": "dash_right",
        "to": [
-        8,
-        13
-       ],
-       "from": [
-        6,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         10,
         13
        ],
        "from": [
-        8,
+        7,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        12,
+        13,
         13
        ],
        "from": [
@@ -1733,29 +1436,18 @@
       {
        "action": "dash_right",
        "to": [
-        14,
-        13
-       ],
-       "from": [
-        12,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         16,
         13
        ],
        "from": [
-        14,
+        13,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        18,
+        19,
         13
        ],
        "from": [
@@ -1766,44 +1458,22 @@
       {
        "action": "dash_right",
        "to": [
-        20,
-        13
-       ],
-       "from": [
-        18,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         22,
         13
        ],
        "from": [
-        20,
+        19,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        24,
+        25,
         13
        ],
        "from": [
         22,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        26,
-        13
-       ],
-       "from": [
-        24,
         13
        ]
       },
@@ -1814,7 +1484,7 @@
         13
        ],
        "from": [
-        26,
+        25,
         13
        ]
       },
@@ -1881,7 +1551,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 14
+       "micro": 9
       },
       {
        "cell": [
@@ -1979,9 +1649,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "dash_right",
+       "action": "walk_right",
        "to": [
-        3,
+        2,
         13
        ],
        "from": [
@@ -1996,14 +1666,14 @@
         13
        ],
        "from": [
-        3,
+        2,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        7,
+        8,
         13
        ],
        "from": [
@@ -2014,51 +1684,29 @@
       {
        "action": "dash_right",
        "to": [
-        9,
+        11,
         13
        ],
        "from": [
-        7,
+        8,
         13
        ]
       },
       {
        "action": "dash_right",
-       "to": [
-        11,
-        13
-       ],
-       "from": [
-        9,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        13,
-        13
-       ],
-       "from": [
-        11,
-        13
-       ]
-      },
-      {
-       "action": "walk_right",
        "to": [
         14,
         13
        ],
        "from": [
-        13,
+        11,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        16,
+        17,
         13
        ],
        "from": [
@@ -2069,44 +1717,22 @@
       {
        "action": "dash_right",
        "to": [
-        18,
-        13
-       ],
-       "from": [
-        16,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         20,
         13
        ],
        "from": [
-        18,
+        17,
         13
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        22,
+        23,
         13
        ],
        "from": [
         20,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        24,
-        13
-       ],
-       "from": [
-        22,
         13
        ]
       },
@@ -2117,7 +1743,7 @@
         13
        ],
        "from": [
-        24,
+        23,
         13
        ]
       },
@@ -2184,7 +1810,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 13
+       "micro": 9
       },
       {
        "cell": [
@@ -2208,7 +1834,7 @@
       {
        "action": "dash_right",
        "to": [
-        3,
+        4,
         13
        ],
        "from": [
@@ -2219,22 +1845,11 @@
       {
        "action": "dash_right",
        "to": [
-        5,
-        13
-       ],
-       "from": [
-        3,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
         7,
         13
        ],
        "from": [
-        5,
+        4,
         13
        ]
       },
@@ -2312,7 +1927,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 3
+       "micro": 2
       },
       {
        "cell": [
@@ -2570,9 +2185,9 @@
      "reachable": true,
      "steps": [
       {
-       "action": "walk_right",
+       "action": "dash_right",
        "to": [
-        18,
+        20,
         4
        ],
        "from": [
@@ -2583,132 +2198,110 @@
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         5
        ],
        "from": [
-        18,
+        20,
         4
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         6
        ],
        "from": [
-        18,
+        20,
         5
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         7
        ],
        "from": [
-        18,
+        20,
         6
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         8
        ],
        "from": [
-        18,
+        20,
         7
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         9
        ],
        "from": [
-        18,
+        20,
         8
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         10
        ],
        "from": [
-        18,
+        20,
         9
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         11
        ],
        "from": [
-        18,
+        20,
         10
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         12
        ],
        "from": [
-        18,
+        20,
         11
        ]
       },
       {
        "action": "fall",
        "to": [
-        18,
+        20,
         13
        ],
        "from": [
-        18,
+        20,
         12
        ]
       },
       {
        "action": "dash_right",
        "to": [
-        20,
-        13
-       ],
-       "from": [
-        18,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        22,
+        23,
         13
        ],
        "from": [
         20,
-        13
-       ]
-      },
-      {
-       "action": "dash_right",
-       "to": [
-        24,
-        13
-       ],
-       "from": [
-        22,
         13
        ]
       },
@@ -2719,7 +2312,7 @@
         13
        ],
        "from": [
-        24,
+        23,
         13
        ]
       },
@@ -2786,7 +2379,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 14
+       "micro": 12
       },
       {
        "cell": [

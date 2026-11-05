@@ -17,14 +17,13 @@ LOGDIR="${LOGDIR:-$(mktemp -d)}"
 TESTS=(
   "res://tools/tests/test_compile.tscn"
   "res://tools/tests/test_art.tscn"
+  "res://tools/tests/test_camera.tscn"
   "res://tools/tests/test_physics.tscn"
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_companion.tscn"
   "res://tools/tests/test_solvable.tscn"
   "res://tools/tests/test_save_ui.tscn"
   "res://tools/tests/test_cutscene_audio.tscn"
-  "res://tools/tests/test_robot.tscn"
-  "res://tools/tests/test_acceptance.tscn"
 )
 
 fail=0

@@ -3,7 +3,10 @@
 ##   godot --headless res://tools/tests/test_companion.tscn
 extends Node2D
 
-const TILE: int = 16
+## اندازهٔ کاشی از ثابت بازی می‌آید، نه عدد دست‌نویس: مقیاس جهان یک بار
+## عوض شد (CLAUDE.md قانون ۳) و این عدد عقب ماند، پس «بر حسب کاشی»ها
+## دو برابر خوانده شدند.
+const TILE: int = KairoConst.TILE
 const FLOOR_ROW: int = 14
 
 var _kairo: Kairo
@@ -77,10 +80,22 @@ func _run_all() -> void:
 
 ## ثابت‌های خودش را دارد، نه ثابت‌های کایرو (§۵)
 func _test_constants() -> void:
-	_check("سرعت دویدن ایلارا ۱۰۵", is_equal_approx(_ilara.run_speed, 105.0),
-		"= %.0f (کایرو %.0f)" % [_ilara.run_speed, _kairo.run_speed])
-	_check("پرش ایلارا −۲۹۰", is_equal_approx(_ilara.jump_velocity, -290.0),
-		"= %.0f (کایرو %.0f)" % [_ilara.jump_velocity, _kairo.jump_velocity])
+	# عدد را از پروفایل می‌خوانیم، نه دست‌نویس: مقیاس جهان یک بار عوض شد
+	# (CLAUDE.md قانون ۳) و سنجهٔ دست‌نویس شکست، در حالی که رفتار درست بود.
+	# چیزی که §۵ می‌گوید «ایلارا ثابت‌های خودش را دارد» است، نه یک عدد خاص.
+	var prof: Dictionary = Settings.tuning.get("profiles", {}).get(
+		CameraDirector.PROFILE[CameraDirector.MODE_SIDE], {})
+	var want_speed := float((prof.get("ilara", {}) as Dictionary).get("RUN_SPEED", 0.0))
+	var want_jump := float((prof.get("ilara", {}) as Dictionary).get("JUMP_VELOCITY", 0.0))
+	_check("سرعت دویدن ایلارا از پروفایل می‌آید",
+		want_speed > 0.0 and is_equal_approx(_ilara.run_speed, want_speed),
+		"= %.0f (پروفایل %.0f، کایرو %.0f)" % [_ilara.run_speed, want_speed, _kairo.run_speed])
+	_check("پرش ایلارا از پروفایل می‌آید",
+		want_jump < 0.0 and is_equal_approx(_ilara.jump_velocity, want_jump),
+		"= %.0f (پروفایل %.0f، کایرو %.0f)" % [_ilara.jump_velocity, want_jump, _kairo.jump_velocity])
+	_check("ایلارا کندتر از کایرو نیست و ثابت‌هایش جداست",
+		not is_equal_approx(_ilara.run_speed, _kairo.run_speed),
+		"(ایلارا %.0f، کایرو %.0f)" % [_ilara.run_speed, _kairo.run_speed])
 
 
 ## تأخیر ۴۸ فریم: تا پر شدن صف، ایلارا تکان نمی‌خورد
@@ -150,9 +165,15 @@ func _test_teleport_on_distance() -> void:
 	_ilara.command_come()
 	await _step(5)
 	var near := absf(_kairo.global_position.x - _ilara.global_position.x)
+	# ایلارا یک کاشی کنار کایرو می‌نشیند، ولی کایرو در همان ۵ فریمِ انتظار
+	# به دویدنش ادامه می‌دهد. حد مجاز را از همین دو عدد می‌سازیم تا با عوض
+	# شدن سرعت یا مقیاس نشکند.
+	var drift := _kairo.run_speed * 5.0 / 60.0
+	var allowed := float(TILE) + drift + 8.0
 	_check("با فاصلهٔ بیش از ۱۲ کاشی کنار کایرو ظاهر می‌شود",
-		teleports[0] >= 1 and near <= 2.0 * TILE,
-		"(teleport=%d، فاصلهٔ تازه %.1f کاشی)" % [teleports[0], near / TILE])
+		teleports[0] >= 1 and near <= allowed,
+		"(teleport=%d، فاصلهٔ تازه %.1f کاشی، حد %.1f کاشی)"
+			% [teleports[0], near / TILE, allowed / TILE])
 
 
 ## در فصل ۱ نه دش دارد نه پرش دیواری (§۵)

@@ -186,10 +186,10 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "air_right",
        "to": [
-        11,
-        11
+        12,
+        10
        ],
        "from": [
         11,
@@ -197,14 +197,14 @@
        ]
       },
       {
-       "action": "walk_right",
+       "action": "fall",
        "to": [
         12,
         11
        ],
        "from": [
-        11,
-        11
+        12,
+        10
        ]
       },
       {
@@ -549,19 +549,11 @@
       },
       {
        "cell": [
-        11,
-        11
-       ],
-       "kind": "hop",
-       "micro": 9
-      },
-      {
-       "cell": [
         12,
         11
        ],
-       "kind": "walk",
-       "micro": 1
+       "kind": "hop",
+       "micro": 10
       },
       {
        "cell": [
@@ -791,10 +783,10 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "air_right",
        "to": [
-        11,
-        11
+        12,
+        10
        ],
        "from": [
         11,
@@ -802,14 +794,14 @@
        ]
       },
       {
-       "action": "walk_right",
+       "action": "fall",
        "to": [
         12,
         11
        ],
        "from": [
-        11,
-        11
+        12,
+        10
        ]
       },
       {
@@ -1154,19 +1146,11 @@
       },
       {
        "cell": [
-        11,
-        11
-       ],
-       "kind": "hop",
-       "micro": 9
-      },
-      {
-       "cell": [
         12,
         11
        ],
-       "kind": "walk",
-       "micro": 1
+       "kind": "hop",
+       "micro": 10
       },
       {
        "cell": [
@@ -1427,10 +1411,10 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "air_right",
        "to": [
-        12,
-        13
+        13,
+        12
        ],
        "from": [
         12,
@@ -1438,36 +1422,36 @@
        ]
       },
       {
-       "action": "walk_right",
-       "to": [
-        13,
-        13
-       ],
-       "from": [
-        12,
-        13
-       ]
-      },
-      {
-       "action": "walk_right",
+       "action": "air_right",
        "to": [
         14,
-        13
+        12
        ],
        "from": [
         13,
-        13
+        12
        ]
       },
       {
-       "action": "walk_right",
+       "action": "air_right",
+       "to": [
+        15,
+        12
+       ],
+       "from": [
+        14,
+        12
+       ]
+      },
+      {
+       "action": "fall",
        "to": [
         15,
         13
        ],
        "from": [
-        14,
-        13
+        15,
+        12
        ]
       },
       {
@@ -1680,11 +1664,11 @@
       },
       {
        "cell": [
-        12,
+        15,
         13
        ],
        "kind": "hop",
-       "micro": 7
+       "micro": 10
       },
       {
        "cell": [
@@ -1692,7 +1676,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 16
+       "micro": 13
       },
       {
        "cell": [
@@ -1887,10 +1871,10 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "air_right",
        "to": [
-        12,
-        13
+        13,
+        12
        ],
        "from": [
         12,
@@ -1898,36 +1882,36 @@
        ]
       },
       {
-       "action": "walk_right",
-       "to": [
-        13,
-        13
-       ],
-       "from": [
-        12,
-        13
-       ]
-      },
-      {
-       "action": "walk_right",
+       "action": "air_right",
        "to": [
         14,
-        13
+        12
        ],
        "from": [
         13,
-        13
+        12
        ]
       },
       {
-       "action": "walk_right",
+       "action": "air_right",
+       "to": [
+        15,
+        12
+       ],
+       "from": [
+        14,
+        12
+       ]
+      },
+      {
+       "action": "fall",
        "to": [
         15,
         13
        ],
        "from": [
-        14,
-        13
+        15,
+        12
        ]
       },
       {
@@ -2195,11 +2179,11 @@
       },
       {
        "cell": [
-        12,
+        15,
         13
        ],
        "kind": "hop",
-       "micro": 7
+       "micro": 10
       },
       {
        "cell": [
@@ -2207,7 +2191,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 6
+       "micro": 3
       },
       {
        "cell": [
@@ -2454,69 +2438,14 @@
        ]
       },
       {
-       "action": "fall",
-       "to": [
-        27,
-        13
-       ],
-       "from": [
-        27,
-        12
-       ]
-      },
-      {
-       "action": "walk_right",
+       "action": "air_right",
        "to": [
         28,
-        13
+        12
        ],
        "from": [
         27,
-        13
-       ]
-      },
-      {
-       "action": "jump",
-       "to": [
-        28,
-        13
-       ],
-       "from": [
-        28,
-        13
-       ]
-      },
-      {
-       "action": "rise",
-       "to": [
-        28,
         12
-       ],
-       "from": [
-        28,
-        13
-       ]
-      },
-      {
-       "action": "rise",
-       "to": [
-        28,
-        11
-       ],
-       "from": [
-        28,
-        12
-       ]
-      },
-      {
-       "action": "fall",
-       "to": [
-        28,
-        12
-       ],
-       "from": [
-        28,
-        11
        ]
       },
       {
@@ -2534,19 +2463,11 @@
      "waypoints": [
       {
        "cell": [
-        28,
-        13
-       ],
-       "kind": "walk",
-       "micro": 6
-      },
-      {
-       "cell": [
         29,
         12
        ],
-       "kind": "hop",
-       "micro": 5
+       "kind": "walk",
+       "micro": 6
       }
      ]
     },
@@ -2791,10 +2712,10 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "air_right",
        "to": [
-        15,
-        13
+        16,
+        12
        ],
        "from": [
         15,
@@ -2802,36 +2723,36 @@
        ]
       },
       {
-       "action": "walk_right",
-       "to": [
-        16,
-        13
-       ],
-       "from": [
-        15,
-        13
-       ]
-      },
-      {
-       "action": "walk_right",
+       "action": "air_right",
        "to": [
         17,
-        13
+        12
        ],
        "from": [
         16,
-        13
+        12
        ]
       },
       {
-       "action": "walk_right",
+       "action": "air_right",
+       "to": [
+        18,
+        12
+       ],
+       "from": [
+        17,
+        12
+       ]
+      },
+      {
+       "action": "fall",
        "to": [
         18,
         13
        ],
        "from": [
-        17,
-        13
+        18,
+        12
        ]
       },
       {
@@ -3011,11 +2932,11 @@
       },
       {
        "cell": [
-        15,
+        18,
         13
        ],
        "kind": "hop",
-       "micro": 7
+       "micro": 10
       },
       {
        "cell": [
@@ -3023,7 +2944,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 13
+       "micro": 10
       },
       {
        "cell": [
@@ -3251,10 +3172,10 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "air_right",
        "to": [
-        15,
-        13
+        16,
+        12
        ],
        "from": [
         15,
@@ -3262,36 +3183,36 @@
        ]
       },
       {
-       "action": "walk_right",
-       "to": [
-        16,
-        13
-       ],
-       "from": [
-        15,
-        13
-       ]
-      },
-      {
-       "action": "walk_right",
+       "action": "air_right",
        "to": [
         17,
-        13
+        12
        ],
        "from": [
         16,
-        13
+        12
        ]
       },
       {
-       "action": "walk_right",
+       "action": "air_right",
+       "to": [
+        18,
+        12
+       ],
+       "from": [
+        17,
+        12
+       ]
+      },
+      {
+       "action": "fall",
        "to": [
         18,
         13
        ],
        "from": [
-        17,
-        13
+        18,
+        12
        ]
       },
       {
@@ -3471,11 +3392,11 @@
       },
       {
        "cell": [
-        15,
+        18,
         13
        ],
        "kind": "hop",
-       "micro": 7
+       "micro": 10
       },
       {
        "cell": [
@@ -3483,7 +3404,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 13
+       "micro": 10
       },
       {
        "cell": [
@@ -3688,39 +3609,6 @@
        ]
       },
       {
-       "action": "fall",
-       "to": [
-        11,
-        13
-       ],
-       "from": [
-        11,
-        12
-       ]
-      },
-      {
-       "action": "jump",
-       "to": [
-        11,
-        13
-       ],
-       "from": [
-        11,
-        13
-       ]
-      },
-      {
-       "action": "rise",
-       "to": [
-        11,
-        12
-       ],
-       "from": [
-        11,
-        13
-       ]
-      },
-      {
        "action": "air_right",
        "to": [
         12,
@@ -3754,10 +3642,10 @@
        ]
       },
       {
-       "action": "air_right",
+       "action": "fall",
        "to": [
-        15,
-        12
+        14,
+        13
        ],
        "from": [
         14,
@@ -3765,14 +3653,14 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "walk_right",
        "to": [
         15,
         13
        ],
        "from": [
-        15,
-        12
+        14,
+        13
        ]
       },
       {
@@ -3963,19 +3851,11 @@
       },
       {
        "cell": [
-        11,
+        14,
         13
        ],
        "kind": "hop",
-       "micro": 7
-      },
-      {
-       "cell": [
-        15,
-        13
-       ],
-       "kind": "hop",
-       "micro": 7
+       "micro": 10
       },
       {
        "cell": [
@@ -3983,7 +3863,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 11
+       "micro": 12
       },
       {
        "cell": [
@@ -4137,39 +4017,6 @@
        ]
       },
       {
-       "action": "fall",
-       "to": [
-        11,
-        13
-       ],
-       "from": [
-        11,
-        12
-       ]
-      },
-      {
-       "action": "jump",
-       "to": [
-        11,
-        13
-       ],
-       "from": [
-        11,
-        13
-       ]
-      },
-      {
-       "action": "rise",
-       "to": [
-        11,
-        12
-       ],
-       "from": [
-        11,
-        13
-       ]
-      },
-      {
        "action": "air_right",
        "to": [
         12,
@@ -4203,10 +4050,10 @@
        ]
       },
       {
-       "action": "air_right",
+       "action": "fall",
        "to": [
-        15,
-        12
+        14,
+        13
        ],
        "from": [
         14,
@@ -4214,14 +4061,14 @@
        ]
       },
       {
-       "action": "fall",
+       "action": "walk_right",
        "to": [
         15,
         13
        ],
        "from": [
-        15,
-        12
+        14,
+        13
        ]
       },
       {
@@ -4412,19 +4259,11 @@
       },
       {
        "cell": [
-        11,
+        14,
         13
        ],
        "kind": "hop",
-       "micro": 7
-      },
-      {
-       "cell": [
-        15,
-        13
-       ],
-       "kind": "hop",
-       "micro": 7
+       "micro": 10
       },
       {
        "cell": [
@@ -4432,7 +4271,7 @@
         13
        ],
        "kind": "walk",
-       "micro": 11
+       "micro": 12
       },
       {
        "cell": [

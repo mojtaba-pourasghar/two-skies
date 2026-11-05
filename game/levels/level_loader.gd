@@ -14,7 +14,10 @@
 class_name LevelLoader
 extends RefCounted
 
-const TILE: int = 16
+## اندازهٔ کاشی. باید با `WorldScale.TILE` یکی باشد؛ GDScript در مقدار
+## `const` به ثابت کلاس دیگر تکیه نمی‌کند (ترتیب بارگذاری)، پس عدد
+## صریح است و `test_camera.gd` یکی بودنشان را می‌سنجد.
+const TILE: int = 32
 const ROOM_W: int = 30
 const ROOM_H: int = 17
 
@@ -70,6 +73,7 @@ func _normalize(level: Dictionary) -> void:
 	level["view"] = String(level.get("view", "side"))
 	level["companion"] = bool(level.get("companion", true))
 	level["par_time"] = float(level.get("par_time", 0.0))
+	_normalize_camera(level)
 	var rooms: Array = level.get("rooms", [])
 	if rooms.is_empty():
 		errors.append("مرحلهٔ «%s» هیچ اتاقی ندارد." % level["id"])
@@ -77,6 +81,57 @@ func _normalize(level: Dictionary) -> void:
 	level["start_room"] = String(level.get("start_room", String(rooms[0].get("id", "r1"))))
 	for room in rooms:
 		_normalize_room(level, room)
+
+
+## فیلدهای دوربین (T3، D-ART-09d).
+##
+## `camera_mode` حالت **پیش‌فرض** مرحله است، نه حالت ثابتش: `camera_zones`
+## می‌تواند وسط ناحیه عوضش کند. `view` قدیمی اگر `camera_mode` نبود به‌عنوان
+## پشتیبان خوانده می‌شود تا مرحله‌های موجود نشکنند.
+func _normalize_camera(level: Dictionary) -> void:
+	var mode := String(level.get("camera_mode", level.get("view", "topdown")))
+	if mode not in ["side", "topdown"]:
+		errors.append("مرحلهٔ «%s»: camera_mode نامعتبر «%s» (side یا topdown)."
+			% [level["id"], mode])
+		mode = "topdown"
+	level["camera_mode"] = mode
+
+	var follow := String(level.get("camera_follow", "follow"))
+	if follow not in ["follow", "room"]:
+		errors.append("مرحلهٔ «%s»: camera_follow نامعتبر «%s» (follow یا room)."
+			% [level["id"], follow])
+		follow = "follow"
+	level["camera_follow"] = follow
+
+	var zones: Array = []
+	var seen: Dictionary = {}
+	for raw in level.get("camera_zones", []):
+		var z: Dictionary = raw
+		var zid := String(z.get("id", ""))
+		if zid == "":
+			errors.append("مرحلهٔ «%s»: یک camera_zone شناسه ندارد." % level["id"])
+			continue
+		if seen.has(zid):
+			errors.append("مرحلهٔ «%s»: شناسهٔ camera_zone تکراری «%s»."
+				% [level["id"], zid])
+			continue
+		seen[zid] = true
+		var rect: Array = z.get("rect", [])
+		if rect.size() != 4:
+			errors.append("مرحلهٔ «%s»: ناحیهٔ «%s» باید rect چهارتایی [c, r, w, h] داشته باشد."
+				% [level["id"], zid])
+			continue
+		if float(rect[2]) <= 0.0 or float(rect[3]) <= 0.0:
+			errors.append("مرحلهٔ «%s»: ناحیهٔ «%s» پهنا یا بلندی صفر دارد."
+				% [level["id"], zid])
+			continue
+		var zmode := String(z.get("mode", "side"))
+		if zmode not in ["side", "topdown"]:
+			errors.append("مرحلهٔ «%s»: ناحیهٔ «%s» حالت نامعتبر «%s» دارد."
+				% [level["id"], zid, zmode])
+			continue
+		zones.append({"id": zid, "mode": zmode, "rect": rect})
+	level["camera_zones"] = zones
 
 
 func _normalize_room(level: Dictionary, room: Dictionary) -> void:

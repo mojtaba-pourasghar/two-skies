@@ -9,7 +9,10 @@
 class_name KairoConst
 extends RefCounted
 
-const TILE: int = 16
+## اندازهٔ کاشی. باید با `WorldScale.TILE` یکی باشد؛ GDScript در مقدار
+## `const` به ثابت کلاس دیگر تکیه نمی‌کند (ترتیب بارگذاری)، پس عدد
+## صریح است و `test_camera.gd` یکی بودنشان را می‌سنجد.
+const TILE: int = 32
 
 ## بوم تصویر ۳۲×۴۰ است ولی جعبهٔ برخورد ۱۰×۱۶ (§۳)
 const HITBOX := Vector2(10, 16)
