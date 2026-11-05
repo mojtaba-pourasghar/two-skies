@@ -93,3 +93,6 @@
 ابطال توکن‌های Cloudflare؛ لباس سبز ایلارا در خانه؛ تأیید نهایی هنر (همه draft).
 
 > **D-ART-09d:** دوربین وسط ناحیه خودکار عوض می‌شود (`camera_zone` در JSON مرحله؛ تغییر `camera_mode` پویا به‌جای ثابت‌بودن در کل مرحله). T3 را بر همین اساس پیاده کن.
+
+## ۱۱. مسیر هنر تازه برای RPG (برای tools/import_art.py)
+`art_drop/overworld/ch1/*` (گره‌ها/مسیر/دروازه/نشانگر)، `art_drop/explore/props/*` (اشیای تعاملی)، `art_drop/explore/pickups/*` (جمع‌شدنی/نشانگر/افکت اکتشاف)، بعداً `art_drop/battle_fx|battle_ui|battle_bg|npc|enemies_battle`. هر پوشه `asset.json` دارد؛ نام فایل = شناسهٔ دارایی. همه پیش‌نویس تا تأیید کاربرند.

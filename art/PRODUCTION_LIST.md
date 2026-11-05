@@ -138,3 +138,9 @@
 
 ### دستهٔ ۱۲ — وضعیت: **برش و پوش شد** (art/tools/slice_ch1_v12.py)
 `art_drop/overworld/ch1/` (۱۵: node_*، path_*، gate_*، marker_*، icon_guardian_boss)، `art_drop/explore/pickups/` (۲۸)، `art_drop/explore/props/` (۱۳). هنوز پیش‌نویس تا تأیید کاربر. مقیاس: overworld/props ۰٫۳، pickups ۰٫۴؛ پالت ۶۴ رنگ.
+
+## دستهٔ ۱۳ — ارسال‌شده به Canva، منتظر دانلود کاربر
+- npc_survivors_1: ۸ بازمانده (مکانیک، کاوشگر، پرستار، تاجر، کودک، نگهبان، محقق، سرباز مجروح) — ۴:۳
+- battle_enemies_1: خزنده/نگهبان/پهپاد/انتحاری در حالت‌های idle/attack/hurt/انفجار — ۴:۳
+- battle_bg_workshop، battle_bg_basement — ۱۶:۹
+- هنوز نفرستاده: پس‌زمینهٔ نبرد خانه و جادهٔ پرتاب، باس غول نگهبان نبرد نوبتی (idle/attack/phase)، مینی‌مپ UI، پیوند دو آسمان.
