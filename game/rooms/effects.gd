@@ -476,6 +476,13 @@ func _make_anim(e: Dictionary) -> Node2D:
 	spr.position = Vector2(float(pos[0]) - size.x * sc * 0.5,
 		float(pos[1]) - size.y * sc)
 	spr.z_index = 2
+	# رنگ اختیاری: بعضی حلقه‌ها رنگ خودشان را دارند و در اتاقی با پالت
+	# دیگر غریبه می‌شوند. در R1e دودِ بنفش روی بخار آبیِ **نقاشی‌شده**
+	# می‌نشست و لکهٔ صورتی دیده می‌شد. نقشه می‌تواند `color` بدهد.
+	var tc := String(e.get("color", ""))
+	if tc.begins_with("#"):
+		spr.modulate = Color(tc)
+	spr.modulate.a *= float(e.get("alpha", 1.0))
 	spr.play("default")
 	if bool(e.get("random_start", false)):
 		spr.frame = randi() % maxi(1, n)
