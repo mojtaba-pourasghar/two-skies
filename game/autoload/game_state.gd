@@ -68,6 +68,37 @@ func save_checkpoint(id: String) -> void:
 	save_game()
 
 
+## جایی که بازیکن در ناحیه ایستاده بود. بعد از هر گذار در نوشته می‌شود،
+## نه در فاصله‌های زمانی: گذار در، تنها لحظه‌ای است که وضعیت پایدار است.
+func save_explore(room_id: String, at: Vector2) -> void:
+	if room_id == "":
+		return
+	data["explore"] = {
+		"room": room_id,
+		"at": [int(at.x), int(at.y)],
+		"flags": (run["flags"] as Dictionary).duplicate(true),
+	}
+	save_game()
+
+
+## اتاقی که باید از آن ادامه داد، یا خالی اگر هنوز جایی نرفته‌ایم.
+func explore_room() -> String:
+	return String((data.get("explore", {}) as Dictionary).get("room", ""))
+
+
+func explore_at() -> Vector2:
+	var a: Array = (data.get("explore", {}) as Dictionary).get("at", [])
+	return Vector2(float(a[0]), float(a[1])) if a.size() == 2 else Vector2.ZERO
+
+
+## پرچم‌های ذخیره‌شده را به وضعیت اجرا برمی‌گرداند.
+func restore_explore_flags() -> void:
+	var f = (data.get("explore", {}) as Dictionary).get("flags", {})
+	if f is Dictionary:
+		for k in (f as Dictionary).keys():
+			(run["flags"] as Dictionary)[k] = (f as Dictionary)[k]
+
+
 func set_flag(name: String, value = true) -> void:
 	if name == "":
 		return
@@ -113,6 +144,9 @@ func default_save() -> Dictionary:
 		"pillars": {},
 		"ending": null,
 		"cutscenes_seen": [],
+		# اکتشاف: کجای ناحیه بودیم. بدون این، «ادامه» بازیکن را به اول
+		# ناحیه برمی‌گرداند و پیشرفتش عملاً ذخیره نشده.
+		"explore": {"room": "", "at": [], "flags": {}},
 	}
 
 

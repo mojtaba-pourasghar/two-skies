@@ -11,6 +11,8 @@ extends Node2D
 
 @export var start_room: String = "r1a_living"
 @export var debug_mask: bool = false
+## اگر روشن باشد و ذخیره‌ای از اکتشاف باشد، از همان اتاق ادامه می‌دهد.
+@export var resume: bool = false
 
 var room: PaintedRoom
 var director: CameraDirector
@@ -25,6 +27,7 @@ var _ilara_waits_in: String = ""
 var _ilara_waits_at := Vector2.ZERO
 var _last_room_id: String = ""
 var _last_door_at := Vector2.ZERO
+var _door_block: String = ""
 var _fade: ColorRect
 var _hud: CanvasLayer
 var _pending_spawn := Vector2.ZERO
@@ -38,7 +41,15 @@ func _ready() -> void:
 
 	_build_hud()
 	_build_camera()
-	if not _enter_room(start_room, Vector2.ZERO):
+
+	# «ادامه»: اگر ذخیره‌ای از اکتشاف هست، از همان‌جا شروع کن.
+	# `resume` را آزمون و منوی تازه خاموش می‌کنند تا از اول شروع شود.
+	var at := Vector2.ZERO
+	if resume and GameState.explore_room() != "":
+		start_room = GameState.explore_room()
+		at = GameState.explore_at()
+		GameState.restore_explore_flags()
+	if not _enter_room(start_room, at):
 		return
 
 	GameMode.set_context(GameMode.Context.EXPLORE)
@@ -178,9 +189,22 @@ func _physics_process(_delta: float) -> void:
 	_check_door()
 
 
+signal door_refused(door: Dictionary, flag: String)
+
+
+## دری که پرچمی لازم دارد (R1d تا فلش‌بک، R1e تا کلید) بدون آن باز
+## نمی‌شود — **و بی‌صدا هم نمی‌ماند**: اعلام می‌شود تا رابط بتواند
+## بگوید چرا. در بی‌صدا، بازیکن فکر می‌کند بازی خراب است.
 func _check_door() -> void:
 	var door := room.door_at(kairo.foot_position())
 	if door.is_empty():
+		_door_block = ""
+		return
+	var need := String(door.get("needs_flag", ""))
+	if need != "" and not bool(GameState.get_flag(need, false)):
+		if _door_block != need:
+			_door_block = need
+			door_refused.emit(door, need)
 		return
 	var sp: Array = door.get("spawn", [0, 0])
 	_pending_spawn = Vector2(float(sp[0]), float(sp[1]))
@@ -188,6 +212,9 @@ func _check_door() -> void:
 	# اینجا بماند
 	_last_room_id = String(room.data.get("id", ""))
 	_last_door_at = kairo.foot_position()
+	# ذخیره **پیش از** گذار: اگر بازی همین‌جا بسته شود، بازیکن در اتاقی
+	# که داشت ترکش می‌کرد ادامه می‌دهد، نه در جایی که هرگز نرسید.
+	GameState.save_explore(String(door.get("to", "")), _pending_spawn)
 	director.go_to_room(String(door.get("to", "")), "")
 
 

@@ -20,6 +20,7 @@ TESTS=(
   "res://tools/tests/test_camera.tscn"
   "res://tools/tests/test_rooms.tscn"
   "res://tools/tests/test_topdown.tscn"
+  "res://tools/tests/test_area1.tscn"
   "res://tools/tests/test_sequence.tscn"
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_save_ui.tscn"

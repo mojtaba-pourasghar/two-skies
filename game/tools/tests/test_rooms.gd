@@ -368,6 +368,22 @@ func _t_all_rooms() -> void:
 			_check("  و نقطهٔ ورودش در «%s» روی زمین است" % dest,
 				not droom.is_empty() and RoomData.point_walkable(droom, at),
 				"= (%d,%d)" % [int(at.x), int(at.y)])
+			# **و نباید داخل درِ دیگری در مقصد بیفتد.** اگر بیفتد،
+			# بازیکن همان فریم دوباره رد می‌شود و بین دو اتاق در حلقه
+			# می‌افتد. این را ضبط مسیر بیرون کشید: برگشت از C1 دوباره
+			# وارد C1 می‌شد، و چهار نقطهٔ ورود دیگر هم همین عیب را
+			# داشتند.
+			var in_door := ""
+			for raw2 in droom.get("doors", []):
+				var d2: Dictionary = raw2
+				var r2: Array = d2.get("rect", [])
+				if r2.size() != 4:
+					continue
+				if Rect2(float(r2[0]), float(r2[1]), float(r2[2]),
+						float(r2[3])).has_point(at):
+					in_door = String(d2.get("id", "?"))
+			_check("  و داخل درِ دیگری نمی‌افتد", in_door == "",
+				"" if in_door == "" else "داخل در «%s»" % in_door)
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:
