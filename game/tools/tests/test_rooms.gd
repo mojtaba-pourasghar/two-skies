@@ -19,6 +19,7 @@ func _ready() -> void:
 	_t_mask_queries()
 	_t_layers()
 	_t_living()
+	_t_all_rooms()
 	_report()
 
 
@@ -259,6 +260,52 @@ func _t_living() -> void:
 			budget = true
 	_check("سطح زوم ناموجود خطای اعتبارسنجی است", caught)
 	_check("اتاق بی‌زندگی هشدار بودجه می‌گیرد", budget)
+
+
+## هر چهار اتاق باید بار شوند و بودجهٔ زندگی را داشته باشند. تا اینجا
+## فقط R1a سنجیده می‌شد، پس یک اتاق تازه می‌توانست با ماسک شکسته یا
+## بی‌هیچ لایهٔ زنده وارد شود و هیچ آزمونی نگوید.
+const ALL_ROOMS := ["r1a_living", "r1b_corridor", "r1c_kitchen", "c1_balcony"]
+
+
+func _t_all_rooms() -> void:
+	print("— هر چهار اتاق —")
+	for rid in ALL_ROOMS:
+		var l := RoomData.new()
+		var room := l.load_room(rid)
+		_check("«%s» بدون خطا بار شد" % rid, not room.is_empty(),
+			"" if room.is_empty() else ", ".join(l.errors))
+		if room.is_empty():
+			continue
+		_check("  شروع «%s» روی زمین است" % rid,
+			RoomData.point_walkable(room, Vector2(float(room["spawn"][0]),
+				float(room["spawn"][1]))))
+		var budget := false
+		for w in l.warnings:
+			if w.contains("بودجهٔ زندگی"):
+				budget = true
+		_check("  «%s» بودجهٔ زندگی را دارد" % rid, not budget,
+			"" if not budget else "هشدار دارد")
+		# در باید به اتاقی برود که وجود دارد، وگرنه بازیکن در هیچ‌جا
+		# می‌افتد و خطایی هم نمی‌بیند
+		for raw in room["doors"]:
+			var dest := String((raw as Dictionary).get("to", ""))
+			var exists := FileAccess.file_exists("res://rooms/%s.json" % dest)
+			_check("  در «%s» → «%s» وجود دارد"
+				% [(raw as Dictionary).get("id", "?"), dest], exists)
+			if not exists:
+				continue
+			# **نقطهٔ ورود باید در مقصد روی زمین باشد.** اگر نباشد بازیکن
+			# داخل دیوار ظاهر می‌شود و هیچ خطایی هم نمی‌بیند؛ همان چیزی
+			# که اعتبارسنجی برای `spawn` خود اتاق می‌گیرد ولی برای
+			# `spawn` درها نمی‌گرفت.
+			var sp: Array = (raw as Dictionary).get("spawn", [])
+			var dl := RoomData.new()
+			var droom := dl.load_room(dest)
+			var at := Vector2(float(sp[0]), float(sp[1]))
+			_check("  و نقطهٔ ورودش در «%s» روی زمین است" % dest,
+				not droom.is_empty() and RoomData.point_walkable(droom, at),
+				"= (%d,%d)" % [int(at.x), int(at.y)])
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:

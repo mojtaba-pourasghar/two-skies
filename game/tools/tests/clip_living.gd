@@ -15,16 +15,18 @@ const OUT := "user://living/"
 ## بازیکن **حرکت نمی‌کند**: هر چه تکان می‌خورد از خود محیط است.
 const SECONDS: float = 10.0
 const EVERY: int = 2
-## آستانهٔ اختلاف: میانگین قدر مطلق تفاوت کانال، بر حسب ۰..۱.
+## **آستانهٔ مطلق جواب نمی‌دهد.** اختلاف پیکسلی با روشنایی اتاق بالا و
+## پایین می‌رود: R1a روشن ۰٫۰۰۰۵۲ داد و R1b تاریک با همان مقدار حرکت
+## ۰٫۰۰۰۲۳ — یعنی عدد ثابت، اتاق تاریک را به‌خاطر تاریک بودنش رد می‌کند،
+## نه به‌خاطر مرده بودنش.
 ##
-## **اندازه‌گیری شد، حدس نیست.** `r1a_static_probe` همان R1a است با همهٔ
-## لایه‌های زنده برداشته‌شده؛ ضبط ۱۰ ثانیه‌اش ۰٫۰۰۰۰۲ داد. R1a زنده
-## ۰٫۰۰۱۳۵ می‌دهد، یعنی ۶۷ برابر. آستانه ۰٫۰۰۰۳ است: ۱۵ برابر کفِ ساکن،
-## و با فاصلهٔ ۴ برابری زیر اتاق زنده. اولین عددی که نوشتم (۰٫۰۰۱۵) از
-## هوا آمده بود و R1a را به‌غلط رد می‌کرد.
-const EPSILON: float = 0.0003
-## کف اندازه‌گیری‌شدهٔ اتاق ساکن، برای مقایسه در گزارش.
-const STATIC_FLOOR: float = 0.00002
+## پس هر اتاق با **خودش** سنجیده می‌شود: همان ده ثانیه دو بار ضبط
+## می‌شود، بار دوم با همهٔ گره‌های `LivingLayer` پنهان. نسبت این دو
+## مستقل از روشنایی است.
+const LIVE_RATIO: float = 8.0
+## و یک کف مطلق خیلی کوچک، برای وقتی اتاق ساکن هم دقیقاً صفر است و
+## نسبت بی‌معنا می‌شود.
+const ABS_FLOOR: float = 0.00008
 
 var _game: Node2D
 var _room_id: String = "r1a_living"
@@ -61,30 +63,40 @@ func _run() -> void:
 	for i in frames:
 		await get_tree().physics_frame
 		await _grab()
+	var live_avg := _avg()
+
+	# پاس دوم: همان اتاق، با لایه‌های زنده پنهان. شیدرها از TIME
+	# می‌خوانند پس «مکث» نمی‌شوند؛ پنهان کردن تنها راه درستِ گرفتن
+	# تصویر ساکنِ همین اتاق است.
+	for n in get_tree().get_nodes_in_group(LivingScene.GROUP):
+		if n is CanvasItem:
+			(n as CanvasItem).visible = false
+	_prev = null
+	_diffs.clear()
+	for i in frames:
+		await get_tree().physics_frame
+		await _grab(false)
+	var static_avg := _avg()
 
 	var living: Dictionary = room.living_layers()
 	var sources := int(living["sources"])
-	var avg := 0.0
-	for d in _diffs:
-		avg += d
-	avg = avg / float(maxi(1, _diffs.size()))
+	var ratio: float = live_avg / maxf(static_avg, 0.0000005)
 
 	print("")
 	print("— پذیرش زنده بودن: %s —" % _room_id)
 	print("  گره‌های متحرک در LivingLayer: %d (حرکت %d، ذره %d، نور %d)"
 		% [sources, int(living["motion"]), int(living["particles"]),
 			int(living["lights"])])
-	print("  میانگین اختلاف فریم‌به‌فریم: %.5f (آستانه %.5f، کفِ اتاق ساکن %.5f)"
-		% [avg, EPSILON, STATIC_FLOOR])
-	print("  یعنی %.0f برابر اتاق ساکن" % (avg / maxf(STATIC_FLOOR, 0.000001)))
-	print("  فریم ذخیره‌شده: %d در %s" % [_diffs.size(), OUT])
+	print("  اختلاف فریم‌به‌فریم زنده: %.5f" % live_avg)
+	print("  همان اتاق با لایه‌های پنهان: %.5f" % static_avg)
+	print("  نسبت: %.0f برابر (لازم %.0f)" % [ratio, LIVE_RATIO])
 
 	var ok_nodes := sources >= 3
-	var ok_motion := avg > EPSILON
+	var ok_motion := ratio >= LIVE_RATIO and live_avg >= ABS_FLOOR
 	if not ok_nodes:
 		print("  ✘ کمتر از ۳ گرهٔ متحرک")
 	if not ok_motion:
-		print("  ✘ تصویر عملاً ثابت است — گره هست ولی چیزی تکان نمی‌خورد")
+		print("  ✘ تصویر عملاً همان اتاق ساکن است — گره هست ولی اثری ندارد")
 	if ok_nodes and ok_motion:
 		print("  ✔ اتاق زنده است")
 		get_tree().quit(0)
@@ -92,12 +104,21 @@ func _run() -> void:
 		get_tree().quit(1)
 
 
-func _grab() -> void:
+func _avg() -> float:
+	var t := 0.0
+	for d in _diffs:
+		t += d
+	return t / float(maxi(1, _diffs.size()))
+
+
+func _grab(save: bool = true) -> void:
 	_n += 1
 	if _n % EVERY != 0:
 		return
 	var img := get_viewport().get_texture().get_image()
-	img.save_png(OUT + "f%05d.png" % _n)
+	# فریم‌های پاس ساکن ذخیره نمی‌شوند: کلیپ باید نسخهٔ زنده باشد
+	if save:
+		img.save_png(OUT + "f%05d.png" % _n)
 	if _prev != null:
 		_diffs.append(_mean_diff(_prev, img))
 	_prev = img
