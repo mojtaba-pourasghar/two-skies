@@ -1,0 +1,43 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "city_glow_0": [
+   360,
+   157
+  ],
+  "city_glow_1": [
+   379,
+   161
+  ],
+  "city_glow_2": [
+   397,
+   171
+  ],
+  "lamp_pulse_0": [
+   314,
+   154
+  ],
+  "lamp_pulse_1": [
+   345,
+   165
+  ],
+  "lamp_pulse_2": [
+   347,
+   176
+  ],
+  "moon_pulse_0": [
+   291,
+   150
+  ],
+  "moon_pulse_1": [
+   335,
+   165
+  ],
+  "moon_pulse_2": [
+   342,
+   174
+  ]
+ },
+ "blend": "additive",
+ "note": "city_glow=نوار افقی پشت پنجره؛ pulse=نبض بی‌شکل؛ ۳ سطح روشنایی برای لرزش ۲Hz"
+}
