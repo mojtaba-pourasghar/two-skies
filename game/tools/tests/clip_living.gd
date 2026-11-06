@@ -12,6 +12,9 @@
 extends Node2D
 
 const OUT := "user://living/"
+## ضبط دوم: همان اتاق با افکت‌ها خاموش. کاربر خواست هر دو را ببیند تا
+## بتواند قضاوت کند افکت چه اضافه کرده — نه فقط عددش را بخواند.
+const OUT_OFF := "user://living_off/"
 ## بازیکن **حرکت نمی‌کند**: هر چه تکان می‌خورد از خود محیط است.
 const SECONDS: float = 10.0
 const EVERY: int = 2
@@ -24,15 +27,20 @@ const EVERY: int = 2
 ## می‌شود، بار دوم با همهٔ گره‌های `LivingLayer` پنهان. نسبت این دو
 ## مستقل از روشنایی است.
 const LIVE_RATIO: float = 8.0
-## و یک کف مطلق خیلی کوچک، برای وقتی اتاق ساکن هم دقیقاً صفر است و
-## نسبت بی‌معنا می‌شود.
-const ABS_FLOOR: float = 0.00008
+## و یک کف مطلق **خیلی** کوچک، فقط برای وقتی اتاق ساکن هم صفر است و
+## نسبت از تقسیم بر نویز درمی‌آید.
+##
+## اولین عددی که گذاشتم (۰٫۰۰۰۰۸) دوباره همان دام بود: R1b و R1c با
+## نسبت ۱۲ و ۱۵ رد شدند، چون تاریک‌اند و اختلاف مطلقشان کوچک است. کف
+## باید در حد **کف اندازه‌گیری** باشد، نه در حد «چقدر حرکت می‌خواهم».
+const ABS_FLOOR: float = 0.00002
 
 var _game: Node2D
 var _room_id: String = "r1a_living"
 var _n: int = 0
 var _prev: Image = null
 var _diffs: Array[float] = []
+var _dir: String = OUT
 
 
 func _ready() -> void:
@@ -40,6 +48,7 @@ func _ready() -> void:
 		if a.begins_with("--room="):
 			_room_id = a.substr(7)
 	DirAccess.make_dir_recursive_absolute(OUT)
+	DirAccess.make_dir_recursive_absolute(OUT_OFF)
 	_game = load("res://scenes/room_game.tscn").instantiate()
 	_game.set("start_room", _room_id)
 	add_child(_game)
@@ -68,14 +77,17 @@ func _run() -> void:
 	# پاس دوم: همان اتاق، با لایه‌های زنده پنهان. شیدرها از TIME
 	# می‌خوانند پس «مکث» نمی‌شوند؛ پنهان کردن تنها راه درستِ گرفتن
 	# تصویر ساکنِ همین اتاق است.
-	for n in get_tree().get_nodes_in_group(LivingScene.GROUP):
+	for n in get_tree().get_nodes_in_group(RoomEffects.GROUP):
 		if n is CanvasItem:
 			(n as CanvasItem).visible = false
 	_prev = null
 	_diffs.clear()
+	_n = 0
+	_dir = OUT_OFF
+	DirAccess.make_dir_recursive_absolute(_dir)
 	for i in frames:
 		await get_tree().physics_frame
-		await _grab(false)
+		await _grab()
 	var static_avg := _avg()
 
 	var living: Dictionary = room.living_layers()
@@ -89,7 +101,7 @@ func _run() -> void:
 			int(living["lights"])])
 	print("  اختلاف فریم‌به‌فریم زنده: %.5f" % live_avg)
 	print("  همان اتاق با لایه‌های پنهان: %.5f" % static_avg)
-	print("  نسبت: %.0f برابر (لازم %.0f)" % [ratio, LIVE_RATIO])
+	print("  نسبت: %.0f برابر (لازم %.0f)؛ کف مطلق %.5f" % [ratio, LIVE_RATIO, ABS_FLOOR])
 
 	var ok_nodes := sources >= 3
 	var ok_motion := ratio >= LIVE_RATIO and live_avg >= ABS_FLOOR
@@ -111,14 +123,12 @@ func _avg() -> float:
 	return t / float(maxi(1, _diffs.size()))
 
 
-func _grab(save: bool = true) -> void:
+func _grab() -> void:
 	_n += 1
 	if _n % EVERY != 0:
 		return
 	var img := get_viewport().get_texture().get_image()
-	# فریم‌های پاس ساکن ذخیره نمی‌شوند: کلیپ باید نسخهٔ زنده باشد
-	if save:
-		img.save_png(OUT + "f%05d.png" % _n)
+	img.save_png(_dir + "f%05d.png" % _n)
 	if _prev != null:
 		_diffs.append(_mean_diff(_prev, img))
 	_prev = img

@@ -60,12 +60,6 @@ func _normalize(room: Dictionary) -> void:
 			room[key] = []
 	if not room.has("light"):
 		room["light"] = {}
-	# محیط زنده (قاعدهٔ ۹ CLAUDE.md، D-ART-42)
-	var amb = room.get("ambient", {})
-	room["ambient"] = amb if amb is Dictionary else {}
-	for key in ["motion", "sway", "water", "fog", "particles"]:
-		if not (room["ambient"] as Dictionary).has(key):
-			(room["ambient"] as Dictionary)[key] = []
 	if not room.has("zoom_zones"):
 		room["zoom_zones"] = []
 	var sp: Array = room.get("spawn", [])
@@ -135,30 +129,39 @@ func _validate(room: Dictionary) -> void:
 ## (REQ-019) و بازی نباید به‌خاطر نیامدن هنر بوت نشود. ولی هشدار سر جایش
 ## می‌ماند تا «اتاق تمام شد» بی‌دلیل گفته نشود.
 func _validate_living(room: Dictionary, rid: String) -> void:
-	var amb: Dictionary = room["ambient"]
-	# «≥۳ منبع حرکت محیطی همزمان» (سند ۱۳ بند ۱). انیمیشن، تکان، آب و مه
-	# همه منبع حرکت‌اند؛ ذره جدا شمرده می‌شود چون بند ۴ خودش آن را
-	# می‌خواهد.
-	var moving := 0
-	for key in ["motion", "sway", "water", "fog"]:
-		moving += (amb[key] as Array).size()
+	# افکت‌ها دیگر در خود اتاق نیستند؛ در نقشهٔ تصویر اتاق‌اند (سند ۱۴).
+	# پس اعتبارسنجی هم باید **همان نقشه** را بخواند، نه بلوکی که برداشته
+	# شده — وگرنه هر اتاقی بی‌دلیل هشدار می‌گیرد.
+	var map_name := String(room.get("fx_map", rid))
+	var path := RoomEffects.map_path(map_name)
+	if not FileAccess.file_exists(path):
+		warnings.append("اتاق «%s»: نقشهٔ افکت «%s» نیست؛ صحنه ساکن می‌ماند."
+			% [rid, map_name])
+		return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Dictionary):
+		errors.append("اتاق «%s»: نقشهٔ افکت «%s» خراب است." % [rid, map_name])
+		return
+
+	var kinds: Dictionary = {}
+	for raw in (parsed as Dictionary).get("effects", []):
+		if raw is Dictionary:
+			var t := String((raw as Dictionary).get("type", ""))
+			kinds[t] = int(kinds.get(t, 0)) + 1
+
+	var moving: int = int(kinds.get("sway", 0)) + int(kinds.get("anim", 0)) \
+		+ int(kinds.get("fog_patch", 0))
+	var parts: int = int(kinds.get("embers", 0)) + int(kinds.get("dust_in_beam", 0))
+	var lights: int = int(kinds.get("flicker_light", 0)) \
+		+ int(kinds.get("glow_pulse", 0))
 
 	var missing: Array[String] = []
-	if moving < 3:
-		missing.append("فقط %d منبع حرکت دارد (حداقل ۳)" % moving)
-	if (amb["particles"] as Array).is_empty():
-		missing.append("جریان ذره ندارد")
-	if (amb["fog"] as Array).size() < 2:
-		missing.append("دو لایهٔ مه ندارد")
-
-	var light: Dictionary = room["light"]
-	var pulsing := (light.get("pulses", []) as Array).size()
-	for raw in light.get("overlays", []):
-		if raw is Dictionary and float((raw as Dictionary).get("flicker", 0.0)) > 0.0:
-			pulsing += 1
-	if pulsing == 0:
-		missing.append("نور نبض‌دار ندارد")
-
+	if moving + parts + lights < 3:
+		missing.append("کمتر از ۳ منبع")
+	if parts == 0:
+		missing.append("هیچ ذره‌ای از منبع ندارد")
+	if lights == 0:
+		missing.append("هیچ نور زنده‌ای ندارد")
 	if not missing.is_empty():
 		warnings.append("اتاق «%s» بودجهٔ زندگی را ندارد: %s."
 			% [rid, ", ".join(missing)])

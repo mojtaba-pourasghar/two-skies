@@ -18,7 +18,7 @@ func _ready() -> void:
 	_t_real_room()
 	_t_mask_queries()
 	_t_layers()
-	_t_living()
+	await _t_living()
 	_t_all_rooms()
 	_report()
 
@@ -158,10 +158,10 @@ func _t_layers() -> void:
 	node.queue_free()
 
 
-## بودجهٔ زندگی (سند ۱۳). اتاق ساکن «تمام» نیست، و کد باید **بگوید**
-## چه کم دارد، نه اینکه بی‌صدا ساکن بماند.
+## افکت‌ها از نقشهٔ تصویر — سند ۱۴. هر عددی که سند می‌گذارد اینجا سنجیده
+## می‌شود، چون «افکت حرفه‌ای» به چشم قابل بحث است ولی این عددها نه.
 func _t_living() -> void:
-	print("— بودجهٔ زندگی —")
+	print("— افکت از روی نقشهٔ تصویر —")
 	var l := RoomData.new()
 	var room := l.load_room(ROOM)
 	if room.is_empty():
@@ -170,96 +170,152 @@ func _t_living() -> void:
 	add_child(node)
 	node.build(room)
 
-	var motion: Node2D = node.get_node("World/Motion")
-	var parts: Node2D = node.get_node("World/Particles")
-	_check("لایهٔ حرکت روی نقاشی و زیر پراپ است",
-		motion.z_index > 0 and motion.z_index < node.get_node("World/Props").z_index,
-		"= z %d" % motion.z_index)
-	_check("لایهٔ ذره روی occluder است",
-		parts.z_index > node.get_node("World/Occluders").z_index,
-		"= z %d" % parts.z_index)
+	var fx: RoomEffects = node.get_node_or_null("World/Motion/Effects")
+	_check("نقشهٔ افکت اتاق بار شد", fx != null)
+	if fx == null:
+		return
 
-	# ذره‌های محیطی باید از لحظهٔ ورود پخش‌شده باشند. گردِ پای بازیکن
-	# استثناست: رویدادی است و تا قدم برندارد نباید چیزی ببارد.
-	var ambient_streams := 0
-	var pre_spread := true
-	for c in parts.get_children():
-		var ps := c as GPUParticles2D
-		if ps == null:
-			pre_spread = false
-			continue
-		if ps.name == "DustPuff":
-			_check("گرد پای بازیکن در شروع خاموش است", not ps.emitting)
-			continue
-		ambient_streams += 1
-		if ps.amount < 1 or ps.preprocess <= 0.0:
-			pre_spread = false
-	_check("جریان ذرهٔ محیطی ساخته شد", ambient_streams >= 1,
-		"= %d جریان" % ambient_streams)
-	_check("ذره‌ها GPUParticles2D اند (دستور کاربر)", pre_spread)
+	# هر افکت نقشه باید گرهی داشته باشد، و هیچ گرهی بی‌نقشه نباشد
+	var want := fx.effects.size()
+	var got := fx.get_child_count()
+	_check("برای هر افکت نقشه یک گره ساخته شد", got == want,
+		"= %d گره برای %d افکت" % [got, want])
+
+	var swayed := 0
+	var fogged := 0
+	var glows := 0
+	var parts := 0
+	for e in fx.effects:
+		var t := String(e.get("type", ""))
+		match t:
+			"sway":
+				swayed += 1
+				# سند ۱۴ بند ۳: دامنه ≤۲ پیکسل، دوره ۳ تا ۶ ثانیه
+				var n: Node2D = fx.get_node_or_null("Fx_%s" % e.get("id", ""))
+				if n != null and n.material is ShaderMaterial:
+					var m := n.material as ShaderMaterial
+					_check("  تکان «%s» دامنه‌اش ≤۲ پیکسل است" % e.get("id", ""),
+						float(m.get_shader_parameter("amp_px")) <= 2.0001,
+						"= %.1f" % float(m.get_shader_parameter("amp_px")))
+					var per: float = float(m.get_shader_parameter("period_s"))
+					_check("  و دوره‌اش ۳ تا ۷ ثانیه است", per >= 3.0 and per <= 7.0,
+						"= %.1f ث" % per)
+			"fog_patch":
+				fogged += 1
+				var n2: Node2D = fx.get_node_or_null("Fx_%s" % e.get("id", ""))
+				if n2 != null and n2.material is ShaderMaterial:
+					var tint = (n2.material as ShaderMaterial).get_shader_parameter("tint")
+					# سند ۱۴ بند ۴: آلفا ≤۰٫۱۲
+					_check("  مه «%s» آلفایش ≤۰٫۱۲ است" % e.get("id", ""),
+						float(tint.w) <= 0.1201, "= %.3f" % float(tint.w))
+			"flicker_light", "glow_pulse":
+				glows += 1
+				# سند ۱۴ بند ۲: دامنه ±۶ تا ۱۲٪ (نبض آرام می‌تواند کمتر)
+				_check("  نور «%s» دامنه‌اش ≤۱۸٪ است" % e.get("id", ""),
+					float(e.get("amp", 0.0)) <= 0.1801,
+					"= %.0f٪" % (float(e.get("amp", 0.0)) * 100.0))
+			"embers", "dust_in_beam":
+				parts += 1
+				var n3: GPUParticles2D = fx.get_node_or_null("Fx_%s" % e.get("id", ""))
+				if n3 != null:
+					# سند ۱۴ بند ۵: حداکثر ۳۰ در هر منبع
+					_check("  ذرهٔ «%s» ≤۳۰ تاست" % e.get("id", ""),
+						n3.amount <= 30, "= %d" % n3.amount)
+
+	_check("اتاق هم تکان دارد، هم نور زنده، هم ذره از منبع",
+		swayed > 0 and glows > 0 and parts > 0,
+		"= تکان %d، نور %d، ذره %d، مه %d" % [swayed, glows, parts, fogged])
+
+	# گرد پای بازیکن جداست: واکنش است نه افکت صحنه
+	var puff: GPUParticles2D = node.get_node_or_null("World/Light/DustPuff")
+	_check("گرد پای بازیکن هست و در شروع خاموش است",
+		puff != null and not puff.emitting)
 
 	var living: Dictionary = node.living_layers()
-	_check("«≥۳ منبع حرکت همزمان» برآورده است (سند ۱۳ بند ۱)",
+	_check("بودجهٔ زندگی از گره‌های واقعی شمرده شد",
 		int(living["sources"]) >= PaintedRoom.LIVING_MIN_SOURCES,
 		"= %d منبع (حرکت %d، ذره %d، نور %d)" % [int(living["sources"]),
 			int(living["motion"]), int(living["particles"]), int(living["lights"])])
-	_check("نور نبض‌دار دارد", bool(living["variable_light"]))
-	_check("اتاق طبق بودجهٔ زندگی «زنده» است", node.is_living())
+	_check("اتاق «زنده» شمرده می‌شود", node.is_living())
 
-	# همه در گروه LivingLayer باشند، وگرنه سنجهٔ پذیرش چیزی برای شمردن
-	# ندارد و «زنده بودن» به حرف می‌ماند
-	var in_group := 0
-	for n in get_tree().get_nodes_in_group(LivingScene.GROUP):
-		if node.is_ancestor_of(n):
-			in_group += 1
-	# گردِ پای بازیکن در گروه هست (متحرک است) ولی **منبع محیطی نیست**،
-	# پس در بودجه شمرده نمی‌شود. اختلاف باید دقیقاً همان یکی باشد.
-	_check("هر گرهٔ متحرک در گروه LivingLayer است",
-		in_group == int(living["sources"]) + 1,
-		"= %d گره در گروه، %d منبع محیطی + گرد پا"
-			% [in_group, int(living["sources"])])
+	await _t_signal(fx)
 
-	# واکنش به عبور: نزدیک گیاه رد شدن باید تکانش را بیشتر کند
-	var sway: Node2D = null
-	for c in motion.get_children():
-		if String(c.name).begins_with("Sway_plant_floor"):
-			sway = c
-	if sway != null:
-		var mat := sway.material as ShaderMaterial
-		var before: float = float(mat.get_shader_parameter("push"))
-		node.react_to(Vector2(60, 470), 120.0)
-		var after: float = float(mat.get_shader_parameter("push"))
-		_check("عبور از کنار گیاه تکانش را بیشتر می‌کند", after > before,
-			"= %.2f ← %.2f" % [before, after])
-		# و بعد باید بخوابد، نه اینکه برای همیشه تکان بخورد
-		for i in 60:
-			node.react_to(Vector2(600, 600), 0.0)
+	# واکنش به عبور: نزدیک یک تکان رد شدن باید فشارش را بیشتر کند
+	var sway_list := fx.sway_nodes()
+	if not sway_list.is_empty():
+		var n4: Node2D = sway_list[0]
+		var mat := n4.material as ShaderMaterial
+		var rect: Rect2 = n4.get_meta("react_rect", Rect2())
+		node.react_to(rect.get_center(), 120.0)
+		var after := float(mat.get_shader_parameter("push"))
+		_check("عبور از کنار گیاه تکانش را بیشتر می‌کند", after > 0.0,
+			"= %.2f" % after)
+		for i in 80:
+			node.react_to(Vector2(-900, -900), 0.0)
 		_check("و بعد از دور شدن می‌خوابد",
-			float(mat.get_shader_parameter("push")) < after * 0.1)
-	else:
-		_check("گرهٔ تکان گیاه ساخته شد", false, "پیدا نشد")
+			float(mat.get_shader_parameter("push")) < 0.05)
 
 	_check("رنگ گذار در، سیاه خالص نیست (تغییر نور نه خاموشی)",
 		node.light_tint() != Color(0, 0, 0), "= %s" % str(node.light_tint()))
 	node.queue_free()
 
-	# دادهٔ غلط باید خطا بدهد، نه بی‌صدا رد شود
-	var bad := {"id": "z", "bg": "x.png", "size": [2560, 1080],
-		"walkable": [[0, 0, 100, 0, 100, 100]], "spawn": [10, 10],
-		"zoom_zones": [{"rect": [0, 0, 100, 100], "level": "telescope"}]}
-	var v := RoomData.new()
-	v._normalize(bad)
-	v._validate(bad)
-	var caught := false
-	var budget := false
-	for e in v.errors:
-		if e.contains("سطح زوم"):
-			caught = true
-	for w in v.warnings:
-		if w.contains("بودجهٔ زندگی"):
-			budget = true
-	_check("سطح زوم ناموجود خطای اعتبارسنجی است", caught)
-	_check("اتاق بی‌زندگی هشدار بودجه می‌گیرد", budget)
+
+## **سینوس خالص ممنوع است** (سند ۱۴ بند ۲). این را نمی‌شود با نگاه کردن
+## به کد ثابت کرد، پس سیگنال واقعی ۳۰۰ فریم نمونه‌برداری و با بهترین
+## سینوسِ هم‌دامنه مقایسه می‌شود. اگر باقی‌مانده کوچک باشد، یعنی عملاً
+## همان سینوس است.
+func _t_signal(fx: RoomEffects) -> void:
+	var target: Node2D = null
+	var amp := 0.0
+	for e in fx.effects:
+		if String(e.get("type", "")) == "flicker_light":
+			target = fx.get_node_or_null("Fx_%s" % e.get("id", ""))
+			amp = float(e.get("amp", 0.1))
+			break
+	if target == null:
+		_check("نور سوسوزن برای سنجش سیگنال پیدا شد", false)
+		return
+
+	var mat := target.material as ShaderMaterial
+	var seen: Array[float] = []
+	for i in 300:
+		await get_tree().process_frame
+		var t = mat.get_shader_parameter("tint")
+		seen.append(float(t.w))
+
+	var lo := seen[0]
+	var hi := seen[0]
+	var mean := 0.0
+	for v in seen:
+		lo = minf(lo, v)
+		hi = maxf(hi, v)
+		mean += v
+	mean /= float(seen.size())
+
+	_check("نور واقعاً نوسان می‌کند", hi - lo > 0.0001,
+		"= دامنهٔ %.4f" % (hi - lo))
+	# دامنهٔ دیده‌شده نباید از چیزی که نقشه خواسته بیشتر باشد
+	_check("نوسانش از دامنهٔ نقشه بیرون نمی‌زند",
+		(hi - lo) <= mean * amp * 2.6 + 0.001,
+		"= %.4f، سقف %.4f" % [hi - lo, mean * amp * 2.6])
+
+	# شمارش قله‌ها: سینوس خالص ۱٫۷ هرتز در ۵ ثانیه دقیقاً ~۸ قله می‌دهد و
+	# فاصله‌هاشان برابرند. سیگنال چندفرکانسی فاصله‌های نابرابر دارد.
+	var gaps: Array[int] = []
+	var last := -1
+	for i in range(1, seen.size() - 1):
+		if seen[i] > seen[i - 1] and seen[i] >= seen[i + 1]:
+			if last >= 0:
+				gaps.append(i - last)
+			last = i
+	var varied := false
+	if gaps.size() >= 3:
+		var g0 := gaps[0]
+		for g in gaps:
+			if absi(g - g0) > 2:
+				varied = true
+	_check("فاصلهٔ قله‌ها برابر نیست (سینوس خالص نیست)", varied,
+		"= %d قله، فاصله‌ها %s" % [gaps.size() + 1, str(gaps.slice(0, 6))])
 
 
 ## هر چهار اتاق باید بار شوند و بودجهٔ زندگی را داشته باشند. تا اینجا

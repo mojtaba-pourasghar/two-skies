@@ -24,31 +24,6 @@ signal door_reached(door: Dictionary)
 signal hazard_entered(hazard: Dictionary)
 
 const ASSETS := "res://assets/"
-## لرزش هالهٔ نور: ۲ هرتز (سند ۰۴ «سوسوی ۲ تا ۳ هرتز»).
-const FLICKER_HZ: float = 2.0
-
-## نوع‌های جریان ذره (سند ۱۳ بند ۴). هر اتاق دست‌کم یکی لازم دارد.
-##
-## `scale` ضریب **بافت** است نه پیکسل: بافت‌های `overlays/particles` حدود
-## ۱۹۰ پیکسل عرض دارند، پس ضریب کوچک است وگرنه هر «ذره» یک لکهٔ درشت
-## می‌شود. (پاسخ مدیر هنر REQ-003: نیم‌مقیاس، آلفا از روشنایی، مد Add.)
-const PARTICLE_KINDS := {
-	"dust": {"lifetime": 7.0, "direction": Vector2(0, -1), "spread": 35.0,
-		"gravity": Vector2(4, -6), "speed": 9.0, "scale": 0.16,
-		"color": Color(0.90, 0.88, 0.78, 0.30), "additive": true},
-	"ember": {"lifetime": 2.8, "direction": Vector2(0, -1), "spread": 20.0,
-		"gravity": Vector2(0, -26), "speed": 26.0, "scale": 0.13,
-		"color": Color(1.00, 0.62, 0.26, 0.75), "additive": true},
-	"ash": {"lifetime": 9.0, "direction": Vector2(0.2, 1), "spread": 30.0,
-		"gravity": Vector2(3, 10), "speed": 8.0, "scale": 0.18,
-		"color": Color(0.80, 0.78, 0.74, 0.35), "additive": false},
-	"spark": {"lifetime": 1.2, "direction": Vector2(0, -1), "spread": 80.0,
-		"gravity": Vector2(0, 90), "speed": 48.0, "scale": 0.12,
-		"color": Color(0.70, 0.92, 1.00, 0.85), "additive": true},
-	"fog": {"lifetime": 12.0, "direction": Vector2(1, 0), "spread": 12.0,
-		"gravity": Vector2(2, 0), "speed": 5.0, "scale": 0.9,
-		"color": Color(0.72, 0.84, 0.88, 0.12), "additive": false},
-}
 
 var data: Dictionary = {}
 var missing_art: Array[String] = []
@@ -62,13 +37,11 @@ var _occluders: Node2D
 var _light: Node2D
 var _mask_debug: Node2D
 var _motion: Node2D
-var _particles: Node2D
-var _flicker_t: float = 0.0
-var _sway_nodes: Array[Node2D] = []
+var _fx: RoomEffects = null
 var _dust_puff: GPUParticles2D = null
 var _last_react := Vector2.ZERO
-var _glows: Array[Sprite2D] = []
-var _pulses: Array[Node2D] = []
+## ضریب نسخهٔ پرجزئیات: ۱ برای ۱۲۸۰×۷۲۰، ۱٫۳۱۲۵ برای hires.
+var _bg_scale: float = 1.0
 
 
 func build(room: Dictionary) -> void:
@@ -83,10 +56,10 @@ func build(room: Dictionary) -> void:
 	_build_props()
 	actors = _layer("Actors", 3)
 	actors.y_sort_enabled = true
-	_build_motion()
+	_build_effects()
 	_build_occluders()
 	_build_light()
-	_build_particles()
+	_build_dust_puff()
 	built.emit(String(room.get("id", "?")))
 
 
@@ -111,6 +84,50 @@ func _load_tex(rel: String) -> Texture2D:
 	return load(p)
 
 
+## نسخهٔ پرجزئیات همان اتاق، برای زوم شفاف تا ۱٫۳× (سند ۱۴، D-ART-46).
+## مسیرش از `bg` ساخته می‌شود: `rooms/ch1/x_1280x720.png` →
+## `rooms/ch1/hires/x_1680x944.png`.
+const HIRES_SCALE: float = 1.3125
+## بالاتر از این زوم، بدون نسخهٔ پرجزئیات تصویر نرم و تار می‌شود.
+const ZOOM_WITHOUT_HIRES: float = 1.12
+
+var _hires: Texture2D = null
+var _lowres: Texture2D = null
+var _using_hires: bool = false
+
+
+func has_hires() -> bool:
+	return _hires != null
+
+
+## حد زوم این اتاق: با نسخهٔ پرجزئیات ۱٫۳×، بی آن ۱٫۱۲×.
+func max_zoom() -> float:
+	return 1.3 if has_hires() else ZOOM_WITHOUT_HIRES
+
+
+## زوم از حد بی‌هایرز گذشت: تصویر پرجزئیات را بگذار. زیر آن، برگرد —
+## نگه داشتن تصویر بزرگ در زوم عادی فقط حافظه می‌خورد.
+func use_hires(on: bool) -> void:
+	if _bg == null or _hires == null or on == _using_hires:
+		return
+	_using_hires = on
+	_bg.texture = _hires if on else _lowres
+	_bg_scale = HIRES_SCALE if on else 1.0
+	_bg.scale = Vector2.ONE / _bg_scale
+	if _fx != null:
+		_fx.set_background(_bg.texture, _bg_scale)
+
+
+func _hires_path(bg_rel: String) -> String:
+	var dir := bg_rel.get_base_dir()
+	var file := bg_rel.get_file()
+	# نام نسخهٔ پرجزئیات: همان نام با اندازهٔ ۱۶۸۰×۹۴۴
+	var stem := file.replace("_1280x720.png", "")
+	if stem == file:
+		return ""
+	return "%s/hires/%s_1680x944.png" % [dir, stem]
+
+
 func _build_background() -> void:
 	var holder := _layer("Background", 0)
 	var tex := _load_tex(String(data.get("bg", "")))
@@ -121,6 +138,10 @@ func _build_background() -> void:
 	_bg.centered = false
 	_bg.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	holder.add_child(_bg)
+	_lowres = tex
+	var hp := _hires_path(String(data.get("bg", "")))
+	if hp != "" and ResourceLoader.exists(ASSETS + hp):
+		_hires = load(ASSETS + hp)
 
 
 func _build_props() -> void:
@@ -145,36 +166,25 @@ func _build_props() -> void:
 		_props.add_child(s)
 
 
-## منبع‌های حرکت محیطی: انیمیشن حلقه‌ای، تکان برگ و پرده، آب، مه.
-## همه در گروه `LivingLayer` می‌نشینند تا سنجهٔ پذیرش بتواند بشمارد.
+## افکت‌های اتاق از نقشهٔ تصویر (سند ۱۴، D-ART-46).
 ##
-## قاعدهٔ بودجهٔ زندگی (سند ۱۳ بند ۱): **دست‌کم ۳ منبع همزمان** در هر
-## اتاق. `is_living()` همین را می‌سنجد و `RoomData` اگر کم باشد هشدار
-## می‌دهد — «تمام» گفتن یک اتاق ساکن اشتباهی است که باید صدا کند.
-func _build_motion() -> void:
+## جای سیستم قبلی `ambient` را گرفت. آن سیستم لایه‌های سراسری می‌ساخت که
+## به هیچ چیزِ تصویر وصل نبودند — همان چیزی که کاربر در ضبط دید و گفت
+## «افکت‌ها غیرطبیعی‌اند». حالا افکتی ساخته می‌شود که در نقشه باشد و به
+## منبع دیدنی‌اش وصل باشد.
+func _build_effects() -> void:
 	_motion = _layer("Motion", 1)
-	var amb: Dictionary = data.get("ambient", {})
-	var scene := LivingScene.new()
-	var bg_tex: Texture2D = _bg.texture if _bg != null else null
-
-	for raw in amb.get("motion", []):
-		if raw is Dictionary:
-			_place(scene.make_anim(raw), raw)
-	for raw in amb.get("sway", []):
-		if raw is Dictionary:
-			var n := scene.make_sway(bg_tex, raw)
-			if n != null:
-				n.set_meta("react_rect", _rect_of(raw))
-				_sway_nodes.append(n)
-			_place(n, raw)
-	for raw in amb.get("water", []):
-		if raw is Dictionary:
-			_place(scene.make_water(bg_tex, raw), raw)
-	for raw in amb.get("fog", []):
-		if raw is Dictionary:
-			_place(scene.make_fog(raw), raw)
-
-	for rel in scene.missing:
+	var map_name := String(data.get("fx_map", String(data.get("id", ""))))
+	_fx = RoomEffects.new()
+	_fx.name = "Effects"
+	if not _fx.load_map(map_name):
+		_fx.free()
+		_fx = null
+		warnings_note("نقشهٔ افکت «%s» نیست؛ اتاق ساکن می‌ماند." % map_name)
+		return
+	_motion.add_child(_fx)
+	_fx.build(_bg.texture if _bg != null else null, _bg_scale)
+	for rel in _fx.missing:
 		_note_missing(rel)
 
 
@@ -185,73 +195,51 @@ func _rect_of(d: Dictionary) -> Rect2:
 	return Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
 
 
-## گره را در لایهٔ درست می‌نشاند. `occluder: true` یعنی شخصیت از **پشتش**
-## رد می‌شود (پردهٔ جلوی صحنه، شاخهٔ آویزان)، پس می‌رود بالای بازیگران.
-func _place(n: Node2D, d: Dictionary) -> void:
-	if n == null:
-		return
-	if bool(d.get("occluder", false)):
-		n.z_index = maxi(n.z_index, 4)
-	_motion.add_child(n)
-
-
-## جریان ذره — GPUParticles2D با بافت‌های `overlays/particles` (دستور
-## کاربر و سند ۱۳ بند ۴). اتاق بی‌ذره حتی با همه‌چیز درست، ساکن است.
-##
-## بافت‌ها نیم‌مقیاس و آلفاشان از روشنایی است (پاسخ مدیر هنر، REQ-003)،
-## پس مد Add می‌خواهند و مقیاس کوچک.
-func _build_particles() -> void:
-	_particles = _layer("Particles", 5)
-	var amb: Dictionary = data.get("ambient", {})
-	for raw in amb.get("particles", []):
-		if not (raw is Dictionary):
+func _build_occluders() -> void:
+	_occluders = _layer("Occluders", 4)
+	for raw in data.get("occluders", []):
+		var o: Dictionary = raw
+		var tex := _load_tex(String(o.get("img", "")))
+		if tex == null:
 			continue
-		var d: Dictionary = raw
-		var kind := String(d.get("kind", "dust"))
-		var r: Array = d.get("rect", [])
-		if r.size() != 4:
-			warnings_note("جریان ذرهٔ «%s» ناحیه ندارد." % kind)
+		var at: Array = o.get("at", [0, 0])
+		var s := Sprite2D.new()
+		s.texture = tex
+		s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		s.centered = false
+		s.position = Vector2(float(at[0]), float(at[1]))
+		_occluders.add_child(s)
+
+
+## لایهٔ نور ثابت. **سوسو اینجا نیست**: نور زنده از نقشهٔ افکت می‌آید
+## (`flicker_light` و `glow_pulse`)، چون آنجا به منبع دیدنی‌اش وصل است.
+## اینجا فقط overlay ثابتی می‌ماند که اتاق بخواهد.
+func _build_light() -> void:
+	_light = _layer("Light", 5)
+	for raw in (data.get("light", {}) as Dictionary).get("overlays", []):
+		var o: Dictionary = raw
+		var tex := _load_tex(String(o.get("img", "")))
+		if tex == null:
 			continue
-		var rect := Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
-		var preset: Dictionary = PARTICLE_KINDS.get(kind, PARTICLE_KINDS["dust"])
-		var tex := _load_tex("overlays/particles/%s_%d.png"
-			% [kind, int(d.get("variant", 0))])
+		var at: Array = o.get("at", [0, 0])
+		var s := Sprite2D.new()
+		s.texture = tex
+		s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		s.centered = false
+		s.position = Vector2(float(at[0]), float(at[1]))
+		s.modulate = Color(1, 1, 1, float(o.get("alpha", 1.0)))
+		s.material = _additive()
+		_light.add_child(s)
 
-		var ps := GPUParticles2D.new()
-		ps.name = "Particles_%s" % String(d.get("id", kind))
-		ps.amount = maxi(1, int(d.get("count", 8)))
-		ps.lifetime = float(preset["lifetime"])
-		ps.position = rect.get_center()
-		ps.local_coords = false
-		ps.texture = tex
-		# بدون preprocess همهٔ ذره‌ها با هم از صفر می‌زنند و ورود به اتاق
-		# یک موج ناگهانی گرد می‌شود
-		ps.preprocess = ps.lifetime
-		ps.randomness = 0.6
 
-		var m := ParticleProcessMaterial.new()
-		m.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
-		m.emission_box_extents = Vector3(rect.size.x * 0.5, rect.size.y * 0.5, 0.0)
-		m.direction = Vector3(preset["direction"].x, preset["direction"].y, 0.0)
-		m.spread = float(preset["spread"])
-		m.gravity = Vector3(preset["gravity"].x, preset["gravity"].y, 0.0)
-		m.initial_velocity_min = float(preset["speed"]) * 0.4
-		m.initial_velocity_max = float(preset["speed"])
-		# بافت‌ها ~۱۹۰ پیکسل‌اند و ذره‌اند نه تکه‌ابر: کوچک می‌شوند
-		m.scale_min = float(preset["scale"]) * 0.5
-		m.scale_max = float(preset["scale"])
-		m.color = preset["color"]
-		ps.process_material = m
-		if bool(preset["additive"]):
-			ps.material = _additive()
-		ps.add_to_group(LivingScene.GROUP)
-		_particles.add_child(ps)
-
-	_build_dust_puff()
+func warnings_note(msg: String) -> void:
+	push_warning("اتاق «%s»: %s" % [String(data.get("id", "?")), msg])
 
 
 ## گردی که از پای بازیکن بلند می‌شود. یک گره است که دنبال پا می‌رود، نه
 ## یکی به‌ازای هر قدم: ساختن و دور انداختن گره در حلقهٔ فیزیک گران است.
+##
+## در نقشهٔ افکت نیست چون افکت صحنه نیست، **واکنش** است (سند ۱۳ بند ۷).
 func _build_dust_puff() -> void:
 	var tex := _load_tex("overlays/particles/dust_1.png")
 	if tex == null:
@@ -277,91 +265,15 @@ func _build_dust_puff() -> void:
 	m.color = Color(0.86, 0.82, 0.72, 0.30)
 	ps.process_material = m
 	ps.material = _additive()
-	ps.add_to_group(LivingScene.GROUP)
-	_particles.add_child(ps)
+	ps.add_to_group(RoomEffects.GROUP)
+	_light.add_child(ps)
 	_dust_puff = ps
-
-
-func warnings_note(msg: String) -> void:
-	push_warning("اتاق «%s»: %s" % [String(data.get("id", "?")), msg])
-
-
-func _build_occluders() -> void:
-	_occluders = _layer("Occluders", 4)
-	for raw in data.get("occluders", []):
-		var o: Dictionary = raw
-		var tex := _load_tex(String(o.get("img", "")))
-		if tex == null:
-			continue
-		var at: Array = o.get("at", [0, 0])
-		var s := Sprite2D.new()
-		s.texture = tex
-		s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		s.centered = false
-		s.position = Vector2(float(at[0]), float(at[1]))
-		_occluders.add_child(s)
-
-
-## نور اتاق. دو راه دارد، و هر دو نبض می‌گیرند:
-##   `light.overlays`  — هالهٔ ساده از یک تصویر، با `flicker`
-##   `light.pulses`    — نور تحویلی `overlays/lights/<نام>_0..2`،
-##                       ۲ هرتز، ±۱۵٪، فاز تصادفی (سند ۱۳ بند ۲)
-func _build_light() -> void:
-	_light = _layer("Light", 5)
-	var light: Dictionary = data.get("light", {})
-	var scene := LivingScene.new()
-
-	for raw in light.get("pulses", []):
-		if not (raw is Dictionary):
-			continue
-		var n := scene.make_pulse(raw)
-		if n != null:
-			_light.add_child(n)
-			_pulses.append(n)
-	for rel in scene.missing:
-		_note_missing(rel)
-
-	for raw in light.get("overlays", []):
-		var o: Dictionary = raw
-		var tex := _load_tex(String(o.get("img", "")))
-		if tex == null:
-			continue
-		var at: Array = o.get("at", [0, 0])
-		var s := Sprite2D.new()
-		s.texture = tex
-		s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		s.centered = false
-		s.position = Vector2(float(at[0]), float(at[1]))
-		# نور **جمع‌شونده** است، نه رویی: روی تصویر نقاشی‌شده می‌نشیند و
-		# روشنش می‌کند، نه اینکه رنگش را بپوشاند (سند ۰۴: مد Add).
-		s.modulate = Color(1, 1, 1, float(o.get("alpha", 1.0)))
-		s.material = _additive()
-		s.set_meta("flicker", float(o.get("flicker", 0.0)))
-		s.set_meta("base_alpha", float(o.get("alpha", 1.0)))
-		_light.add_child(s)
-		if float(o.get("flicker", 0.0)) > 0.0:
-			s.add_to_group(LivingScene.GROUP)
-			_glows.append(s)
 
 
 func _additive() -> CanvasItemMaterial:
 	var m := CanvasItemMaterial.new()
 	m.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	return m
-
-
-func _process(delta: float) -> void:
-	if _glows.is_empty() and _pulses.is_empty():
-		return
-	_flicker_t += delta
-	for s in _glows:
-		var hz: float = float(s.get_meta("flicker", FLICKER_HZ))
-		var base: float = float(s.get_meta("base_alpha", 1.0))
-		# دامنهٔ کم: سوسو باید حس زنده بدهد، نه چشمک بزند
-		var a := base * (0.88 + 0.12 * sin(_flicker_t * TAU * hz))
-		s.modulate.a = a
-	for n in _pulses:
-		LivingScene.tick_pulse(n, _flicker_t)
 
 
 ## شعاعی که عبور بازیکن در آن حس می‌شود، و چقدر طول می‌کشد تا بخوابد.
@@ -378,7 +290,7 @@ const REACT_SPEED: float = 40.0
 ## بدون این، صحنه زنده هست ولی **بی‌اعتنا**؛ بازیکن حس نمی‌کند در آن
 ## اتاق حضور دارد.
 func react_to(foot: Vector2, speed: float) -> void:
-	for n in _sway_nodes:
+	for n in (_fx.sway_nodes() if _fx != null else []):
 		var mat := n.material as ShaderMaterial
 		if mat == null:
 			continue
@@ -423,24 +335,26 @@ func zoom_zones() -> Array:
 
 
 ## بودجهٔ زندگی این اتاق — از **گره‌های ساخته‌شده** شمرده می‌شود، نه از
-## روی JSON. تفاوتش مهم است: اگر هنر یک حلقه نرسیده باشد، JSON می‌گوید
-## سه منبع دارم و صحنه ساکن است. اینجا همان چیزی شمرده می‌شود که روی
-## صفحه حرکت می‌کند.
+## روی JSON. اگر هنر یک افکت نرسیده باشد، نقشه می‌گوید سه منبع دارم و
+## صحنه ساکن است؛ اینجا همان چیزی شمرده می‌شود که روی صفحه حرکت می‌کند.
 func living_layers() -> Dictionary:
 	var motion := 0
 	var particles := 0
 	var lights := 0
-	for n in get_tree().get_nodes_in_group(LivingScene.GROUP) if is_inside_tree() else []:
+	for n in get_tree().get_nodes_in_group(RoomEffects.GROUP) if is_inside_tree() else []:
 		if not is_ancestor_of(n):
 			continue
 		# گردِ پای بازیکن **منبع محیطی نیست**: واکنش است و تا کسی راه
-		# نرود چیزی نمی‌بارد. اگر شمرده شود، اتاق کاملاً ساکن هم شرط
-		# «ذره دارد» را برآورده می‌کند و بودجه بی‌معنا می‌شود.
+		# نرود چیزی نمی‌بارد. اگر شمرده شود، اتاق ساکن هم شرط «ذره دارد»
+		# را برآورده می‌کند و بودجه بی‌معنا می‌شود.
 		if n == _dust_puff:
 			continue
 		if n is GPUParticles2D or n is CPUParticles2D:
 			particles += 1
-		elif n.has_meta("pulse_base") or n.has_meta("flicker"):
+		elif (n is Sprite2D) and (n as Sprite2D).material is ShaderMaterial \
+				and ((n as Sprite2D).material as ShaderMaterial).shader != null \
+				and String(((n as Sprite2D).material as ShaderMaterial).shader.resource_path)\
+					.ends_with("glow.gdshader"):
 			lights += 1
 		else:
 			motion += 1

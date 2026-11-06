@@ -1,0 +1,157 @@
+{
+ "room": "r1a_house",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "city_fire_window",
+   "type": "flicker_light",
+   "pos": [
+    320,
+    190
+   ],
+   "radius": 230,
+   "color": "#ff7a30",
+   "amp": 0.12,
+   "source": "شعلهٔ شهر پشت پنجره",
+   "signal": "noise2+3freq",
+   "clip_rect": [
+    150,
+    70,
+    500,
+    330
+   ]
+  },
+  {
+   "id": "floor_patch",
+   "type": "flicker_light",
+   "pos": [
+    520,
+    480
+   ],
+   "radius": 260,
+   "color": "#ff8a3a",
+   "amp": 0.08,
+   "source": "لکهٔ نور قالی؛ همان سیگنال شعلهٔ شهر با تأخیر ۱۰۰ms",
+   "signal": "same_as:city_fire_window"
+  },
+  {
+   "id": "window_beam",
+   "type": "dust_in_beam",
+   "poly": [
+    [
+     170,
+     100
+    ],
+    [
+     480,
+     100
+    ],
+    [
+     640,
+     420
+    ],
+    [
+     330,
+     430
+    ]
+   ],
+   "count": 18,
+   "sprite": "overlays/particles/dust_*",
+   "drift_px_s": [
+    2,
+    6
+   ]
+  },
+  {
+   "id": "curtain_left",
+   "type": "sway",
+   "rect": [
+    70,
+    120,
+    190,
+    420
+   ],
+   "pivot": [
+    130,
+    120
+   ],
+   "amp_px": 2.0,
+   "period_s": 5.0,
+   "gusts": true,
+   "what": "پردهٔ چپ"
+  },
+  {
+   "id": "curtain_right",
+   "type": "sway",
+   "rect": [
+    480,
+    20,
+    560,
+    330
+   ],
+   "pivot": [
+    520,
+    20
+   ],
+   "amp_px": 1.6,
+   "period_s": 6.0,
+   "gusts": true,
+   "what": "پردهٔ راست پنجره"
+  },
+  {
+   "id": "plant_left",
+   "type": "sway",
+   "rect": [
+    0,
+    380,
+    130,
+    560
+   ],
+   "pivot": [
+    60,
+    560
+   ],
+   "amp_px": 1.4,
+   "period_s": 5.0,
+   "gusts": true,
+   "what": "گیاه چپ"
+  },
+  {
+   "id": "ash_outside",
+   "type": "embers",
+   "pos": [
+    320,
+    200
+   ],
+   "spawn_size": [
+    260,
+    120
+   ],
+   "rate_per_s": 1.2,
+   "rise_px_s": -10,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff6a30",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "lamp",
+   "type": "flicker_light",
+   "pos": [
+    1185,
+    540
+   ],
+   "radius": 90,
+   "color": "#c8883a",
+   "amp": 0.05,
+   "source": "آباژور کم‌نور",
+   "signal": "noise2+3freq"
+  }
+ ],
+ "forbid": [
+  "مه",
+  "نور سبزآبی"
+ ]
+}

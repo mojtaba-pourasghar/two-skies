@@ -72,6 +72,9 @@ var _zoom_zones: Array = []
 var _sway_t: float = 0.0
 var _sway_seed: float = 0.0
 var _drift := Vector2.ZERO
+## سقف زوم این اتاق. با نسخهٔ پرجزئیات ۱٫۳×، بی آن ۱٫۱۲× — بالاتر از آن
+## تصویر ۱۲۸۰ نرم و تار می‌شود (سند ۱۴، D-ART-46).
+var max_zoom: float = 1.3
 
 
 func _ready() -> void:
@@ -116,7 +119,7 @@ func request_zoom(level: String, seconds: float = ZOOM_SECONDS) -> void:
 		return
 	_zoom_level = level
 	_zoom_from = zoom.x
-	_zoom_to = float(ZOOM_LEVELS[level])
+	_zoom_to = minf(float(ZOOM_LEVELS[level]), max_zoom)
 	var secs := clampf(seconds, ZOOM_SECONDS_MIN, ZOOM_SECONDS_MAX)
 	# فریم‌محور، نه delta انباشته: نتیجهٔ headless و اجرای واقعی یکی بماند
 	_zoom_frames_total = maxi(1, int(round(secs * FPS)))
@@ -136,7 +139,7 @@ func snap_zoom(level: String) -> void:
 	if not ZOOM_LEVELS.has(level):
 		return
 	_zoom_level = level
-	var z := float(ZOOM_LEVELS[level])
+	var z := minf(float(ZOOM_LEVELS[level]), max_zoom)
 	_zoom_from = z
 	_zoom_to = z
 	_zoom_frames_left = 0

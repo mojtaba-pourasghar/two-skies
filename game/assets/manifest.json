@@ -7,8 +7,8 @@
    "approved": false,
    "images": 6,
    "bytes": 28247,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -17,8 +17,18 @@
    "approved": false,
    "images": 6,
    "bytes": 51304,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/door_open",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 111623,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -27,8 +37,8 @@
    "approved": false,
    "images": 6,
    "bytes": 12199,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -37,8 +47,8 @@
    "approved": false,
    "images": 6,
    "bytes": 31470,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -47,8 +57,8 @@
    "approved": false,
    "images": 6,
    "bytes": 44529,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -57,8 +67,28 @@
    "approved": false,
    "images": 6,
    "bytes": 17087,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/neon_arrow",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 30967,
+   "copied": 0,
+   "unchanged": 6,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/neon_bar",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 70831,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -67,8 +97,8 @@
    "approved": false,
    "images": 6,
    "bytes": 86204,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -77,8 +107,18 @@
    "approved": false,
    "images": 6,
    "bytes": 12719,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/stove_fire",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 33104,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -87,8 +127,8 @@
    "approved": false,
    "images": 6,
    "bytes": 44313,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -97,8 +137,8 @@
    "approved": false,
    "images": 6,
    "bytes": 57328,
-   "copied": 6,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 6,
    "camera": "topdown"
   },
   {
@@ -573,13 +613,22 @@
    "camera": "topdown"
   },
   {
+   "path": "overlays/fog",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 3,
+   "bytes": 2880647,
+   "copied": 0,
+   "unchanged": 3
+  },
+  {
    "path": "overlays/lights",
    "status": "draft-until-user-approval",
    "approved": false,
    "images": 9,
    "bytes": 706763,
-   "copied": 9,
-   "unchanged": 0
+   "copied": 0,
+   "unchanged": 9
   },
   {
    "path": "overlays/particles",
@@ -656,6 +705,15 @@
    "copied": 0,
    "unchanged": 7,
    "camera": "topdown"
+  },
+  {
+   "path": "rooms/ch1/hires",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 9,
+   "bytes": 20200799,
+   "copied": 0,
+   "unchanged": 9
   },
   {
    "path": "scenes",

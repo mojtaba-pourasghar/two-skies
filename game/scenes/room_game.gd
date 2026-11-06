@@ -97,6 +97,8 @@ func _enter_room(room_id: String, spawn_override: Vector2) -> bool:
 	# گذار در به در «تغییر نور» است نه خاموشی: پرده به رنگ نور اتاق مقصد
 	# می‌رود (سند ۱۳ بند ۶).
 	_fade.color = room.light_tint()
+	# سقف زوم اتاق: با نسخهٔ پرجزئیات ۱٫۳×، بی آن ۱٫۱۲×
+	camera.max_zoom = room.max_zoom()
 	camera.snap_zoom(GameCamera.ZOOM_NORMAL)
 	camera.set_zoom_zones(room.zoom_zones())
 	camera.snap_to_target()
@@ -142,6 +144,8 @@ func _physics_process(_delta: float) -> void:
 			_visuals[i].update_from(a)
 	# محیط باید عبور بازیکن را حس کند (سند ۱۳ بند ۷)
 	room.react_to(kairo.foot_position(), kairo.velocity.length())
+	# زوم که از حد بی‌هایرز گذشت، تصویر پرجزئیات بیاید
+	room.use_hires(camera.zoom.x > PaintedRoom.ZOOM_WITHOUT_HIRES)
 	_check_door()
 
 

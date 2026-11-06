@@ -1,0 +1,140 @@
+{
+ "room": "r1c_kitchen",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "stove",
+   "type": "flicker_light",
+   "pos": [
+    250,
+    360
+   ],
+   "radius": 170,
+   "color": "#ff8a3a",
+   "amp": 0.14,
+   "source": "آتش اجاق هیزمی (همان سیگنال نور کف)",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "stove_fire",
+   "type": "anim",
+   "anim": "ambient/ch1/stove_fire",
+   "pos": [
+    244,
+    395
+   ],
+   "scale": 0.3,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "wall_lantern",
+   "type": "flicker_light",
+   "pos": [
+    75,
+    240
+   ],
+   "radius": 110,
+   "color": "#ffb04a",
+   "amp": 0.1,
+   "source": "فانوس دیواری",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "moon_window",
+   "type": "glow_pulse",
+   "pos": [
+    960,
+    120
+   ],
+   "radius": 170,
+   "color": "#6fd8ff",
+   "amp": 0.04,
+   "period_s": 9,
+   "source": "پنجرهٔ مهتاب (بسیار کند)"
+  },
+  {
+   "id": "moon_floor",
+   "type": "glow_pulse",
+   "pos": [
+    880,
+    300
+   ],
+   "radius": 150,
+   "color": "#4ab8ff",
+   "amp": 0.05,
+   "period_s": 9,
+   "source": "لکهٔ نور مهتاب کف، هم‌فاز با پنجره"
+  },
+  {
+   "id": "moon_beam",
+   "type": "dust_in_beam",
+   "poly": [
+    [
+     900,
+     70
+    ],
+    [
+     1050,
+     70
+    ],
+    [
+     960,
+     330
+    ],
+    [
+     780,
+     300
+    ]
+   ],
+   "count": 14,
+   "sprite": "overlays/particles/dust_*",
+   "drift_px_s": [
+    2,
+    6
+   ]
+  },
+  {
+   "id": "window_curtain",
+   "type": "sway",
+   "rect": [
+    860,
+    20,
+    1000,
+    150
+   ],
+   "pivot": [
+    930,
+    20
+   ],
+   "amp_px": 1.4,
+   "period_s": 5.0,
+   "gusts": true,
+   "what": "پردهٔ پاره پنجره"
+  },
+  {
+   "id": "stove_sparks",
+   "type": "embers",
+   "pos": [
+    244,
+    370
+   ],
+   "spawn_size": [
+    40,
+    10
+   ],
+   "rate_per_s": 0.8,
+   "rise_px_s": 12,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff9a40",
+   "sprite": "overlays/particles/ember_*"
+  }
+ ],
+ "forbid": [
+  "مه آبی روی کل اتاق",
+  "شعلهٔ شمع سفید"
+ ]
+}
