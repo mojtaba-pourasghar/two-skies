@@ -186,3 +186,5 @@
 
 ### دستهٔ ۱۸ — وضعیت: **برش و پوش شد** (art/tools/slice_ch1_v18.py)
 `rooms/ch1/c1_balcony|c2_laser_alley|c3_electric_hall_1280x720`، `challenge/traps/` (۲۴)، `overlays/particles/` (۱۵). کانال Claude Code ↔ هنر: `comms/`.
+
+## دستهٔ ۱۹ — درخشش افقی شهر + نبض نور بی‌شکل (REQ-001/002) — ارسال‌شده به Canva، منتظر دانلود کاربر
