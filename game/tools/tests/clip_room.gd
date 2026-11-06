@@ -33,15 +33,17 @@ func _run() -> void:
 	# مسیر: از گوشهٔ جنوب-غربی، کنار مجسمهٔ ذخیره، دور مبل، تا طاق.
 	# عمداً از کنار مبل و از پشت ستون رد می‌شود تا Y-sort و occluder
 	# در کلیپ دیده شوند.
-	await _hold(kairo, 20)
-	await _walk(kairo, Vector2(0, -1), 55)      # بالا، کنار مجسمه
-	await _walk(kairo, Vector2(1, 0), 70)       # راست، پشت مبل
-	await _walk(kairo, Vector2(1, 1), 45)       # پایین-راست، روی قالی
-	await _walk(kairo, Vector2(1, 0), 60)       # راست، به سمت بوفه
-	await _walk(kairo, Vector2(1, -1), 40)      # بالا-راست، پشت ستون
-	await _walk(kairo, Vector2(0, 1), 50)       # پایین، جلوی ستون
-	await _walk(kairo, Vector2(-1, 0), 70)      # برگشت به چپ
-	await _hold(kairo, 25)
+	await _hold(kairo, 18)
+	# مسیر عمداً از کنار هر مانع می‌گذرد تا در کلیپ دیده شود ماسک با
+	# گوشه‌ها و مبلمان می‌خواند: دور مبل، کنار بوفه، پای ستون، لبهٔ نرده.
+	await _walk(kairo, Vector2(0, -1), 48)      # بالا، تا پای مبل
+	await _walk(kairo, Vector2(1, -1), 52)      # بالا-راست، دور کردن مبل
+	await _walk(kairo, Vector2(1, 0), 85)       # راست، زیر دیوار پشتی
+	await _walk(kairo, Vector2(1, 1), 40)       # پایین-راست، کنار بوفه
+	await _walk(kairo, Vector2(0, 1), 45)       # پایین، پای ستون
+	await _walk(kairo, Vector2(-1, 1), 45)      # پایین-چپ، تا لبهٔ نرده
+	await _walk(kairo, Vector2(-1, 0), 80)      # برگشت از جلوی قالی
+	await _hold(kairo, 22)
 
 	print("فریم: %d" % _n)
 	print("جای کایرو: %s" % str(kairo.global_position.round()))

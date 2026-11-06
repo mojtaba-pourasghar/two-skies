@@ -118,9 +118,17 @@ func _t_mask_queries() -> void:
 		not RoomData.hazard_at(room,
 			Vector2(float(hz["safe"][0]), float(hz["safe"][1]))).has("id"))
 
-	var dr := RoomData.door_at(room, Vector2(930, 460))
-	_check("در طاق خوانده می‌شود", not dr.is_empty(),
-		"= %s → %s" % [dr.get("id", "-"), dr.get("to", "-")])
+	# مرکز در را از خود داده می‌گیریم، نه عدد دست‌نویس: ماسک از روی تصویر
+	# کشیده می‌شود و با هر اصلاح جابه‌جا می‌شود (درس D-ART-17).
+	var door_rect: Array = ((room["doors"] as Array)[0] as Dictionary)["rect"]
+	var door_mid := Vector2(
+		float(door_rect[0]) + float(door_rect[2]) * 0.5,
+		float(door_rect[1]) + float(door_rect[3]) * 0.5)
+	var dr := RoomData.door_at(room, door_mid)
+	_check("در طاق از مرکز خودش خوانده می‌شود", not dr.is_empty(),
+		"= %s → %s در %s" % [dr.get("id", "-"), dr.get("to", "-"), str(door_mid)])
+	_check("نقطه‌ای دور از هر در، در نیست",
+		RoomData.door_at(room, Vector2(200, 650)).is_empty())
 
 
 ## ترتیب لایه‌ها اهمیت دارد: اگر occluder زیر بازیگر بیاید، شخصیت روی ستون
