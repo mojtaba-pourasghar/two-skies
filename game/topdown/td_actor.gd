@@ -79,6 +79,11 @@ func attach_visual(visual: Node2D, shadow: Node2D) -> void:
 ## ارتفاع دیداری جهش: فقط جابه‌جایی اسپرایت است، نه فیزیک. سایه روی زمین
 ## می‌ماند، پس بازیکن نقطهٔ فرود را می‌بیند — همین «دقت پرش» را در نمای بالا
 ## ممکن می‌کند (TOPDOWN_SPEC §۳).
+## بیرون هم لازم است: سایه باید بداند بازیگر چقدر از زمین بلند شده.
+func visual_lift() -> float:
+	return _visual_lift()
+
+
 func _visual_lift() -> float:
 	if state != State.HOP:
 		return 0.0

@@ -63,7 +63,7 @@ func _normalize(room: Dictionary) -> void:
 	# محیط زنده (قاعدهٔ ۹ CLAUDE.md، D-ART-42)
 	var amb = room.get("ambient", {})
 	room["ambient"] = amb if amb is Dictionary else {}
-	for key in ["motion", "particles"]:
+	for key in ["motion", "sway", "water", "fog", "particles"]:
 		if not (room["ambient"] as Dictionary).has(key):
 			(room["ambient"] as Dictionary)[key] = []
 	if not room.has("zoom_zones"):
@@ -131,26 +131,36 @@ func _validate(room: Dictionary) -> void:
 			% [rid, int(spawn.x), int(spawn.y)])
 
 
-## قاعدهٔ ۹: هر اتاق دست‌کم یک حرکت طبیعت + یک جریان ذره + یک نور متغیر
-## می‌خواهد. **هشدار است نه خطا**: هنر زندهٔ اتاق‌ها هنوز نرسیده
+## بودجهٔ زندگی (سند ۱۳). **هشدار است نه خطا**: هنر زندهٔ اتاق‌ها هنوز نرسیده
 ## (REQ-019) و بازی نباید به‌خاطر نیامدن هنر بوت نشود. ولی هشدار سر جایش
 ## می‌ماند تا «اتاق تمام شد» بی‌دلیل گفته نشود.
 func _validate_living(room: Dictionary, rid: String) -> void:
 	var amb: Dictionary = room["ambient"]
+	# «≥۳ منبع حرکت محیطی همزمان» (سند ۱۳ بند ۱). انیمیشن، تکان، آب و مه
+	# همه منبع حرکت‌اند؛ ذره جدا شمرده می‌شود چون بند ۴ خودش آن را
+	# می‌خواهد.
+	var moving := 0
+	for key in ["motion", "sway", "water", "fog"]:
+		moving += (amb[key] as Array).size()
+
 	var missing: Array[String] = []
-	if (amb["motion"] as Array).is_empty():
-		missing.append("حرکت طبیعت")
+	if moving < 3:
+		missing.append("فقط %d منبع حرکت دارد (حداقل ۳)" % moving)
 	if (amb["particles"] as Array).is_empty():
-		missing.append("جریان ذره")
-	var pulsing := false
-	for raw in (room["light"] as Dictionary).get("overlays", []):
+		missing.append("جریان ذره ندارد")
+	if (amb["fog"] as Array).size() < 2:
+		missing.append("دو لایهٔ مه ندارد")
+
+	var light: Dictionary = room["light"]
+	var pulsing := (light.get("pulses", []) as Array).size()
+	for raw in light.get("overlays", []):
 		if raw is Dictionary and float((raw as Dictionary).get("flicker", 0.0)) > 0.0:
-			pulsing = true
-			break
-	if not pulsing:
-		missing.append("نور متغیر")
+			pulsing += 1
+	if pulsing == 0:
+		missing.append("نور نبض‌دار ندارد")
+
 	if not missing.is_empty():
-		warnings.append("اتاق «%s» طبق قاعدهٔ ۹ تمام نیست: %s ندارد."
+		warnings.append("اتاق «%s» بودجهٔ زندگی را ندارد: %s."
 			% [rid, ", ".join(missing)])
 
 	for raw in room["zoom_zones"]:

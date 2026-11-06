@@ -94,6 +94,9 @@ func _enter_room(room_id: String, spawn_override: Vector2) -> bool:
 	camera.target = kairo
 	# زوم قبل از اولین قاب بنشیند، وگرنه ورود به اتاق با یک گذار زوم
 	# شروع می‌شود که کسی نخواسته (D-ART-42).
+	# گذار در به در «تغییر نور» است نه خاموشی: پرده به رنگ نور اتاق مقصد
+	# می‌رود (سند ۱۳ بند ۶).
+	_fade.color = room.light_tint()
 	camera.snap_zoom(GameCamera.ZOOM_NORMAL)
 	camera.set_zoom_zones(room.zoom_zones())
 	camera.snap_to_target()
@@ -137,6 +140,8 @@ func _physics_process(_delta: float) -> void:
 		var a: TdActor = kairo if i == 0 else ilara
 		if a != null:
 			_visuals[i].update_from(a)
+	# محیط باید عبور بازیکن را حس کند (سند ۱۳ بند ۷)
+	room.react_to(kairo.foot_position(), kairo.velocity.length())
 	_check_door()
 
 

@@ -28,6 +28,15 @@ const ZOOM_SECONDS: float = 1.0
 const ZOOM_SECONDS_MIN: float = 0.8
 const ZOOM_SECONDS_MAX: float = 1.2
 
+## «دوربین هیچ‌وقت کاملاً ثابت نیست» (سند ۱۳ بند ۶).
+## لرزش ریز همیشگی: ±۱ پیکسل، آهسته، نامنظم. این با `shake()` فرق دارد؛
+## آن رویدادی است و این نفسِ دوربین. بدون آن، اتاقِ قفل‌شده عکس می‌شود.
+const IDLE_SWAY_PX: float = 1.0
+const IDLE_SWAY_HZ: float = 0.13
+## اینرسی: دوربین بعد از ایستادن بازیکن کمی سُر می‌خورد و می‌ایستد.
+const INERTIA: float = 0.86
+const INERTIA_MAX_PX: float = 2.4
+
 ## عددهای «مقدار دوربین» سند ۰۴، ستون سه‌چهارم، در WORLD_SCALE=2.
 ## ستون کناری با D-ART-32 بی‌موضوع شد.
 const DEAD_ZONE := Vector2(192, 128)
@@ -60,6 +69,9 @@ var _zoom_frames_total: int = 0
 var _zoom_frames_left: int = 0
 ## نواحی زوم اتاق: [{rect: Rect2, level: String, seconds: float}]
 var _zoom_zones: Array = []
+var _sway_t: float = 0.0
+var _sway_seed: float = 0.0
+var _drift := Vector2.ZERO
 
 
 func _ready() -> void:
@@ -68,6 +80,9 @@ func _ready() -> void:
 	position_smoothing_enabled = false
 	anchor_mode = Camera2D.ANCHOR_MODE_DRAG_CENTER
 	ignore_rotation = true
+	# بذر تصادفی: دو بار اجرای بازی نباید لرزش یکسان بدهد، ولی در یک
+	# اجرا قطعی بماند
+	_sway_seed = randf() * 100.0
 	if EventBus.has_signal("camera_shake_requested"):
 		EventBus.camera_shake_requested.connect(shake)
 
@@ -144,6 +159,10 @@ func snap_to_target() -> void:
 		return
 	_desired = _target_point()
 	global_position = _clamped(_desired).round()
+	# اینرسی باید از صفر شروع شود، وگرنه ورود به اتاق با یک سُر خوردن
+	# شروع می‌شود که کسی نخواسته
+	_last_target = global_position
+	_drift = Vector2.ZERO
 
 
 func shake(pixels: float, seconds: float = 0.12) -> void:
@@ -163,7 +182,7 @@ func _physics_process(_delta: float) -> void:
 	_tick_zoom()
 	_tick_zoom_zones()
 	var want := _clamped(_desired)
-	global_position = want + _shake_offset()
+	global_position = want + _shake_offset() + _idle_sway() + _inertia(want)
 	# «موقعیت دوربین به عدد صحیح گرد می‌شود؛ نیم‌پیکسل ممنوع» (سند ۰۴)
 	global_position = global_position.round()
 	_apply_presentation()
@@ -224,6 +243,26 @@ func _clamped(p: Vector2) -> Vector2:
 		out.y = clampf(p.y, _bounds.position.y + half.y,
 			_bounds.position.y + _bounds.size.y - half.y)
 	return out
+
+
+## نفس دوربین: دو سینوس ناهم‌فرکانس، پس الگویش تکرار آشکار ندارد.
+## گرد می‌شود، چون نیم‌پیکسل روی پیکسل‌آرت کل صحنه را تار می‌کند.
+func _idle_sway() -> Vector2:
+	_sway_t += 1.0 / FPS
+	var a := _sway_t * TAU * IDLE_SWAY_HZ + _sway_seed
+	return Vector2(sin(a) * IDLE_SWAY_PX,
+		sin(a * 0.73 + 1.3) * IDLE_SWAY_PX * 0.6).round()
+
+
+## اینرسی: دوربین وقتی هدف می‌ایستد یک‌باره قفل نمی‌شود، کمی می‌سُرد.
+## سقف دارد (±۲٫۴ پیکسل) تا به «شناور بودن» نرسد.
+func _inertia(want: Vector2) -> Vector2:
+	var moved := want - _last_target
+	_last_target = want
+	_drift = (_drift + moved * 0.25) * INERTIA
+	_drift.x = clampf(_drift.x, -INERTIA_MAX_PX, INERTIA_MAX_PX)
+	_drift.y = clampf(_drift.y, -INERTIA_MAX_PX, INERTIA_MAX_PX)
+	return _drift.round()
 
 
 func _shake_offset() -> Vector2:

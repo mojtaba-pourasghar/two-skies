@@ -157,10 +157,10 @@ func _t_layers() -> void:
 	node.queue_free()
 
 
-## محیط زنده (قاعدهٔ ۹ CLAUDE.md، D-ART-42). اتاق ساکن «تمام» نیست، و
-## کد باید **بگوید** کدام سه چیز را ندارد، نه اینکه بی‌صدا ساکن بماند.
+## بودجهٔ زندگی (سند ۱۳). اتاق ساکن «تمام» نیست، و کد باید **بگوید**
+## چه کم دارد، نه اینکه بی‌صدا ساکن بماند.
 func _t_living() -> void:
-	print("— محیط زنده —")
+	print("— بودجهٔ زندگی —")
 	var l := RoomData.new()
 	var room := l.load_room(ROOM)
 	if room.is_empty():
@@ -174,40 +174,72 @@ func _t_living() -> void:
 	_check("لایهٔ حرکت روی نقاشی و زیر پراپ است",
 		motion.z_index > 0 and motion.z_index < node.get_node("World/Props").z_index,
 		"= z %d" % motion.z_index)
-	_check("لایهٔ ذره هم‌سطح نور است (روی occluder)",
+	_check("لایهٔ ذره روی occluder است",
 		parts.z_index > node.get_node("World/Occluders").z_index,
 		"= z %d" % parts.z_index)
 
-	var made := parts.get_child_count()
-	_check("جریان ذرهٔ اتاق ساخته شد", made >= 1, "= %d جریان" % made)
+	# ذره‌های محیطی باید از لحظهٔ ورود پخش‌شده باشند. گردِ پای بازیکن
+	# استثناست: رویدادی است و تا قدم برندارد نباید چیزی ببارد.
+	var ambient_streams := 0
 	var pre_spread := true
 	for c in parts.get_children():
-		var ps := c as CPUParticles2D
-		if ps == null or ps.amount < 1 or ps.preprocess <= 0.0:
+		var ps := c as GPUParticles2D
+		if ps == null:
 			pre_spread = false
-	# بدون preprocess همهٔ ذره‌ها با هم از صفر می‌زنند و ورود به اتاق
-	# یک موج ناگهانی گرد می‌شود
-	_check("ذره‌ها از لحظهٔ ورود پخش‌شده‌اند", pre_spread)
+			continue
+		if ps.name == "DustPuff":
+			_check("گرد پای بازیکن در شروع خاموش است", not ps.emitting)
+			continue
+		ambient_streams += 1
+		if ps.amount < 1 or ps.preprocess <= 0.0:
+			pre_spread = false
+	_check("جریان ذرهٔ محیطی ساخته شد", ambient_streams >= 1,
+		"= %d جریان" % ambient_streams)
+	_check("ذره‌ها GPUParticles2D اند (دستور کاربر)", pre_spread)
 
 	var living: Dictionary = node.living_layers()
-	_check("نور متغیر دارد (سوسوی هاله)", bool(living["variable_light"]))
-	_check("شمارش جریان ذره با لایهٔ ساخته‌شده می‌خواند",
-		int(living["particles"]) == made, "= %d" % int(living["particles"]))
-	# این اتاق هنوز حرکت طبیعت ندارد (REQ-019). آزمون **همین** را ثبت
-	# می‌کند تا روزی که هنر رسید، سنجه خودش عوض شود و یادمان بیاید.
-	_check("اتاق بی‌حرکتِ طبیعت «تمام» شمرده نمی‌شود",
-		node.is_living() == (int(living["motion"]) > 0),
-		"= حرکت %d، زنده %s" % [int(living["motion"]), str(node.is_living())])
-	var warned := false
-	for w in l.warnings:
-		if w.contains("قاعدهٔ ۹"):
-			warned = true
-	_check("نبودِ لایهٔ زنده هشدار می‌دهد نه سکوت",
-		warned if not node.is_living() else true)
+	_check("«≥۳ منبع حرکت همزمان» برآورده است (سند ۱۳ بند ۱)",
+		int(living["sources"]) >= PaintedRoom.LIVING_MIN_SOURCES,
+		"= %d منبع (حرکت %d، ذره %d، نور %d)" % [int(living["sources"]),
+			int(living["motion"]), int(living["particles"]), int(living["lights"])])
+	_check("نور نبض‌دار دارد", bool(living["variable_light"]))
+	_check("اتاق طبق بودجهٔ زندگی «زنده» است", node.is_living())
 
-	# ناحیهٔ زوم: اتاق هم‌اندازهٔ صفحه نباید ناحیهٔ زوم داشته باشد (REQ-018)
-	_check("ناحیهٔ زوم اتاق به شکل Rect2 درمی‌آید",
-		node.zoom_zones().size() == (room["zoom_zones"] as Array).size())
+	# همه در گروه LivingLayer باشند، وگرنه سنجهٔ پذیرش چیزی برای شمردن
+	# ندارد و «زنده بودن» به حرف می‌ماند
+	var in_group := 0
+	for n in get_tree().get_nodes_in_group(LivingScene.GROUP):
+		if node.is_ancestor_of(n):
+			in_group += 1
+	# گردِ پای بازیکن در گروه هست (متحرک است) ولی **منبع محیطی نیست**،
+	# پس در بودجه شمرده نمی‌شود. اختلاف باید دقیقاً همان یکی باشد.
+	_check("هر گرهٔ متحرک در گروه LivingLayer است",
+		in_group == int(living["sources"]) + 1,
+		"= %d گره در گروه، %d منبع محیطی + گرد پا"
+			% [in_group, int(living["sources"])])
+
+	# واکنش به عبور: نزدیک گیاه رد شدن باید تکانش را بیشتر کند
+	var sway: Node2D = null
+	for c in motion.get_children():
+		if String(c.name).begins_with("Sway_plant_floor"):
+			sway = c
+	if sway != null:
+		var mat := sway.material as ShaderMaterial
+		var before: float = float(mat.get_shader_parameter("push"))
+		node.react_to(Vector2(60, 470), 120.0)
+		var after: float = float(mat.get_shader_parameter("push"))
+		_check("عبور از کنار گیاه تکانش را بیشتر می‌کند", after > before,
+			"= %.2f ← %.2f" % [before, after])
+		# و بعد باید بخوابد، نه اینکه برای همیشه تکان بخورد
+		for i in 60:
+			node.react_to(Vector2(600, 600), 0.0)
+		_check("و بعد از دور شدن می‌خوابد",
+			float(mat.get_shader_parameter("push")) < after * 0.1)
+	else:
+		_check("گرهٔ تکان گیاه ساخته شد", false, "پیدا نشد")
+
+	_check("رنگ گذار در، سیاه خالص نیست (تغییر نور نه خاموشی)",
+		node.light_tint() != Color(0, 0, 0), "= %s" % str(node.light_tint()))
 	node.queue_free()
 
 	# دادهٔ غلط باید خطا بدهد، نه بی‌صدا رد شود
@@ -218,10 +250,15 @@ func _t_living() -> void:
 	v._normalize(bad)
 	v._validate(bad)
 	var caught := false
+	var budget := false
 	for e in v.errors:
 		if e.contains("سطح زوم"):
 			caught = true
+	for w in v.warnings:
+		if w.contains("بودجهٔ زندگی"):
+			budget = true
 	_check("سطح زوم ناموجود خطای اعتبارسنجی است", caught)
+	_check("اتاق بی‌زندگی هشدار بودجه می‌گیرد", budget)
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:

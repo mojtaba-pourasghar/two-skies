@@ -2,6 +2,106 @@
  "note": "ساختهٔ tools/import_art.py — دستی ویرایش نکن.",
  "assets": [
   {
+   "path": "ambient/ch1/candle",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 28247,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/curtain",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 51304,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/drip",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 12199,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/drone",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 31470,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/lantern",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 44529,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/moth",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 17087,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/plant",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 86204,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/smoke",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 12719,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/vines",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 44313,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
+   "path": "ambient/ch1/water",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 6,
+   "bytes": 57328,
+   "copied": 6,
+   "unchanged": 0,
+   "camera": "topdown"
+  },
+  {
    "path": "app_icon",
    "status": "draft",
    "approved": false,
@@ -120,8 +220,8 @@
    "approved": false,
    "images": 24,
    "bytes": 220011,
-   "copied": 24,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 24,
    "camera": "topdown"
   },
   {
@@ -149,8 +249,8 @@
    "approved": false,
    "images": 47,
    "bytes": 274398,
-   "copied": 47,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 47,
    "camera": "battle-3q"
   },
   {
@@ -468,9 +568,18 @@
    "approved": false,
    "images": 12,
    "bytes": 225722,
-   "copied": 12,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 12,
    "camera": "topdown"
+  },
+  {
+   "path": "overlays/lights",
+   "status": "draft-until-user-approval",
+   "approved": false,
+   "images": 9,
+   "bytes": 706763,
+   "copied": 9,
+   "unchanged": 0
   },
   {
    "path": "overlays/particles",
@@ -478,8 +587,8 @@
    "approved": false,
    "images": 15,
    "bytes": 182585,
-   "copied": 15,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 15,
    "camera": "any"
   },
   {
@@ -488,8 +597,8 @@
    "approved": false,
    "images": 12,
    "bytes": 105377,
-   "copied": 12,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 12,
    "camera": "topdown"
   },
   {
@@ -544,8 +653,8 @@
    "approved": false,
    "images": 7,
    "bytes": 12116816,
-   "copied": 7,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 7,
    "camera": "topdown"
   },
   {
@@ -572,8 +681,8 @@
    "approved": false,
    "images": 13,
    "bytes": 64626,
-   "copied": 13,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 13,
    "camera": "side"
   },
   {
@@ -712,8 +821,8 @@
    "approved": false,
    "images": 10,
    "bytes": 644242,
-   "copied": 10,
-   "unchanged": 0,
+   "copied": 0,
+   "unchanged": 10,
    "camera": "ui"
   },
   {

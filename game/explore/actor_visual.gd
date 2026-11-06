@@ -14,6 +14,14 @@ const FOOT_Y: int = 124
 ## سند ۰۴: فریم‌ریت انیمیشن شخصیت ۱۲ فریم بر ثانیه.
 const ANIM_FPS: float = 12.0
 
+## تنفس ایستاده (سند ۱۳ بند ۵). شخصیتی که ایستاده و **هیچ** حرکتی ندارد
+## مجسمه دیده می‌شود، حتی اگر همهٔ پس‌زمینه زنده باشد.
+## آهسته و ریز: ۰٫۴ هرتز، یک پیکسل. بیشتر از این «تکان» می‌شود نه نفس.
+const BREATH_HZ: float = 0.4
+const BREATH_PX: float = 1.0
+## سایه زیر پا با جهش کوچک و کم‌رنگ می‌شود — بازیکن ارتفاع را می‌بیند.
+const SHADOW_MIN_SCALE: float = 0.62
+
 var who: String = "kairo"
 var missing: Array[String] = []
 
@@ -23,6 +31,8 @@ var _frames: Dictionary = {}
 var _current: String = ""
 var _frame: int = 0
 var _timer: float = 0.0
+var _breath_t: float = 0.0
+var _sprite_base_y: float = 0.0
 var _base := "res://assets/%s/home/"
 
 
@@ -49,7 +59,10 @@ func setup(actor_name: String) -> void:
 	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	# پا روی مبدأ: بوم را بالا و چپ می‌بریم
 	_sprite.position = Vector2(-CANVAS * 0.5, -FOOT_Y)
+	_sprite_base_y = _sprite.position.y
 	add_child(_sprite)
+	# فاز تصادفی: کایرو و ایلارا نباید مثل دو ساعت با هم نفس بکشند
+	_breath_t = randf() * 10.0
 
 	_load_anims()
 	play("idle_down")
@@ -100,6 +113,7 @@ func _apply() -> void:
 
 
 func _process(delta: float) -> void:
+	_tick_breath(delta)
 	if not _frames.has(_current):
 		return
 	_timer += delta
@@ -110,8 +124,35 @@ func _process(delta: float) -> void:
 		_apply()
 
 
+## نفس فقط وقتی می‌آید که شخصیت **واقعاً ایستاده** است. روی راه رفتن
+## سوار نمی‌شود، وگرنه با فریم‌های راه رفتن می‌جنگد و لرزش می‌دهد.
+func _tick_breath(delta: float) -> void:
+	_breath_t += delta
+	if _sprite == null:
+		return
+	if not _current.begins_with("idle"):
+		_sprite.position.y = _sprite_base_y
+		return
+	var rise: float = BREATH_PX * 0.5 * (1.0 + sin(_breath_t * TAU * BREATH_HZ))
+	# به **بالا** گرد می‌شود: نیم‌پیکسل روی پیکسل‌آرت لبه را تار می‌کند
+	_sprite.position.y = _sprite_base_y + round(-rise)
+
+
+## سایهٔ پویا: با جهش کوچک و کم‌رنگ می‌شود و با دش کمی کشیده. ثابت ماندنش
+## در جهش باعث می‌شد ارتفاع پرش روی صفحه خوانده نشود.
+func _tick_shadow(actor: TdActor) -> void:
+	if _shadow == null:
+		return
+	var lift: float = absf(actor.visual_lift())
+	var k: float = clampf(lift / maxf(1.0, TdConst.HOP_ARC_PX), 0.0, 1.0)
+	var sc: float = lerpf(1.0, SHADOW_MIN_SCALE, k)
+	_shadow.scale = Vector2(sc, sc)
+	_shadow.modulate.a = lerpf(1.0, 0.55, k)
+
+
 ## از روی جهت و حالت بازیگر، انیمیشن درست را می‌چیند.
 func update_from(actor: TdActor) -> void:
+	_tick_shadow(actor)
 	var moving := actor.velocity.length() > 8.0
 	var row := TdConst.facing_row(actor.facing)
 	var dir: String = ["down", "up", "left"][row]

@@ -139,9 +139,10 @@ func _t_follow() -> void:
 	cam.set_bounds(one_screen)
 	body.global_position = Vector2(0, 0)
 	await _frames(120)
-	_check("اتاق هم‌اندازهٔ صفحه وسط‌چین می‌شود",
-		cam.global_position.is_equal_approx(one_screen.get_center().round()),
-		"= %s" % str(cam.global_position))
+	_check("اتاق هم‌اندازهٔ صفحه وسط‌چین می‌شود (±نفس دوربین)",
+		_near(cam.global_position, one_screen.get_center().round()),
+		"= %s، مرکز %s، بودجه %.1f px" % [str(cam.global_position),
+			str(one_screen.get_center().round()), _sway_budget()])
 	_check("موقعیت دوربین عدد صحیح است (نیم‌پیکسل ممنوع)",
 		is_equal_approx(cam.global_position.x, roundf(cam.global_position.x)),
 		"= %s" % str(cam.global_position))
@@ -154,9 +155,25 @@ func _t_follow() -> void:
 	cam2.set_room(room_rect)
 	body2.global_position = room_rect.get_center() + Vector2(300, 200)
 	await _frames(30)
-	_check("حالت room روی مرکز اتاق قفل است",
-		cam2.global_position.is_equal_approx(_clamp_center(room_rect, pano, cam2)),
-		"= %s" % str(cam2.global_position))
+	_check("حالت room روی مرکز اتاق قفل است (±نفس دوربین)",
+		_near(cam2.global_position, _clamp_center(room_rect, pano, cam2)),
+		"= %s، مرکز %s" % [str(cam2.global_position),
+			str(_clamp_center(room_rect, pano, cam2))])
+	# ولی «نفس» نباید به «شناور بودن» برسد: باید واقعاً تکان بخورد و
+	# واقعاً نزدیک بماند. هر دو سنجیده می‌شوند.
+	var seen: Array[Vector2] = []
+	for i in 240:
+		await get_tree().physics_frame
+		seen.append(cam2.global_position)
+	var swayed := false
+	var strayed := false
+	for v in seen:
+		if v != seen[0]:
+			swayed = true
+		if not _near(v, _clamp_center(room_rect, pano, cam2)):
+			strayed = true
+	_check("دوربین کاملاً ثابت نیست (سند ۱۳ بند ۶)", swayed)
+	_check("ولی از بودجهٔ نفس بیرون نمی‌زند", not strayed)
 
 	for n in [made[0], body, cam, made2[0], body2, cam2]:
 		n.queue_free()
@@ -276,6 +293,18 @@ func _t_zoom_zones() -> void:
 
 	for n in [made[0], body, cam]:
 		n.queue_free()
+
+
+## دوربین دیگر **دقیقاً** روی عدد نمی‌نشیند: نفس همیشگی ±۱ پیکسل و
+## اینرسی تا ±۲٫۴ پیکسل دارد (سند ۱۳ بند ۶، «هیچ‌وقت کاملاً ثابت نیست»).
+## پس سنجه‌ها «برابر مرکز» را به «درون دامنهٔ مجاز» عوض کردند — وگرنه
+## آزمون همان چیزی را رد می‌کند که عمداً اضافه شده.
+func _sway_budget() -> float:
+	return GameCamera.IDLE_SWAY_PX + GameCamera.INERTIA_MAX_PX + 0.6
+
+
+func _near(a: Vector2, b: Vector2) -> bool:
+	return a.distance_to(b) <= _sway_budget()
 
 
 func _clamp_center(room_rect: Rect2, map: Rect2, cam: GameCamera) -> Vector2:

@@ -27,23 +27,27 @@ const ASSETS := "res://assets/"
 ## لرزش هالهٔ نور: ۲ هرتز (سند ۰۴ «سوسوی ۲ تا ۳ هرتز»).
 const FLICKER_HZ: float = 2.0
 
-## نوع‌های جریان ذره (سند ۱۳ §۴). هر اتاق دست‌کم یکی لازم دارد.
+## نوع‌های جریان ذره (سند ۱۳ بند ۴). هر اتاق دست‌کم یکی لازم دارد.
+##
+## `scale` ضریب **بافت** است نه پیکسل: بافت‌های `overlays/particles` حدود
+## ۱۹۰ پیکسل عرض دارند، پس ضریب کوچک است وگرنه هر «ذره» یک لکهٔ درشت
+## می‌شود. (پاسخ مدیر هنر REQ-003: نیم‌مقیاس، آلفا از روشنایی، مد Add.)
 const PARTICLE_KINDS := {
-	"dust": {"lifetime": 6.0, "direction": Vector2(0, -1), "spread": 35.0,
-		"gravity": Vector2(4, -6), "speed": 9.0, "scale": 1.6,
-		"color": Color(0.90, 0.88, 0.78, 0.35), "additive": true},
-	"ember": {"lifetime": 2.6, "direction": Vector2(0, -1), "spread": 20.0,
-		"gravity": Vector2(0, -26), "speed": 26.0, "scale": 1.8,
-		"color": Color(1.00, 0.62, 0.26, 0.85), "additive": true},
-	"pollen": {"lifetime": 8.0, "direction": Vector2(1, -0.2), "spread": 50.0,
-		"gravity": Vector2(6, -3), "speed": 7.0, "scale": 2.0,
-		"color": Color(0.96, 0.95, 0.70, 0.45), "additive": true},
+	"dust": {"lifetime": 7.0, "direction": Vector2(0, -1), "spread": 35.0,
+		"gravity": Vector2(4, -6), "speed": 9.0, "scale": 0.16,
+		"color": Color(0.90, 0.88, 0.78, 0.30), "additive": true},
+	"ember": {"lifetime": 2.8, "direction": Vector2(0, -1), "spread": 20.0,
+		"gravity": Vector2(0, -26), "speed": 26.0, "scale": 0.13,
+		"color": Color(1.00, 0.62, 0.26, 0.75), "additive": true},
+	"ash": {"lifetime": 9.0, "direction": Vector2(0.2, 1), "spread": 30.0,
+		"gravity": Vector2(3, 10), "speed": 8.0, "scale": 0.18,
+		"color": Color(0.80, 0.78, 0.74, 0.35), "additive": false},
 	"spark": {"lifetime": 1.2, "direction": Vector2(0, -1), "spread": 80.0,
-		"gravity": Vector2(0, 90), "speed": 48.0, "scale": 1.2,
-		"color": Color(0.70, 0.92, 1.00, 0.90), "additive": true},
-	"mist": {"lifetime": 10.0, "direction": Vector2(1, 0), "spread": 15.0,
-		"gravity": Vector2(2, 0), "speed": 5.0, "scale": 7.0,
-		"color": Color(0.72, 0.84, 0.88, 0.14), "additive": false},
+		"gravity": Vector2(0, 90), "speed": 48.0, "scale": 0.12,
+		"color": Color(0.70, 0.92, 1.00, 0.85), "additive": true},
+	"fog": {"lifetime": 12.0, "direction": Vector2(1, 0), "spread": 12.0,
+		"gravity": Vector2(2, 0), "speed": 5.0, "scale": 0.9,
+		"color": Color(0.72, 0.84, 0.88, 0.12), "additive": false},
 }
 
 var data: Dictionary = {}
@@ -60,7 +64,11 @@ var _mask_debug: Node2D
 var _motion: Node2D
 var _particles: Node2D
 var _flicker_t: float = 0.0
+var _sway_nodes: Array[Node2D] = []
+var _dust_puff: GPUParticles2D = null
+var _last_react := Vector2.ZERO
 var _glows: Array[Sprite2D] = []
+var _pulses: Array[Node2D] = []
 
 
 func build(room: Dictionary) -> void:
@@ -137,45 +145,61 @@ func _build_props() -> void:
 		_props.add_child(s)
 
 
-## حرکت طبیعت: شیت افقی هم‌اندازه، حلقه‌ای (REQ-019).
+## منبع‌های حرکت محیطی: انیمیشن حلقه‌ای، تکان برگ و پرده، آب، مه.
+## همه در گروه `LivingLayer` می‌نشینند تا سنجهٔ پذیرش بتواند بشمارد.
+##
+## قاعدهٔ بودجهٔ زندگی (سند ۱۳ بند ۱): **دست‌کم ۳ منبع همزمان** در هر
+## اتاق. `is_living()` همین را می‌سنجد و `RoomData` اگر کم باشد هشدار
+## می‌دهد — «تمام» گفتن یک اتاق ساکن اشتباهی است که باید صدا کند.
 func _build_motion() -> void:
 	_motion = _layer("Motion", 1)
 	var amb: Dictionary = data.get("ambient", {})
+	var scene := LivingScene.new()
+	var bg_tex: Texture2D = _bg.texture if _bg != null else null
+
 	for raw in amb.get("motion", []):
-		if not (raw is Dictionary):
-			continue
-		var m: Dictionary = raw
-		var tex := _load_tex(String(m.get("img", "")))
-		if tex == null:
-			continue
-		var frames := maxi(1, int(m.get("frames", 1)))
-		var fps := maxf(1.0, float(m.get("fps", 8.0)))
-		var sheet := SpriteFrames.new()
-		sheet.set_animation_speed("default", fps)
-		sheet.set_animation_loop("default", true)
-		var fw := int(tex.get_width() / frames)
-		var fh := tex.get_height()
-		for i in frames:
-			var at := AtlasTexture.new()
-			at.atlas = tex
-			at.region = Rect2(i * fw, 0, fw, fh)
-			sheet.add_frame("default", at)
-		var spr := AnimatedSprite2D.new()
-		spr.name = "Motion_%s" % String(m.get("id", "x"))
-		spr.sprite_frames = sheet
-		spr.centered = false
-		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		var at_pos: Array = m.get("at", [0, 0])
-		spr.position = Vector2(float(at_pos[0]), float(at_pos[1]))
-		spr.play("default")
-		# پرده و برگِ جلوی صحنه باید شخصیت را بپوشانند، نه برعکس
-		if bool(m.get("occluder", false)):
-			spr.z_index = 4
-		_motion.add_child(spr)
+		if raw is Dictionary:
+			_place(scene.make_anim(raw), raw)
+	for raw in amb.get("sway", []):
+		if raw is Dictionary:
+			var n := scene.make_sway(bg_tex, raw)
+			if n != null:
+				n.set_meta("react_rect", _rect_of(raw))
+				_sway_nodes.append(n)
+			_place(n, raw)
+	for raw in amb.get("water", []):
+		if raw is Dictionary:
+			_place(scene.make_water(bg_tex, raw), raw)
+	for raw in amb.get("fog", []):
+		if raw is Dictionary:
+			_place(scene.make_fog(raw), raw)
+
+	for rel in scene.missing:
+		_note_missing(rel)
 
 
-## جریان ذره: گرد و اخگر و گردهٔ گل. اتاق بی‌ذره ساکن به نظر می‌رسد حتی
-## اگر همه‌چیزش درست باشد.
+func _rect_of(d: Dictionary) -> Rect2:
+	var r: Array = d.get("rect", [])
+	if r.size() != 4:
+		return Rect2()
+	return Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
+
+
+## گره را در لایهٔ درست می‌نشاند. `occluder: true` یعنی شخصیت از **پشتش**
+## رد می‌شود (پردهٔ جلوی صحنه، شاخهٔ آویزان)، پس می‌رود بالای بازیگران.
+func _place(n: Node2D, d: Dictionary) -> void:
+	if n == null:
+		return
+	if bool(d.get("occluder", false)):
+		n.z_index = maxi(n.z_index, 4)
+	_motion.add_child(n)
+
+
+## جریان ذره — GPUParticles2D با بافت‌های `overlays/particles` (دستور
+## کاربر و سند ۱۳ بند ۴). اتاق بی‌ذره حتی با همه‌چیز درست، ساکن است.
+##
+## بافت‌ها نیم‌مقیاس و آلفاشان از روشنایی است (پاسخ مدیر هنر، REQ-003)،
+## پس مد Add می‌خواهند و مقیاس کوچک.
 func _build_particles() -> void:
 	_particles = _layer("Particles", 5)
 	var amb: Dictionary = data.get("ambient", {})
@@ -190,29 +214,72 @@ func _build_particles() -> void:
 			continue
 		var rect := Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
 		var preset: Dictionary = PARTICLE_KINDS.get(kind, PARTICLE_KINDS["dust"])
-		# CPUParticles2D نه GPU: در headless و روی گوشی‌های ارزان هم کار
-		# می‌کند، و اینجا تعداد ذره‌ها کم است
-		var ps := CPUParticles2D.new()
-		ps.name = "Particles_%s" % kind
+		var tex := _load_tex("overlays/particles/%s_%d.png"
+			% [kind, int(d.get("variant", 0))])
+
+		var ps := GPUParticles2D.new()
+		ps.name = "Particles_%s" % String(d.get("id", kind))
 		ps.amount = maxi(1, int(d.get("count", 8)))
 		ps.lifetime = float(preset["lifetime"])
 		ps.position = rect.get_center()
-		ps.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-		ps.emission_rect_extents = rect.size * 0.5
-		ps.direction = preset["direction"]
-		ps.spread = float(preset["spread"])
-		ps.gravity = preset["gravity"]
-		ps.initial_velocity_min = float(preset["speed"]) * 0.5
-		ps.initial_velocity_max = float(preset["speed"])
-		ps.scale_amount_min = float(preset["scale"]) * 0.6
-		ps.scale_amount_max = float(preset["scale"])
-		ps.color = preset["color"]
 		ps.local_coords = false
-		# ذره‌ها از لحظهٔ ورود پخش‌شده باشند، نه اینکه با هم از صفر بزنند
+		ps.texture = tex
+		# بدون preprocess همهٔ ذره‌ها با هم از صفر می‌زنند و ورود به اتاق
+		# یک موج ناگهانی گرد می‌شود
 		ps.preprocess = ps.lifetime
+		ps.randomness = 0.6
+
+		var m := ParticleProcessMaterial.new()
+		m.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+		m.emission_box_extents = Vector3(rect.size.x * 0.5, rect.size.y * 0.5, 0.0)
+		m.direction = Vector3(preset["direction"].x, preset["direction"].y, 0.0)
+		m.spread = float(preset["spread"])
+		m.gravity = Vector3(preset["gravity"].x, preset["gravity"].y, 0.0)
+		m.initial_velocity_min = float(preset["speed"]) * 0.4
+		m.initial_velocity_max = float(preset["speed"])
+		# بافت‌ها ~۱۹۰ پیکسل‌اند و ذره‌اند نه تکه‌ابر: کوچک می‌شوند
+		m.scale_min = float(preset["scale"]) * 0.5
+		m.scale_max = float(preset["scale"])
+		m.color = preset["color"]
+		ps.process_material = m
 		if bool(preset["additive"]):
 			ps.material = _additive()
+		ps.add_to_group(LivingScene.GROUP)
 		_particles.add_child(ps)
+
+	_build_dust_puff()
+
+
+## گردی که از پای بازیکن بلند می‌شود. یک گره است که دنبال پا می‌رود، نه
+## یکی به‌ازای هر قدم: ساختن و دور انداختن گره در حلقهٔ فیزیک گران است.
+func _build_dust_puff() -> void:
+	var tex := _load_tex("overlays/particles/dust_1.png")
+	if tex == null:
+		return
+	var ps := GPUParticles2D.new()
+	ps.name = "DustPuff"
+	ps.amount = 6
+	ps.lifetime = 0.7
+	ps.texture = tex
+	ps.local_coords = false
+	ps.emitting = false
+	ps.z_index = 3
+	var m := ParticleProcessMaterial.new()
+	m.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	m.emission_sphere_radius = 6.0
+	m.direction = Vector3(0, -1, 0)
+	m.spread = 55.0
+	m.gravity = Vector3(0, 26, 0)
+	m.initial_velocity_min = 6.0
+	m.initial_velocity_max = 18.0
+	m.scale_min = 0.05
+	m.scale_max = 0.11
+	m.color = Color(0.86, 0.82, 0.72, 0.30)
+	ps.process_material = m
+	ps.material = _additive()
+	ps.add_to_group(LivingScene.GROUP)
+	_particles.add_child(ps)
+	_dust_puff = ps
 
 
 func warnings_note(msg: String) -> void:
@@ -235,9 +302,25 @@ func _build_occluders() -> void:
 		_occluders.add_child(s)
 
 
+## نور اتاق. دو راه دارد، و هر دو نبض می‌گیرند:
+##   `light.overlays`  — هالهٔ ساده از یک تصویر، با `flicker`
+##   `light.pulses`    — نور تحویلی `overlays/lights/<نام>_0..2`،
+##                       ۲ هرتز، ±۱۵٪، فاز تصادفی (سند ۱۳ بند ۲)
 func _build_light() -> void:
 	_light = _layer("Light", 5)
 	var light: Dictionary = data.get("light", {})
+	var scene := LivingScene.new()
+
+	for raw in light.get("pulses", []):
+		if not (raw is Dictionary):
+			continue
+		var n := scene.make_pulse(raw)
+		if n != null:
+			_light.add_child(n)
+			_pulses.append(n)
+	for rel in scene.missing:
+		_note_missing(rel)
+
 	for raw in light.get("overlays", []):
 		var o: Dictionary = raw
 		var tex := _load_tex(String(o.get("img", "")))
@@ -257,6 +340,7 @@ func _build_light() -> void:
 		s.set_meta("base_alpha", float(o.get("alpha", 1.0)))
 		_light.add_child(s)
 		if float(o.get("flicker", 0.0)) > 0.0:
+			s.add_to_group(LivingScene.GROUP)
 			_glows.append(s)
 
 
@@ -267,7 +351,7 @@ func _additive() -> CanvasItemMaterial:
 
 
 func _process(delta: float) -> void:
-	if _glows.is_empty():
+	if _glows.is_empty() and _pulses.is_empty():
 		return
 	_flicker_t += delta
 	for s in _glows:
@@ -276,6 +360,61 @@ func _process(delta: float) -> void:
 		# دامنهٔ کم: سوسو باید حس زنده بدهد، نه چشمک بزند
 		var a := base * (0.88 + 0.12 * sin(_flicker_t * TAU * hz))
 		s.modulate.a = a
+	for n in _pulses:
+		LivingScene.tick_pulse(n, _flicker_t)
+
+
+## شعاعی که عبور بازیکن در آن حس می‌شود، و چقدر طول می‌کشد تا بخوابد.
+const REACT_PX: float = 86.0
+const REACT_PUSH: float = 5.0
+const REACT_DECAY: float = 0.90
+## زیر این سرعت، رد شدن «عبور» نیست و گرد بلند نمی‌کند.
+const REACT_SPEED: float = 40.0
+
+
+## محیط به عبور بازیکن واکنش نشان می‌دهد (سند ۱۳ بند ۷): برگ و پرده‌ای
+## که نزدیکش رد می‌شود تکان بیشتری می‌خورد، و از پا گرد بلند می‌شود.
+##
+## بدون این، صحنه زنده هست ولی **بی‌اعتنا**؛ بازیکن حس نمی‌کند در آن
+## اتاق حضور دارد.
+func react_to(foot: Vector2, speed: float) -> void:
+	for n in _sway_nodes:
+		var mat := n.material as ShaderMaterial
+		if mat == null:
+			continue
+		var rect: Rect2 = n.get_meta("react_rect", Rect2())
+		var raw_push = mat.get_shader_parameter("push")
+		var push: float = float(raw_push) if raw_push != null else 0.0
+		var near: float = _distance_to_rect(foot, rect)
+		if near < REACT_PX and speed > REACT_SPEED:
+			# نزدیک‌تر، تکان بیشتر — نه روشن/خاموش
+			push = maxf(push, REACT_PUSH * (1.0 - near / REACT_PX))
+		push *= REACT_DECAY
+		mat.set_shader_parameter("push", push)
+
+	if _dust_puff != null:
+		var moved := foot.distance_to(_last_react)
+		_dust_puff.position = foot
+		# فقط وقتی واقعاً راه می‌رود، نه وقتی ایستاده می‌لرزد
+		_dust_puff.emitting = speed > REACT_SPEED and moved > 0.5
+	_last_react = foot
+
+
+static func _distance_to_rect(p: Vector2, r: Rect2) -> float:
+	if r.size == Vector2.ZERO:
+		return INF
+	var dx: float = maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x)
+	var dy: float = maxf(maxf(r.position.y - p.y, 0.0), p.y - r.end.y)
+	return sqrt(dx * dx + dy * dy)
+
+
+## رنگ نور اتاق، برای گذار در به در: پردهٔ گذار به‌جای سیاه خالص، به رنگ
+## نور اتاق می‌رود، پس عبور از در **تغییر نور** دیده می‌شود نه خاموشی.
+func light_tint() -> Color:
+	var t: Array = (data.get("light", {}) as Dictionary).get("tint", [])
+	if t.size() != 3:
+		return Color(0, 0, 0)
+	return Color(float(t[0]), float(t[1]), float(t[2]))
 
 
 ## نواحی زوم اتاق، به شکلی که دوربین می‌خواهد (D-ART-42).
@@ -283,25 +422,47 @@ func zoom_zones() -> Array:
 	return RoomData.zoom_zones(data)
 
 
-## آیا این اتاق طبق قاعدهٔ ۹ زنده است؟ سه چیز لازم است: حرکت طبیعت،
-## جریان ذره، نور متغیر.
+## بودجهٔ زندگی این اتاق — از **گره‌های ساخته‌شده** شمرده می‌شود، نه از
+## روی JSON. تفاوتش مهم است: اگر هنر یک حلقه نرسیده باشد، JSON می‌گوید
+## سه منبع دارم و صحنه ساکن است. اینجا همان چیزی شمرده می‌شود که روی
+## صفحه حرکت می‌کند.
 func living_layers() -> Dictionary:
-	var amb: Dictionary = data.get("ambient", {})
-	var pulsing := false
-	for raw in (data.get("light", {}) as Dictionary).get("overlays", []):
-		if raw is Dictionary and float((raw as Dictionary).get("flicker", 0.0)) > 0.0:
-			pulsing = true
-			break
+	var motion := 0
+	var particles := 0
+	var lights := 0
+	for n in get_tree().get_nodes_in_group(LivingScene.GROUP) if is_inside_tree() else []:
+		if not is_ancestor_of(n):
+			continue
+		# گردِ پای بازیکن **منبع محیطی نیست**: واکنش است و تا کسی راه
+		# نرود چیزی نمی‌بارد. اگر شمرده شود، اتاق کاملاً ساکن هم شرط
+		# «ذره دارد» را برآورده می‌کند و بودجه بی‌معنا می‌شود.
+		if n == _dust_puff:
+			continue
+		if n is GPUParticles2D or n is CPUParticles2D:
+			particles += 1
+		elif n.has_meta("pulse_base") or n.has_meta("flicker"):
+			lights += 1
+		else:
+			motion += 1
 	return {
-		"motion": (amb.get("motion", []) as Array).size(),
-		"particles": (amb.get("particles", []) as Array).size(),
-		"variable_light": pulsing,
+		"motion": motion,
+		"particles": particles,
+		"variable_light": lights > 0,
+		"lights": lights,
+		"sources": motion + particles + lights,
 	}
+
+
+## «≥۳ منبع حرکت محیطی همزمان» (سند ۱۳ بند ۱) و نور نبض‌دار و ذره.
+const LIVING_MIN_SOURCES: int = 3
 
 
 func is_living() -> bool:
 	var l := living_layers()
-	return int(l["motion"]) > 0 and int(l["particles"]) > 0 and bool(l["variable_light"])
+	return int(l["sources"]) >= LIVING_MIN_SOURCES \
+		and int(l["particles"]) > 0 \
+		and bool(l["variable_light"]) \
+		and int(l["motion"]) > 0
 
 
 ## اندازهٔ اتاق بر حسب پیکسل — حد دوربین از همین می‌آید.
