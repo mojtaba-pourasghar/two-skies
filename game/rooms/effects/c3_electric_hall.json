@@ -1,0 +1,332 @@
+{
+ "room": "c3_electric_hall",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "tesla_1",
+   "type": "arc_pop",
+   "pos": [
+    305,
+    30
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_2",
+   "type": "arc_pop",
+   "pos": [
+    460,
+    88
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_3",
+   "type": "arc_pop",
+   "pos": [
+    800,
+    50
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_4",
+   "type": "arc_pop",
+   "pos": [
+    860,
+    118
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_5",
+   "type": "arc_pop",
+   "pos": [
+    220,
+    195
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_6",
+   "type": "arc_pop",
+   "pos": [
+    1055,
+    45
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_7",
+   "type": "arc_pop",
+   "pos": [
+    150,
+    370
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_8",
+   "type": "arc_pop",
+   "pos": [
+    300,
+    550
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "tesla_9",
+   "type": "arc_pop",
+   "pos": [
+    990,
+    545
+   ],
+   "radius": 70,
+   "color": "#7ae8ff",
+   "interval_s": [
+    1.5,
+    6
+   ],
+   "dur_ms": [
+    60,
+    140
+   ],
+   "sprite": "overlays/particles/spark_*",
+   "source": "سر کویل تسلا"
+  },
+  {
+   "id": "panels_cyan",
+   "type": "flicker_light",
+   "pos": [
+    640,
+    350
+   ],
+   "radius": 420,
+   "color": "#2ae8ff",
+   "amp": 0.05,
+   "source": "پنل‌های برق فیروزه‌ای (مجموعه)",
+   "signal": "noise2+3freq",
+   "clip_rect": [
+    240,
+    180,
+    1020,
+    600
+   ],
+   "mode": "additive_soft"
+  },
+  {
+   "id": "red_beacon_a",
+   "type": "flicker_light",
+   "pos": [
+    555,
+    100
+   ],
+   "radius": 70,
+   "color": "#ff3a3a",
+   "amp": 0.1,
+   "source": "چراغ قرمز بالا-چپ",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "red_beacon_b",
+   "type": "flicker_light",
+   "pos": [
+    695,
+    100
+   ],
+   "radius": 70,
+   "color": "#ff3a3a",
+   "amp": 0.1,
+   "source": "چراغ قرمز بالا-راست",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "red_beacon_c",
+   "type": "flicker_light",
+   "pos": [
+    495,
+    680
+   ],
+   "radius": 80,
+   "color": "#ff3a3a",
+   "amp": 0.1,
+   "source": "چراغ قرمز پایین-چپ",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "red_beacon_d",
+   "type": "flicker_light",
+   "pos": [
+    710,
+    680
+   ],
+   "radius": 80,
+   "color": "#ff3a3a",
+   "amp": 0.1,
+   "source": "چراغ قرمز پایین-راست",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "door_red",
+   "type": "glow_pulse",
+   "pos": [
+    640,
+    60
+   ],
+   "radius": 130,
+   "color": "#ff4a3a",
+   "amp": 0.06,
+   "period_s": 6,
+   "source": "تابلوی در قرمز",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "transformer_sparks",
+   "type": "embers",
+   "pos": [
+    580,
+    270
+   ],
+   "spawn_size": [
+    60,
+    20
+   ],
+   "rate_per_s": 1.2,
+   "rise_px_s": 16,
+   "life_s": [
+    1,
+    3
+   ],
+   "color": "#8af0ff",
+   "sprite": "overlays/particles/spark_*"
+  },
+  {
+   "id": "haze_left",
+   "type": "fog_patch",
+   "rect": [
+    0,
+    300,
+    220,
+    640
+   ],
+   "sheet": "overlays/fog/sheet_thin.png",
+   "alpha": 0.07,
+   "speed_px_s": 3,
+   "dir": [
+    1,
+    0
+   ],
+   "edge_feather": 80
+  },
+  {
+   "id": "haze_right",
+   "type": "fog_patch",
+   "rect": [
+    1060,
+    300,
+    1280,
+    640
+   ],
+   "sheet": "overlays/fog/sheet_thin.png",
+   "alpha": 0.07,
+   "speed_px_s": 3,
+   "dir": [
+    -1,
+    0
+   ],
+   "edge_feather": 80
+  }
+ ],
+ "forbid": [
+  "سینوس خالص روی پنل‌ها",
+  "نور روی کف تاریک بین پنل‌ها"
+ ]
+}

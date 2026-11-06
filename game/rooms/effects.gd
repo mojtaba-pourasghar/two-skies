@@ -15,6 +15,10 @@
 ##   fog_patch      مه فقط در ورطه و لبه و دهانهٔ باز
 ##   sway           تکان با لولا در ریشه، ≤۲ پیکسل، دورهٔ ۳ تا ۶ ثانیه
 ##   anim           حلقهٔ تصویری از `ambient/ch1/<نام>`
+##   arc_pop        جرقهٔ کوتاه و **تصادفی** سر کویل یا تیر برق
+##   neon_buzz      نئون ثابت است و فقط گاهی یک لرزش کوتاه دارد
+##   laser_hum      نبض ±۵٪ روی پرتوها؛ خطر بصری هرگز محو نمی‌شود
+##   led_blink      نقطه‌های ۲ پیکسلی تصادفی روی رک‌ها
 class_name RoomEffects
 extends Node2D
 
@@ -37,6 +41,9 @@ var _history: Dictionary = {}
 var _glow_nodes: Array[Dictionary] = []
 var _fog_nodes: Array[Dictionary] = []
 var _sway_nodes: Array[Node2D] = []
+var _burst_nodes: Array[Dictionary] = []
+var _laser_nodes: Array[Dictionary] = []
+var _led_nodes: Array[Dictionary] = []
 
 
 ## نقشهٔ افکت اتاق. نام فایل گاهی با شناسهٔ اتاق فرق دارد (`r1a_living`
@@ -74,6 +81,10 @@ func build(bg: Texture2D, bg_scale: float = 1.0) -> void:
 			"dust_in_beam": _add(_make_dust(e), e)
 			"fog_patch": _add(_make_fog(e), e)
 			"flicker_light", "glow_pulse": _add(_make_glow(e), e)
+			"arc_pop": _add(_make_arc(e), e)
+			"neon_buzz": _add(_make_neon(e), e)
+			"laser_hum": _add(_make_laser(e), e)
+			"led_blink": _add(_make_leds(e), e)
 			_: push_warning("RoomEffects: نوع ناشناختهٔ «%s»" % e.get("type", ""))
 
 
@@ -174,10 +185,15 @@ func _make_glow(e: Dictionary) -> Node2D:
 	spr.material = mat
 
 	var kind := String(e.get("type", ""))
+	# `glow_pulse` پیش‌فرض یک سینوس آرام است، ولی نقشه می‌تواند
+	# `signal: noise_lowpass` بخواهد — برای شکاف و دروازه‌ای که نفس
+	# می‌کشد ولی دوره ندارد.
+	var sig := String(e.get("signal", ""))
 	_glow_nodes.append({
 		"node": spr, "mat": mat, "id": String(e.get("id", "")),
 		"amp": float(e.get("amp", 0.08)), "base": base, "rgb": c,
-		"pulse": kind == "glow_pulse",
+		"pulse": kind == "glow_pulse" and sig != "noise_lowpass",
+		"lowpass": sig == "noise_lowpass",
 		"period": float(e.get("period_s", 6.0)),
 		"same_as": String(e.get("signal", "")).trim_prefix("same_as:")
 			if String(e.get("signal", "")).begins_with("same_as:") else "",
@@ -466,6 +482,129 @@ func _make_anim(e: Dictionary) -> Node2D:
 	return spr
 
 
+# ------------------------------------------------- جرقه و نئون و لیزر
+
+## جرقهٔ تصادفی سر کویل یا تیر برق: بیشتر وقت‌ها **هیچ** و هر چند ثانیه
+## یک بار یک برقِ ۶۰ تا ۱۴۰ میلی‌ثانیه‌ای.
+##
+## فاصلهٔ بعدی هر بار از نو قرعه می‌خورد؛ فاصلهٔ ثابت یعنی ریتم، و ریتم
+## یعنی «افکت» دیده می‌شود نه برق.
+func _make_arc(e: Dictionary) -> Node2D:
+	var n := _make_glow(e)
+	if n == null:
+		return null
+	# از فهرست نورهای تیک‌خور برداشته می‌شود: روشنایی‌اش را خودش می‌برد
+	_glow_nodes.pop_back()
+	var iv: Array = e.get("interval_s", [2.0, 6.0])
+	var du: Array = e.get("dur_ms", [60, 140])
+	var c := color_of(e, Color(0.48, 0.91, 1.0))
+	_burst_nodes.append({
+		"mat": n.material, "rgb": c, "base": 0.55,
+		"min_gap": float(iv[0]), "max_gap": float(iv[iv.size() - 1]),
+		"min_dur": float(du[0]) / 1000.0, "max_dur": float(du[du.size() - 1]) / 1000.0,
+		"next": randf_range(float(iv[0]), float(iv[iv.size() - 1])),
+		"until": -1.0, "idle": 0.0,
+	})
+	# اسپرایت جرقه، فقط در همان لحظه
+	var spark := _tex(_sprite_of(e, "overlays/particles/spark_2.png"))
+	if spark != null:
+		var s2 := Sprite2D.new()
+		s2.texture = spark
+		s2.centered = true
+		s2.position = n.position
+		s2.scale = Vector2.ONE * 0.5
+		s2.modulate = Color(c.r, c.g, c.b, 0.0)
+		s2.material = _additive()
+		s2.z_index = 5
+		n.add_child(s2)
+		_burst_nodes[-1]["spark"] = s2
+	return n
+
+
+## نئون **روشن و ثابت** است. فقط هر ۸ تا ۲۰ ثانیه یک لرزش ۹۰ تا ۱۸۰
+## میلی‌ثانیه‌ای دارد. چشمک مداوم، که اولین کاری است که آدم می‌کند،
+## دقیقاً چیزی است که سند ۱۴ بند ۶ ممنوع کرده.
+func _make_neon(e: Dictionary) -> Node2D:
+	var n := _make_glow(e)
+	if n == null:
+		return null
+	_glow_nodes.pop_back()
+	var iv: Array = e.get("interval_s", [8.0, 20.0])
+	var du: Array = e.get("dur_ms", [90, 180])
+	var c := color_of(e, Color(1.0, 0.23, 0.66))
+	_burst_nodes.append({
+		"mat": n.material, "rgb": c, "base": 0.16,
+		"min_gap": float(iv[0]), "max_gap": float(iv[iv.size() - 1]),
+		"min_dur": float(du[0]) / 1000.0, "max_dur": float(du[du.size() - 1]) / 1000.0,
+		"next": randf_range(float(iv[0]), float(iv[iv.size() - 1])),
+		"until": -1.0,
+		# بین لرزش‌ها خاموش نیست، **ثابت روشن** است
+		"idle": 1.0, "amp": float(e.get("amp", 0.25)),
+	})
+	return n
+
+
+## پرتوهای لیزر: نبض ریز ±۵٪ روی شدتشان. **هرگز محو نمی‌شوند** — خطر
+## بصری است و بازیکن باید همیشه ببیندش (نقشهٔ C2 هم همین را می‌گوید).
+func _make_laser(e: Dictionary) -> Node2D:
+	var holder := Node2D.new()
+	var xr: Array = e.get("x_range", [0, 100])
+	var c := color_of(e, Color(1.0, 0.23, 0.23))
+	var lines: Array = e.get("lines_y", [])
+	for y in lines:
+		var line := Sprite2D.new()
+		line.texture = _white()
+		line.centered = false
+		line.position = Vector2(float(xr[0]), float(y) - 1.0)
+		line.scale = Vector2(float(xr[1]) - float(xr[0]), 2.0)
+		line.modulate = Color(c.r, c.g, c.b, 0.55)
+		line.material = _additive()
+		line.z_index = 5
+		holder.add_child(line)
+	if holder.get_child_count() == 0:
+		holder.free()
+		return null
+	_laser_nodes.append({
+		"node": holder, "amp": float(e.get("amp", 0.05)),
+		"id": String(e.get("id", "laser")),
+	})
+	return holder
+
+
+## چراغ‌های ریز رک سرور: نقطه‌های ۲ پیکسلی که هر کدام ریتم خودش را دارد.
+func _make_leds(e: Dictionary) -> Node2D:
+	var holder := Node2D.new()
+	var c := color_of(e, Color(0.23, 1.0, 0.78))
+	var sz := float(e.get("size_px", 2))
+	var per := int(e.get("count_per_box", 6))
+	var iv: Array = e.get("interval_s", [0.6, 3.5])
+	for raw in e.get("boxes", []):
+		var r := corners(raw)
+		if r.size == Vector2.ZERO:
+			continue
+		for i in per:
+			var dot := Sprite2D.new()
+			dot.texture = _white()
+			dot.centered = true
+			dot.position = Vector2(randf_range(r.position.x, r.end.x),
+				randf_range(r.position.y, r.end.y))
+			dot.scale = Vector2.ONE * sz
+			dot.modulate = Color(c.r, c.g, c.b, 0.9)
+			dot.material = _additive()
+			dot.z_index = 5
+			holder.add_child(dot)
+			_led_nodes.append({
+				"node": dot,
+				"next": randf_range(float(iv[0]), float(iv[iv.size() - 1])),
+				"min_gap": float(iv[0]), "max_gap": float(iv[iv.size() - 1]),
+				"on": true,
+			})
+	if holder.get_child_count() == 0:
+		holder.free()
+		return null
+	return holder
+
+
 func _additive() -> CanvasItemMaterial:
 	var m := CanvasItemMaterial.new()
 	m.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
@@ -480,7 +619,10 @@ func _process(delta: float) -> void:
 	for g in _glow_nodes:
 		var id: String = g["id"]
 		var v: float
-		if bool(g["pulse"]):
+		if bool(g.get("lowpass", false)):
+			# نویز هموار بدون دوره: «نفس» می‌کشد ولی ریتم ندارد
+			v = 1.0 + float(g["amp"]) * _noise(id)
+		elif bool(g["pulse"]):
 			v = 1.0 + float(g["amp"]) * sin(_t * TAU / maxf(float(g["period"]), 0.1))
 		else:
 			v = _flicker(id, float(g["amp"]))
@@ -498,12 +640,57 @@ func _process(delta: float) -> void:
 		(g["mat"] as ShaderMaterial).set_shader_parameter("tint",
 			Vector4(c.r, c.g, c.b, a))
 
+	_tick_bursts()
+	_tick_lasers()
+	_tick_leds(delta)
+
 	for f in _fog_nodes:
 		var off: Vector2 = f["vel"] * _t
 		(f["mat"] as ShaderMaterial).set_shader_parameter("offset_a", off)
 		# لایهٔ دوم کندتر و با زاویهٔ کمی متفاوت
 		(f["mat"] as ShaderMaterial).set_shader_parameter("offset_b",
 			off.rotated(0.4) * -0.55)
+
+
+## جرقه و نئون: روشنایی بیشتر وقت‌ها روی `idle` است و فقط در پنجرهٔ
+## لرزش بالا می‌رود. فاصلهٔ بعدی هر بار از نو قرعه می‌خورد.
+func _tick_bursts() -> void:
+	for b in _burst_nodes:
+		var firing: bool = _t < float(b["until"])
+		if not firing and _t >= float(b["next"]):
+			var dur: float = randf_range(float(b["min_dur"]), float(b["max_dur"]))
+			b["until"] = _t + dur
+			b["next"] = _t + dur + randf_range(float(b["min_gap"]), float(b["max_gap"]))
+			firing = true
+		var c: Color = b["rgb"]
+		var base: float = float(b["base"])
+		# نئون بین لرزش‌ها ثابت روشن است؛ جرقه بین پرش‌ها خاموش
+		var level: float = float(b.get("idle", 0.0))
+		if firing:
+			level = 1.0 + float(b.get("amp", 0.0))
+		(b["mat"] as ShaderMaterial).set_shader_parameter("tint",
+			Vector4(c.r, c.g, c.b, base * level))
+		if b.has("spark"):
+			(b["spark"] as Sprite2D).modulate.a = 0.85 if firing else 0.0
+
+
+## نبض ریز روی پرتو لیزر. کف ۰٫۸ است: پرتو **هرگز** محو نمی‌شود، چون
+## خطر بصری است و بازیکن باید همیشه ببیندش.
+func _tick_lasers() -> void:
+	for l in _laser_nodes:
+		var v: float = 1.0 + float(l["amp"]) * _noise(String(l["id"]))
+		var a: float = clampf(0.55 * v, 0.44, 0.66)
+		for c in (l["node"] as Node2D).get_children():
+			(c as Sprite2D).modulate.a = a
+
+
+func _tick_leds(_delta: float) -> void:
+	for d in _led_nodes:
+		if _t < float(d["next"]):
+			continue
+		d["on"] = not bool(d["on"])
+		d["next"] = _t + randf_range(float(d["min_gap"]), float(d["max_gap"]))
+		(d["node"] as Sprite2D).modulate.a = 0.9 if bool(d["on"]) else 0.12
 
 
 const DELAY_FRAMES: int = 6   # ~۱۰۰ms در ۶۰ فریم

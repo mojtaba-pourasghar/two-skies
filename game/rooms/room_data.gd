@@ -149,19 +149,27 @@ func _validate_living(room: Dictionary, rid: String) -> void:
 			var t := String((raw as Dictionary).get("type", ""))
 			kinds[t] = int(kinds.get(t, 0)) + 1
 
+	# سه سطل، با انواع تازهٔ گام ۵۲ (arc_pop، neon_buzz، laser_hum،
+	# led_blink) در جای درستشان.
 	var moving: int = int(kinds.get("sway", 0)) + int(kinds.get("anim", 0)) \
 		+ int(kinds.get("fog_patch", 0))
-	var parts: int = int(kinds.get("embers", 0)) + int(kinds.get("dust_in_beam", 0))
+	var parts: int = int(kinds.get("embers", 0)) + int(kinds.get("dust_in_beam", 0)) \
+		+ int(kinds.get("arc_pop", 0))
 	var lights: int = int(kinds.get("flicker_light", 0)) \
-		+ int(kinds.get("glow_pulse", 0))
+		+ int(kinds.get("glow_pulse", 0)) + int(kinds.get("neon_buzz", 0)) \
+		+ int(kinds.get("laser_hum", 0)) + int(kinds.get("led_blink", 0))
 
 	var missing: Array[String] = []
 	if moving + parts + lights < 3:
 		missing.append("کمتر از ۳ منبع")
-	if parts == 0:
-		missing.append("هیچ ذره‌ای از منبع ندارد")
 	if lights == 0:
 		missing.append("هیچ نور زنده‌ای ندارد")
+	if moving == 0 and parts == 0:
+		missing.append("نه حرکتی دارد نه ذره‌ای")
+	# **شرط «هر اتاق باید ذره داشته باشد» برداشته شد.** سند ۱۴ می‌گوید
+	# ذره فقط **از منبع** باشد، نه اینکه هر اتاقی منبعی داشته باشد. با
+	# شرط قبلی، سه اتاقی که مدیر هنر عمداً بی‌ذره طراحی کرده بود
+	# (R1e، C2، S3a) بی‌دلیل هشدار می‌گرفتند.
 	if not missing.is_empty():
 		warnings.append("اتاق «%s» بودجهٔ زندگی را ندارد: %s."
 			% [rid, ", ".join(missing)])

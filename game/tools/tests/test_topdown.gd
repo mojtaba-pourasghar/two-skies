@@ -25,6 +25,7 @@ func _ready() -> void:
 	await _t_orders()
 	await _t_hop_mark()
 	_t_death()
+	await _t_challenge_rooms()
 	_report()
 
 
@@ -153,6 +154,62 @@ func _t_death() -> void:
 	_check("مرگ ایلارا شمرده شد", ilara.falls == 1, "= %d" % ilara.falls)
 	_check("و اعلام شد", heard.size() == 1, "= %d" % heard.size())
 	made[0].queue_free()
+
+
+## D-ART-35: ایلارا وارد اتاق چالش نمی‌شود؛ کنار در منتظر می‌ماند و
+## هنگام برگشت دوباره دنبال می‌کند.
+##
+## این یک **باگ واقعی** بود، نه قاعدهٔ تازه: تا اینجا ایلارا با کایرو
+## وارد C1 می‌شد، و چون در اتاق چالش مرگ بی‌نهایت است، قانون §۵ (مرگ
+## ایلارا = شکست مرحله) با قانون اتاق چالش می‌جنگید.
+func _t_challenge_rooms() -> void:
+	print("— ایلارا و اتاق چالش —")
+	var l := RoomData.new()
+	var challenge := 0
+	for rid in ["c1_balcony", "c2_laser_alley", "c3_electric_hall"]:
+		var r := l.load_room(rid)
+		if r.is_empty():
+			_check("اتاق «%s» بار شد" % rid, false)
+			continue
+		var is_c: bool = RoomGame.is_challenge(r)
+		_check("«%s» اتاق چالش علامت خورده" % rid, is_c)
+		if is_c:
+			challenge += 1
+	_check("هر سه اتاق چالش علامت دارند", challenge == 3, "= %d" % challenge)
+
+	for rid in ["r1a_living", "r1b_corridor", "r1c_kitchen"]:
+		var r := l.load_room(rid)
+		_check("«%s» اتاق چالش **نیست**" % rid,
+			not r.is_empty() and not RoomGame.is_challenge(r))
+
+	# اجرای واقعی: ورود به C1 نباید ایلارا بسازد
+	var game: Node2D = load("res://scenes/room_game.tscn").instantiate()
+	game.set("start_room", "c1_balcony")
+	add_child(game)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_check("کایرو در اتاق چالش هست", game.get("kairo") != null)
+	_check("ولی ایلارا وارد نشده است", game.get("ilara") == null)
+	var in_tree := 0
+	for n in get_tree().get_nodes_in_group("ilara"):
+		if game.is_ancestor_of(n):
+			in_tree += 1
+	_check("و هیچ گرهٔ ایلارایی در صحنه نیست", in_tree == 0, "= %d" % in_tree)
+	game.queue_free()
+	await get_tree().process_frame
+
+	# و در اتاق عادی باید باشد و دنبال کند
+	var game2: Node2D = load("res://scenes/room_game.tscn").instantiate()
+	game2.set("start_room", "r1a_living")
+	add_child(game2)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var il = game2.get("ilara")
+	_check("در اتاق عادی ایلارا هست", il != null)
+	if il != null:
+		_check("و در حالت «بیا» است", il.order == TdIlara.Order.FOLLOW)
+		_check("و رهبرش کایروست", il.leader == game2.get("kairo"))
+	game2.queue_free()
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:

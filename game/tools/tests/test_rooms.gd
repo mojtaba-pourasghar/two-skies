@@ -321,7 +321,13 @@ func _t_signal(fx: RoomEffects) -> void:
 ## هر چهار اتاق باید بار شوند و بودجهٔ زندگی را داشته باشند. تا اینجا
 ## فقط R1a سنجیده می‌شد، پس یک اتاق تازه می‌توانست با ماسک شکسته یا
 ## بی‌هیچ لایهٔ زنده وارد شود و هیچ آزمونی نگوید.
-const ALL_ROOMS := ["r1a_living", "r1b_corridor", "r1c_kitchen", "c1_balcony"]
+## هر ۱۱ اتاق فصل ۱. تا اینجا فقط چهار تا سنجیده می‌شدند، پس اتاق تازه
+## می‌توانست با ماسک شکسته یا دری به ناکجا وارد شود و هیچ آزمونی نگوید.
+const ALL_ROOMS := [
+	"r1a_living", "r1b_corridor", "r1c_kitchen", "r1d_bedroom", "r1e_basement",
+	"c1_balcony", "c2_laser_alley", "c3_electric_hall",
+	"s2a_street", "s2b_street", "s3a_plaza",
+]
 
 
 func _t_all_rooms() -> void:

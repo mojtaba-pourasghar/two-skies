@@ -6,6 +6,7 @@
 ## حرکت در این بازی **ماسک‌محور** است نه برخورد فیزیکی: بازیگر هر فریم
 ## می‌سنجد که قدم بعدی‌اش روی چندضلعی قابل‌راه‌رفتن می‌افتد یا نه. دلیلش
 ## سند ۱۱ است — دیوار در خود **تصویر** نقاشی شده و جسم فیزیکی ندارد.
+class_name RoomGame
 extends Node2D
 
 @export var start_room: String = "r1a_living"
@@ -19,6 +20,11 @@ var ilara: TdIlara
 
 var _loader := RoomData.new()
 var _visuals: Array[ActorVisual] = []
+## کجا ایلارا منتظر مانده (D-ART-35): شناسهٔ اتاق و نقطهٔ کنار در.
+var _ilara_waits_in: String = ""
+var _ilara_waits_at := Vector2.ZERO
+var _last_room_id: String = ""
+var _last_door_at := Vector2.ZERO
 var _fade: ColorRect
 var _hud: CanvasLayer
 var _pending_spawn := Vector2.ZERO
@@ -105,6 +111,14 @@ func _enter_room(room_id: String, spawn_override: Vector2) -> bool:
 	return true
 
 
+## «ایلارا وارد C1/C2/C3 نمی‌شود؛ کنار در منتظر می‌ماند» (D-ART-35،
+## سند ۱۲ §۶ب). این یک **باگ** بود: او تا اینجا با کایرو وارد اتاق چالش
+## می‌شد، و چون در اتاق چالش مرگ بی‌نهایت است، قانون §۵ (مرگ ایلارا =
+## شکست مرحله) با قانون اتاق چالش می‌جنگید.
+static func is_challenge(room_data: Dictionary) -> bool:
+	return bool(room_data.get("challenge", false))
+
+
 func _spawn_actors(at: Vector2) -> void:
 	_visuals.clear()
 	kairo = TdKairo.new()
@@ -114,11 +128,26 @@ func _spawn_actors(at: Vector2) -> void:
 	kairo.room = room
 	_dress(kairo, "kairo")
 
+	if is_challenge(room.data):
+		# ایلارا ساخته نمی‌شود. جایی که منتظر مانده ثبت می‌شود تا موقع
+		# برگشت دقیقاً همان‌جا باشد، نه کنار کایرو.
+		ilara = null
+		_ilara_waits_in = _last_room_id
+		_ilara_waits_at = _last_door_at
+		return
+
 	ilara = TdIlara.new()
 	ilara.name = "Ilara"
 	room.actors.add_child(ilara)
 	ilara.leader = kairo
-	ilara.global_position = at - Vector2(40, 0)
+	# اگر اینجا منتظر مانده بود، سر همان در پیدایش می‌شود و دوباره دنبال
+	# می‌کند؛ وگرنه کنار کایرو
+	if _ilara_waits_in == String(room.data.get("id", "")):
+		ilara.global_position = _ilara_waits_at
+		_ilara_waits_in = ""
+	else:
+		ilara.global_position = at - Vector2(40, 0)
+	ilara.set_order(TdIlara.Order.FOLLOW)
 	ilara.room = room
 	_dress(ilara, "ilara")
 
@@ -155,6 +184,10 @@ func _check_door() -> void:
 		return
 	var sp: Array = door.get("spawn", [0, 0])
 	_pending_spawn = Vector2(float(sp[0]), float(sp[1]))
+	# اتاقی که داریم ترک می‌کنیم و جای همین در، برای وقتی ایلارا باید
+	# اینجا بماند
+	_last_room_id = String(room.data.get("id", ""))
+	_last_door_at = kairo.foot_position()
 	director.go_to_room(String(door.get("to", "")), "")
 
 
