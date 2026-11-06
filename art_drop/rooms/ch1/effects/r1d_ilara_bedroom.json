@@ -1,0 +1,180 @@
+{
+ "room": "r1d_ilara_bedroom",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "city_fire_window",
+   "type": "flicker_light",
+   "pos": [
+    290,
+    200
+   ],
+   "radius": 180,
+   "color": "#ff7a30",
+   "amp": 0.1,
+   "source": "شعلهٔ شهر پشت پنجره",
+   "signal": "noise2+3freq",
+   "clip_rect": [
+    200,
+    100,
+    420,
+    320
+   ]
+  },
+  {
+   "id": "desk_lamp",
+   "type": "flicker_light",
+   "pos": [
+    750,
+    290
+   ],
+   "radius": 120,
+   "color": "#ffb04a",
+   "amp": 0.1,
+   "source": "آباژور میز",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "window_beam",
+   "type": "dust_in_beam",
+   "poly": [
+    [
+     220,
+     160
+    ],
+    [
+     380,
+     160
+    ],
+    [
+     480,
+     420
+    ],
+    [
+     280,
+     440
+    ]
+   ],
+   "count": 10,
+   "sprite": "overlays/particles/dust_*",
+   "drift_px_s": [
+    2,
+    6
+   ]
+  },
+  {
+   "id": "curtain_left",
+   "type": "sway",
+   "rect": [
+    160,
+    120,
+    230,
+    420
+   ],
+   "pivot": [
+    195,
+    120
+   ],
+   "amp_px": 1.8,
+   "period_s": 5.0,
+   "gusts": true,
+   "what": "پردهٔ چپ"
+  },
+  {
+   "id": "curtain_right",
+   "type": "sway",
+   "rect": [
+    355,
+    100,
+    410,
+    310
+   ],
+   "pivot": [
+    380,
+    100
+   ],
+   "amp_px": 1.6,
+   "period_s": 5.5,
+   "gusts": true,
+   "what": "پردهٔ راست"
+  },
+  {
+   "id": "plant_window",
+   "type": "sway",
+   "rect": [
+    205,
+    300,
+    250,
+    360
+   ],
+   "pivot": [
+    228,
+    360
+   ],
+   "amp_px": 1.0,
+   "period_s": 4.5,
+   "gusts": true,
+   "what": "گلدان پنجره"
+  },
+  {
+   "id": "plant_desk",
+   "type": "sway",
+   "rect": [
+    800,
+    280,
+    850,
+    330
+   ],
+   "pivot": [
+    825,
+    330
+   ],
+   "amp_px": 1.0,
+   "period_s": 5.0,
+   "gusts": true,
+   "what": "گلدان میز"
+  },
+  {
+   "id": "plant_corner",
+   "type": "sway",
+   "rect": [
+    1010,
+    520,
+    1110,
+    620
+   ],
+   "pivot": [
+    1060,
+    620
+   ],
+   "amp_px": 1.4,
+   "period_s": 5.0,
+   "gusts": true,
+   "what": "گیاه گوشهٔ راست"
+  },
+  {
+   "id": "ash_outside",
+   "type": "embers",
+   "pos": [
+    290,
+    210
+   ],
+   "spawn_size": [
+    150,
+    80
+   ],
+   "rate_per_s": 0.8,
+   "rise_px_s": -8,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff6a30",
+   "sprite": "overlays/particles/ember_*"
+  }
+ ],
+ "forbid": [
+  "مه",
+  "نور سبزآبی"
+ ]
+}

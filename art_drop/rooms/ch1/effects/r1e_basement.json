@@ -1,0 +1,204 @@
+{
+ "room": "r1e_basement",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "vent_a",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    80,
+    420
+   ],
+   "scale": 0.6,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_b",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    190,
+    545
+   ],
+   "scale": 0.6,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_c",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    700,
+    310
+   ],
+   "scale": 0.5,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_d",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    1090,
+    340
+   ],
+   "scale": 0.6,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_e",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    1150,
+    555
+   ],
+   "scale": 0.6,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_f",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    690,
+    110
+   ],
+   "scale": 0.5,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "lamp_a",
+   "type": "flicker_light",
+   "pos": [
+    330,
+    160
+   ],
+   "radius": 80,
+   "color": "#ff7a30",
+   "amp": 0.08,
+   "source": "چراغ اضطراری",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "lamp_b",
+   "type": "flicker_light",
+   "pos": [
+    940,
+    75
+   ],
+   "radius": 80,
+   "color": "#ff7a30",
+   "amp": 0.08,
+   "source": "چراغ اضطراری",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "lamp_c",
+   "type": "flicker_light",
+   "pos": [
+    1200,
+    225
+   ],
+   "radius": 80,
+   "color": "#ff7a30",
+   "amp": 0.08,
+   "source": "چراغ اضطراری",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "lamp_d",
+   "type": "flicker_light",
+   "pos": [
+    190,
+    300
+   ],
+   "radius": 80,
+   "color": "#ff7a30",
+   "amp": 0.08,
+   "source": "چراغ اضطراری طاق",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "term_a",
+   "type": "flicker_light",
+   "pos": [
+    255,
+    600
+   ],
+   "radius": 70,
+   "color": "#2affb0",
+   "amp": 0.06,
+   "source": "ترمینال سبز پایین-چپ",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "term_b",
+   "type": "flicker_light",
+   "pos": [
+    1150,
+    350
+   ],
+   "radius": 70,
+   "color": "#2affb0",
+   "amp": 0.06,
+   "source": "ترمینال سبز راست",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "rack_leds",
+   "type": "led_blink",
+   "boxes": [
+    [
+     420,
+     130,
+     570,
+     300
+    ],
+    [
+     420,
+     380,
+     560,
+     560
+    ],
+    [
+     610,
+     250,
+     740,
+     440
+    ],
+    [
+     890,
+     380,
+     1080,
+     540
+    ],
+    [
+     740,
+     540,
+     960,
+     720
+    ]
+   ],
+   "count_per_box": 6,
+   "color": "#3affc8",
+   "interval_s": [
+    0.6,
+    3.5
+   ],
+   "size_px": 2,
+   "source": "چراغ‌های رک سرور"
+  }
+ ],
+ "forbid": [
+  "مه سراسری",
+  "نور روی کف تاریک"
+ ]
+}

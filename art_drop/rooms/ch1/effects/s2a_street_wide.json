@@ -1,0 +1,216 @@
+{
+ "room": "s2a_street_wide",
+ "space": "1776x896",
+ "effects": [
+  {
+   "id": "sunset",
+   "type": "flicker_light",
+   "pos": [
+    960,
+    130
+   ],
+   "radius": 340,
+   "color": "#ff7a30",
+   "amp": 0.06,
+   "source": "خورشید غروب",
+   "signal": "noise2+3freq",
+   "clip_rect": [
+    600,
+    40,
+    1350,
+    300
+   ],
+   "mode": "additive_soft"
+  },
+  {
+   "id": "lantern_pole",
+   "type": "flicker_light",
+   "pos": [
+    275,
+    285
+   ],
+   "radius": 100,
+   "color": "#ffb04a",
+   "amp": 0.1,
+   "source": "فانوس تیر چپ",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "fire_left_door",
+   "type": "flicker_light",
+   "pos": [
+    270,
+    540
+   ],
+   "radius": 110,
+   "color": "#ff8a3a",
+   "amp": 0.14,
+   "source": "آتش در ساختمان چپ",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "fire_far_right",
+   "type": "flicker_light",
+   "pos": [
+    1470,
+    150
+   ],
+   "radius": 110,
+   "color": "#ff7a30",
+   "amp": 0.12,
+   "source": "آتش دور راست",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "fire_right_doorway",
+   "type": "flicker_light",
+   "pos": [
+    1640,
+    690
+   ],
+   "radius": 120,
+   "color": "#ff8a3a",
+   "amp": 0.14,
+   "source": "آتش در ساختمان راست",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "neon_right",
+   "type": "neon_buzz",
+   "pos": [
+    1385,
+    470
+   ],
+   "radius": 130,
+   "color": "#c040ff",
+   "interval_s": [
+    8,
+    20
+   ],
+   "dur_ms": [
+    90,
+    180
+   ],
+   "amp": 0.25,
+   "source": "تابلوی بنفش راست"
+  },
+  {
+   "id": "crack_a",
+   "type": "glow_pulse",
+   "pos": [
+    700,
+    430
+   ],
+   "radius": 100,
+   "color": "#4affd8",
+   "amp": 0.08,
+   "period_s": 8,
+   "source": "شکاف فیروزه‌ای",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "crack_b",
+   "type": "glow_pulse",
+   "pos": [
+    450,
+    640
+   ],
+   "radius": 110,
+   "color": "#4affd8",
+   "amp": 0.08,
+   "period_s": 8,
+   "source": "شکاف فیروزه‌ای",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "crack_c",
+   "type": "glow_pulse",
+   "pos": [
+    850,
+    780
+   ],
+   "radius": 110,
+   "color": "#4affd8",
+   "amp": 0.08,
+   "period_s": 8,
+   "source": "شکاف فیروزه‌ای",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "crack_d",
+   "type": "glow_pulse",
+   "pos": [
+    1450,
+    840
+   ],
+   "radius": 110,
+   "color": "#4affd8",
+   "amp": 0.08,
+   "period_s": 8,
+   "source": "شکاف فیروزه‌ای",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "embers_left",
+   "type": "embers",
+   "pos": [
+    270,
+    520
+   ],
+   "spawn_size": [
+    60,
+    20
+   ],
+   "rate_per_s": 1.5,
+   "rise_px_s": 16,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff9a40",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "embers_right",
+   "type": "embers",
+   "pos": [
+    1640,
+    670
+   ],
+   "spawn_size": [
+    80,
+    30
+   ],
+   "rate_per_s": 2.0,
+   "rise_px_s": 16,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff9a40",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "horizon_haze",
+   "type": "fog_patch",
+   "rect": [
+    600,
+    180,
+    1300,
+    330
+   ],
+   "sheet": "overlays/fog/sheet_thin.png",
+   "alpha": 0.08,
+   "speed_px_s": 4,
+   "dir": [
+    1,
+    0
+   ],
+   "edge_feather": 80
+  }
+ ],
+ "forbid": [
+  "نور روی آسفالت وسط",
+  "پارالاکس مصنوعی روی یک تصویر"
+ ]
+}

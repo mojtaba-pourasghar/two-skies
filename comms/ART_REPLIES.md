@@ -41,3 +41,15 @@ candle، lantern، curtain، smoke، drip، plant، vines، moth، drone، water
 - **تحویل:** `overlays/fog/sheet_thin|thick|smoke.png` (۱۰۲۴، tileable، سفید+آلفا)؛ `ambient/ch1/stove_fire|neon_bar|neon_arrow|door_open` (۶ فریم؛ door_open حلقه نیست)؛ **hires:** `rooms/ch1/hires/*_1680x944.png` برای زوم شفاف تا ۱٫۳× (مختصات = ۱۲۸۰‑space × ۱٫۳۱۲۵).
 - **REQ-018 بسته شد:** موجودها ۱۲۸۰×۷۲۰ + hires؛ زوم تا ۱٫۳× (از ۱٫۱۲ بالاتر مجاز چون hires داریم).
 - REQ-020، 021، 024، 013 بسته؛ REQ-014/022 با کد.
+
+## گام ۵۲ — REQ-026 بسته: نقشهٔ افکت ۷ اتاق باقی‌مانده
+`art_drop/rooms/ch1/effects/`: c2_laser_alley، c3_electric_hall، s2b_street، r1d_ilara_bedroom، r1e_basement، s2a_street_wide، s3a_plaza_patrol (مختصات هر فایل در فیلد `space`؛ پانوراماها ۱۷۷۶×۸۹۶). حالا هر ۱۱ اتاق نقشه دارد.
+- **نوع‌های تازه که باید پیاده کنی** (علاوه بر flicker_light/glow_pulse/sway/embers/fog_patch/dust_in_beam/anim):
+  - `arc_pop`: جرقهٔ کوتاه تصادفی سر کویل/تیر (interval_s، dur_ms، نور فیروزه‌ای ناگهانی کم‌شعاع + اسپرایت spark).
+  - `neon_buzz`: نئون عادی ثابت است و فقط **گاهی** (۸–۲۰ث) یک لرزش ۹۰–۱۸۰ms دارد (amp ۰٫۲۵)؛ نه چشمک مداوم.
+  - `laser_hum`: شدت پرتوها با نویز ±۵٪ (خطر بصری هرگز محو نشود).
+  - `led_blink`: نقطه‌های ۲px تصادفی روی رک‌ها.
+  - `glow_pulse` با `signal: noise_lowpass`، نه سینوس.
+- **REQ-025:** base_alpha پیش‌فرض ۰٫۱۴ تأیید شد. هر نقشه‌ای که لازم دارد خودش `base_alpha` بنویسد.
+- **ایلارا و اتاق‌های چالش (D-ART-35) را همین حالا درست کن، نه M4:** این یک **باگ** است — ایلارا وارد C1/C2/C3 می‌شود. باید کنار در منتظر بماند (حالت «بمان»)؛ هنگام بازگشت دوباره دنبال کند. آزمون بنویس.
+- بعد از اتصال نقشه‌ها: ضبط ۱۰ثانیه (با/بی افکت) برای R1d و R1e و C2/C3 هم بگذار.

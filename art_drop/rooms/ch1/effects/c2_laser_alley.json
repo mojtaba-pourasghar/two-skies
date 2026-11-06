@@ -1,0 +1,247 @@
+{
+ "room": "c2_laser_alley",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "gate_teal",
+   "type": "glow_pulse",
+   "pos": [
+    640,
+    40
+   ],
+   "radius": 120,
+   "color": "#4affd8",
+   "amp": 0.05,
+   "period_s": 7,
+   "source": "دروازهٔ فیروزه‌ای بالا",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "lamp_gate_l",
+   "type": "flicker_light",
+   "pos": [
+    570,
+    15
+   ],
+   "radius": 70,
+   "color": "#4affd8",
+   "amp": 0.07,
+   "source": "چراغ چپ دروازه",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "lamp_gate_r",
+   "type": "flicker_light",
+   "pos": [
+    720,
+    15
+   ],
+   "radius": 70,
+   "color": "#4affd8",
+   "amp": 0.07,
+   "source": "چراغ راست دروازه",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "neon_pink_a",
+   "type": "neon_buzz",
+   "pos": [
+    975,
+    100
+   ],
+   "radius": 110,
+   "color": "#ff3aa8",
+   "interval_s": [
+    8,
+    20
+   ],
+   "dur_ms": [
+    90,
+    180
+   ],
+   "amp": 0.25,
+   "source": "نئون صورتی بالا-راست"
+  },
+  {
+   "id": "neon_pink_b",
+   "type": "neon_buzz",
+   "pos": [
+    1115,
+    335
+   ],
+   "radius": 120,
+   "color": "#ff3aa8",
+   "interval_s": [
+    8,
+    20
+   ],
+   "dur_ms": [
+    90,
+    180
+   ],
+   "amp": 0.25,
+   "source": "نئون صورتی راست"
+  },
+  {
+   "id": "beacon_bl",
+   "type": "glow_pulse",
+   "pos": [
+    330,
+    665
+   ],
+   "radius": 90,
+   "color": "#4affd8",
+   "amp": 0.08,
+   "period_s": 4,
+   "source": "چراغ فیروزه‌ای پایین-چپ",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "fan_teal",
+   "type": "glow_pulse",
+   "pos": [
+    100,
+    345
+   ],
+   "radius": 110,
+   "color": "#2ad8c8",
+   "amp": 0.06,
+   "period_s": 6,
+   "source": "فن/دریچهٔ فیروزه‌ای چپ",
+   "signal": "noise_lowpass"
+  },
+  {
+   "id": "window_warm",
+   "type": "flicker_light",
+   "pos": [
+    55,
+    185
+   ],
+   "radius": 100,
+   "color": "#ff9a40",
+   "amp": 0.1,
+   "source": "پنجرهٔ گرم چپ",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "laser_hum",
+   "type": "laser_hum",
+   "lines_y": [
+    115,
+    152,
+    190,
+    238,
+    298,
+    374,
+    460
+   ],
+   "x_range": [
+    330,
+    985
+   ],
+   "amp": 0.05,
+   "color": "#ff3a3a",
+   "source": "پرتوهای لیزر (نبض بسیار ریز؛ خطر بصری ثابت می‌ماند)"
+  },
+  {
+   "id": "vent_a",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    385,
+    625
+   ],
+   "scale": 0.5,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_b",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    935,
+    620
+   ],
+   "scale": 0.5,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_c",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    470,
+    150
+   ],
+   "scale": 0.4,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_d",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    830,
+    100
+   ],
+   "scale": 0.4,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "vent_e",
+   "type": "anim",
+   "anim": "ambient/ch1/smoke",
+   "pos": [
+    1160,
+    600
+   ],
+   "scale": 0.5,
+   "fps": 8,
+   "random_start": true
+  },
+  {
+   "id": "mist_left",
+   "type": "fog_patch",
+   "rect": [
+    0,
+    160,
+    330,
+    720
+   ],
+   "sheet": "overlays/fog/sheet_thin.png",
+   "alpha": 0.08,
+   "speed_px_s": 4,
+   "dir": [
+    1,
+    0.1
+   ],
+   "edge_feather": 80
+  },
+  {
+   "id": "mist_right",
+   "type": "fog_patch",
+   "rect": [
+    990,
+    330,
+    1280,
+    720
+   ],
+   "sheet": "overlays/fog/sheet_thin.png",
+   "alpha": 0.08,
+   "speed_px_s": 4,
+   "dir": [
+    -1,
+    0.1
+   ],
+   "edge_feather": 80
+  }
+ ],
+ "forbid": [
+  "نور روی کف خیس وسط",
+  "حرکت پرتوهای لیزر (فقط گیم‌پلی)"
+ ]
+}
