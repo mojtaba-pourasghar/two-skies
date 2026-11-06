@@ -139,7 +139,13 @@ func _build_background() -> void:
 	_bg.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	holder.add_child(_bg)
 	_lowres = tex
-	var hp := _hires_path(String(data.get("bg", "")))
+	# مسیر نسخهٔ پرجزئیات: اول فیلد صریح `hires` اتاق، بعد حدس از روی
+	# نام `bg`. اتاق‌هایی که تصویرشان در `scenes/` است (R1d، R1e، S2b)
+	# نسخهٔ پرجزئیاتشان در `rooms/ch1/hires/` و با **نام دیگری** است،
+	# پس حدس از روی مسیر برایشان کار نمی‌کند و بی‌صدا hires نمی‌گرفتند.
+	var hp := String(data.get("hires", ""))
+	if hp == "":
+		hp = _hires_path(String(data.get("bg", "")))
 	if hp != "" and ResourceLoader.exists(ASSETS + hp):
 		_hires = load(ASSETS + hp)
 

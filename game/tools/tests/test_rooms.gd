@@ -342,6 +342,24 @@ func _t_all_rooms() -> void:
 		_check("  شروع «%s» روی زمین است" % rid,
 			RoomData.point_walkable(room, Vector2(float(room["spawn"][0]),
 				float(room["spawn"][1]))))
+		# سقف زوم از وجود نسخهٔ پرجزئیات می‌آید: ۱٫۳× با آن، ۱٫۱۲× بی آن
+		# (سند ۱۴، D-ART-46). اتاقی که hires دارد ولی مسیرش غلط نوشته
+		# شده، بی‌صدا به ۱٫۱۲ قفل می‌شود — همین برای چهار اتاق افتاده بود.
+		var node2 := PaintedRoom.new()
+		add_child(node2)
+		node2.build(room)
+		# اگر اتاق فیلد `hires` دارد، باید واقعاً بار شود
+		if String(room.get("hires", "")) != "":
+			_check("  «%s» نسخهٔ پرجزئیاتش بار شد" % rid, node2.has_hires(),
+				"= %s" % String(room.get("hires", "")))
+		# و سقف زوم همیشه با وجود یا نبود آن می‌خواند
+		_check("  سقف زوم «%s» با نسخهٔ پرجزئیات می‌خواند" % rid,
+			is_equal_approx(node2.max_zoom(),
+				1.3 if node2.has_hires() else PaintedRoom.ZOOM_WITHOUT_HIRES),
+			"= %.2f (%s)" % [node2.max_zoom(),
+				"دارد" if node2.has_hires() else "ندارد"])
+		node2.queue_free()
+
 		var budget := false
 		for w in l.warnings:
 			if w.contains("بودجهٔ زندگی"):
