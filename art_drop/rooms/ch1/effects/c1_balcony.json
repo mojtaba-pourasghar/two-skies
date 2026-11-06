@@ -1,0 +1,346 @@
+{
+ "room": "c1_balcony",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "lantern_door_a",
+   "type": "flicker_light",
+   "pos": [
+    955,
+    75
+   ],
+   "radius": 110,
+   "color": "#ffb35a",
+   "amp": 0.1,
+   "source": "فانوس چپ در",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "lantern_door_b",
+   "type": "flicker_light",
+   "pos": [
+    1052,
+    120
+   ],
+   "radius": 100,
+   "color": "#ffb35a",
+   "amp": 0.1,
+   "source": "فانوس راست در",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "lantern_start",
+   "type": "flicker_light",
+   "pos": [
+    180,
+    580
+   ],
+   "radius": 90,
+   "color": "#ff9a4a",
+   "amp": 0.12,
+   "source": "فانوس نقطهٔ شروع",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "door_glow",
+   "type": "glow_pulse",
+   "pos": [
+    1000,
+    150
+   ],
+   "radius": 140,
+   "color": "#ffd9a0",
+   "amp": 0.06,
+   "period_s": 5,
+   "source": "نور کاشی جلوی در"
+  },
+  {
+   "id": "city_fire",
+   "type": "flicker_light",
+   "pos": [
+    300,
+    90
+   ],
+   "radius": 260,
+   "color": "#ff6a2a",
+   "amp": 0.12,
+   "source": "شهر سوخته پس‌زمینهٔ بالا-چپ",
+   "signal": "noise2+3freq",
+   "mode": "additive_soft",
+   "clip_rect": [
+    0,
+    0,
+    640,
+    200
+   ]
+  },
+  {
+   "id": "pit_nw",
+   "type": "embers",
+   "pos": [
+    720,
+    170
+   ],
+   "spawn_size": [
+    80,
+    40
+   ],
+   "rate_per_s": 2.0,
+   "rise_px_s": 14,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff7a30",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "pit_c",
+   "type": "embers",
+   "pos": [
+    880,
+    300
+   ],
+   "spawn_size": [
+    90,
+    50
+   ],
+   "rate_per_s": 2.5,
+   "rise_px_s": 14,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff7a30",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "pit_e",
+   "type": "embers",
+   "pos": [
+    900,
+    500
+   ],
+   "spawn_size": [
+    80,
+    40
+   ],
+   "rate_per_s": 2.0,
+   "rise_px_s": 14,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff7a30",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "pit_w",
+   "type": "embers",
+   "pos": [
+    310,
+    410
+   ],
+   "spawn_size": [
+    70,
+    40
+   ],
+   "rate_per_s": 1.5,
+   "rise_px_s": 12,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff7a30",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "pit_s",
+   "type": "embers",
+   "pos": [
+    500,
+    600
+   ],
+   "spawn_size": [
+    90,
+    40
+   ],
+   "rate_per_s": 3.0,
+   "rise_px_s": 16,
+   "life_s": [
+    3,
+    7
+   ],
+   "color": "#ff7a30",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "grille_heat",
+   "type": "embers",
+   "pos": [
+    450,
+    290
+   ],
+   "spawn_size": [
+    160,
+    80
+   ],
+   "rate_per_s": 3.0,
+   "rise_px_s": 10,
+   "life_s": [
+    2,
+    5
+   ],
+   "color": "#ff5a20",
+   "sprite": "overlays/particles/ember_*"
+  },
+  {
+   "id": "abyss_left",
+   "type": "fog_patch",
+   "rect": [
+    0,
+    180,
+    220,
+    720
+   ],
+   "sheet": "overlays/fog/sheet_thick.png",
+   "alpha": 0.1,
+   "speed_px_s": 6,
+   "dir": [
+    1,
+    0.2
+   ],
+   "edge_feather": 80
+  },
+  {
+   "id": "abyss_right",
+   "type": "fog_patch",
+   "rect": [
+    1080,
+    330,
+    1280,
+    720
+   ],
+   "sheet": "overlays/fog/sheet_thick.png",
+   "alpha": 0.1,
+   "speed_px_s": 5,
+   "dir": [
+    -1,
+    0.2
+   ],
+   "edge_feather": 80
+  },
+  {
+   "id": "abyss_bottom",
+   "type": "fog_patch",
+   "rect": [
+    560,
+    620,
+    1280,
+    720
+   ],
+   "sheet": "overlays/fog/sheet_thin.png",
+   "alpha": 0.08,
+   "speed_px_s": 4,
+   "dir": [
+    1,
+    0
+   ],
+   "edge_feather": 80
+  },
+  {
+   "id": "plant_left",
+   "type": "sway",
+   "rect": [
+    60,
+    400,
+    240,
+    540
+   ],
+   "pivot": [
+    150,
+    540
+   ],
+   "amp_px": 2.0,
+   "period_s": 4.5,
+   "gusts": true,
+   "what": "نخل چپ"
+  },
+  {
+   "id": "plant_right",
+   "type": "sway",
+   "rect": [
+    1040,
+    160,
+    1190,
+    260
+   ],
+   "pivot": [
+    1110,
+    260
+   ],
+   "amp_px": 1.6,
+   "period_s": 5.0,
+   "gusts": true,
+   "what": "نخل راست-بالا"
+  },
+  {
+   "id": "plant_bottom",
+   "type": "sway",
+   "rect": [
+    330,
+    600,
+    470,
+    720
+   ],
+   "pivot": [
+    400,
+    720
+   ],
+   "amp_px": 2.2,
+   "period_s": 4.0,
+   "gusts": true,
+   "what": "نخل پایین"
+  },
+  {
+   "id": "vines_right",
+   "type": "sway",
+   "rect": [
+    1150,
+    330,
+    1260,
+    620
+   ],
+   "pivot": [
+    1200,
+    330
+   ],
+   "amp_px": 2.5,
+   "period_s": 5.5,
+   "gusts": true,
+   "what": "پیچک آویزان"
+  },
+  {
+   "id": "city_smoke",
+   "type": "fog_patch",
+   "rect": [
+    0,
+    0,
+    520,
+    170
+   ],
+   "sheet": "overlays/fog/sheet_smoke.png",
+   "alpha": 0.07,
+   "speed_px_s": 5,
+   "dir": [
+    0.6,
+    -1
+   ],
+   "edge_feather": 90
+  }
+ ],
+ "forbid": [
+  "افکت روی کف سنگفرش روشن",
+  "نبض سراسری صفحه"
+ ]
+}

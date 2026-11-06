@@ -1,0 +1,20 @@
+{
+ "status": "draft-until-user-approval",
+ "tileable": true,
+ "color": "white-alpha (رنگ را کد بزند)",
+ "sheets": {
+  "thin": [
+   1024,
+   1024
+  ],
+  "thick": [
+   1024,
+   1024
+  ],
+  "smoke": [
+   1024,
+   1024
+  ]
+ },
+ "note": "آلفا=روشنایی نرمال‌شده؛ مصرف: UV scroll دو لایه با سرعت‌های متفاوت، آلفای کل ۰٫۰۴–۰٫۲"
+}

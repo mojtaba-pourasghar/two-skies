@@ -1,0 +1,12 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": 6,
+ "size": [
+  96,
+  73
+ ],
+ "fps": 8,
+ "loop": true,
+ "anchor": "bottom-center",
+ "camera": "topdown"
+}

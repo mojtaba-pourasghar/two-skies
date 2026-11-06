@@ -1,0 +1,42 @@
+{
+ "status": "draft-until-user-approval",
+ "note": "اصل Canva بدون کاهش به ۱۲۸۰؛ برای زوم تا ۱٫۳× شفاف. مختصات ۱۲۸۰×۷۲۰ با ضرب ۱٫۳۱۲۵ (X و Y) به آن‌ها می‌رسد",
+ "rooms": {
+  "r1b_corridor": [
+   1680,
+   944
+  ],
+  "r1c_kitchen": [
+   1680,
+   944
+  ],
+  "c1_balcony": [
+   1680,
+   944
+  ],
+  "c2_laser_alley": [
+   1680,
+   944
+  ],
+  "c3_electric_hall": [
+   1680,
+   944
+  ],
+  "r1a_house": [
+   1680,
+   944
+  ],
+  "r1d_ilara_bedroom": [
+   1680,
+   944
+  ],
+  "r1e_basement": [
+   1680,
+   944
+  ],
+  "s2b_street": [
+   1680,
+   944
+  ]
+ }
+}

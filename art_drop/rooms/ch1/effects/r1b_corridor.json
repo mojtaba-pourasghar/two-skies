@@ -1,0 +1,161 @@
+{
+ "room": "r1b_corridor",
+ "space": "1280x720",
+ "effects": [
+  {
+   "id": "table_lamp",
+   "type": "flicker_light",
+   "pos": [
+    385,
+    385
+   ],
+   "radius": 130,
+   "color": "#ffb04a",
+   "amp": 0.1,
+   "source": "چراغ میز",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "candles",
+   "type": "flicker_light",
+   "pos": [
+    1145,
+    235
+   ],
+   "radius": 80,
+   "color": "#ffc070",
+   "amp": 0.18,
+   "source": "شمعدان سه‌شاخه",
+   "signal": "noise2+3freq"
+  },
+  {
+   "id": "moon_window",
+   "type": "glow_pulse",
+   "pos": [
+    990,
+    75
+   ],
+   "radius": 150,
+   "color": "#5ac8ff",
+   "amp": 0.04,
+   "period_s": 9,
+   "source": "پنجرهٔ انتهای راهرو"
+  },
+  {
+   "id": "moon_floor",
+   "type": "glow_pulse",
+   "pos": [
+    930,
+    225
+   ],
+   "radius": 120,
+   "color": "#4ab8ff",
+   "amp": 0.05,
+   "period_s": 9,
+   "source": "لکهٔ نور کف، هم‌فاز"
+  },
+  {
+   "id": "moon_beam",
+   "type": "dust_in_beam",
+   "poly": [
+    [
+     950,
+     90
+    ],
+    [
+     1040,
+     90
+    ],
+    [
+     1000,
+     260
+    ],
+    [
+     860,
+     250
+    ]
+   ],
+   "count": 12,
+   "sprite": "overlays/particles/dust_*",
+   "drift_px_s": [
+    2,
+    6
+   ]
+  },
+  {
+   "id": "window_curtain_l",
+   "type": "sway",
+   "rect": [
+    900,
+    0,
+    970,
+    150
+   ],
+   "pivot": [
+    935,
+    0
+   ],
+   "amp_px": 1.6,
+   "period_s": 6.0,
+   "gusts": true,
+   "what": "پردهٔ چپ پنجره"
+  },
+  {
+   "id": "window_curtain_r",
+   "type": "sway",
+   "rect": [
+    1030,
+    0,
+    1100,
+    150
+   ],
+   "pivot": [
+    1065,
+    0
+   ],
+   "amp_px": 1.6,
+   "period_s": 6.5,
+   "gusts": true,
+   "what": "پردهٔ راست پنجره"
+  },
+  {
+   "id": "chandelier",
+   "type": "sway",
+   "rect": [
+    720,
+    0,
+    900,
+    120
+   ],
+   "pivot": [
+    810,
+    0
+   ],
+   "amp_px": 1.2,
+   "period_s": 7.0,
+   "gusts": false,
+   "what": "لوستر"
+  },
+  {
+   "id": "floor_haze",
+   "type": "fog_patch",
+   "rect": [
+    560,
+    420,
+    1100,
+    720
+   ],
+   "sheet": "overlays/fog/sheet_thin.png",
+   "alpha": 0.06,
+   "speed_px_s": 3,
+   "dir": [
+    -1,
+    0
+   ],
+   "edge_feather": 80
+  }
+ ],
+ "forbid": [
+  "نور روی کاشی‌های تاریک جلوی دوربین"
+ ]
+}
