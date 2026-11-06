@@ -89,35 +89,47 @@ def save(canvas: Canvas, rel: str) -> Path:
 
 # ===================== کاشی‌ها =====================
 
-def ground_tile(top_lit: bool, left_edge: bool, right_edge: bool) -> Canvas:
-    """یک کاشی جامد ۱۶×۱۶ با سه پلهٔ سایه (§۴: سایه، میانه، روشن)."""
-    t = Canvas(TILE, TILE, C["steel"])
-    # بافت آجری ریز با پلهٔ تیره، تا سطح یکدست نباشد
-    for y in range(TILE):
-        for x in range(TILE):
-            band = (y // 4) % 2
-            if (x + band * 4) % 8 == 0:
+# کاشی جهان **۳۲** است (CLAUDE.md قانون ۳، WORLD_SCALE=2). این با `TILE`
+# بالا که بوم شخصیت‌های موقت است فرق دارد و باید جدا بماند: اطلس کاشی در
+# ۱۶ ساخته می‌شد و موتور با `texture_region_size=32` هیچ کاشی‌ای از آن
+# نمی‌توانست بسازد، پس **کف بازی هیچ برخوردی نداشت** و هیچ آزمونی هم
+# نمی‌گفت (D-ART-43).
+WORLD_TILE = 32
+
+
+def ground_tile(top_lit: bool, left_edge: bool, right_edge: bool,
+                size: int = WORLD_TILE) -> Canvas:
+    """یک کاشی جامد با سه پلهٔ سایه (§۴: سایه، میانه، روشن)."""
+    t = Canvas(size, size, C["steel"])
+    # بافت آجری: گامش با اندازهٔ کاشی مقیاس می‌خورد تا در ۳۲ همان‌قدر ریز
+    # دیده شود که در ۱۶ دیده می‌شد، نه دو برابر درشت
+    band_h = max(1, size // 4)
+    step = max(2, size // 2)
+    for y in range(size):
+        for x in range(size):
+            band = (y // band_h) % 2
+            if (x + band * (step // 2)) % step == 0:
                 t.set(x, y, C["steel_d"])
     # کف کاشی تیره‌تر: نور جهت‌دار از بالا (§۴)
-    t.hline(0, TILE - 1, TILE, C["steel_d"])
+    t.hline(0, size - 1, size, C["steel_d"])
     if top_lit:
         # «پلتفرم قابل‌ایستادن با خط بالایی روشن‌تر، ۱ پیکسل، #C9CCD6»
-        t.hline(0, 0, TILE, C["dust"])
-        t.hline(0, 1, TILE, C["steel_l"])
+        t.hline(0, 0, size, C["dust"])
+        t.hline(0, 1, size, C["steel_l"])
     if left_edge:
-        t.vline(0, 1, TILE - 1, C["steel_d"])
+        t.vline(0, 1, size - 1, C["steel_d"])
     if right_edge:
-        t.vline(TILE - 1, 1, TILE - 1, C["steel_d"])
+        t.vline(size - 1, 1, size - 1, C["steel_d"])
     return t
 
 
-def gen_tileset() -> Path:
+def gen_tileset(size: int = WORLD_TILE) -> Path:
     """اطلس ۴ کاشی در یک ردیف: درون، سطح، سکوی تک، ستون."""
-    atlas = Canvas(TILE * 4, TILE)
-    atlas.blit(ground_tile(False, False, False), 0, 0)          # ۰ درون توده
-    atlas.blit(ground_tile(True, False, False), TILE, 0)        # ۱ سطح
-    atlas.blit(ground_tile(True, True, True), TILE * 2, 0)      # ۲ سکوی تک
-    atlas.blit(ground_tile(False, True, True), TILE * 3, 0)     # ۳ ستون
+    atlas = Canvas(size * 4, size)
+    atlas.blit(ground_tile(False, False, False, size), 0, 0)         # ۰ درون توده
+    atlas.blit(ground_tile(True, False, False, size), size, 0)       # ۱ سطح
+    atlas.blit(ground_tile(True, True, True, size), size * 2, 0)     # ۲ سکوی تک
+    atlas.blit(ground_tile(False, True, True, size), size * 3, 0)    # ۳ ستون
     return save(atlas, "tilesets/ch1_ground.png")
 
 

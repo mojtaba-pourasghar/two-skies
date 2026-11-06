@@ -92,6 +92,10 @@ func _enter_room(room_id: String, spawn_override: Vector2) -> bool:
 	camera.set_bounds(room.bounds())
 	camera.set_room(room.bounds())
 	camera.target = kairo
+	# زوم قبل از اولین قاب بنشیند، وگرنه ورود به اتاق با یک گذار زوم
+	# شروع می‌شود که کسی نخواسته (D-ART-42).
+	camera.snap_zoom(GameCamera.ZOOM_NORMAL)
+	camera.set_zoom_zones(room.zoom_zones())
 	camera.snap_to_target()
 	return true
 

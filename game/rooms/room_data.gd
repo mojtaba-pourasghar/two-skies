@@ -15,8 +15,10 @@
 ##     "doors":    [{"id":..., "rect":[x,y,w,h], "to":"r1b", "spawn":[x,y]}],
 ##     "props":    [{"id":"save_statue", "at":[x,y]}],
 ##     "occluders":[{"img":"occluders/ch1/arch_gothic.png", "at":[x,y]}],
-##     "light":    {"overlays":[{"img":..., "at":[x,y], "flicker":2.0}],
-##                  "particles":[{"kind":"ember", "rect":[...], "count":8}]},
+##     "light":    {"overlays":[{"img":..., "at":[x,y], "flicker":2.0}]},
+##     "ambient":  {"motion":   [{"img":..., "at":[x,y], "frames":6, "fps":8}],
+##                  "particles":[{"kind":"ember", "rect":[x,y,w,h], "count":8}]},
+##     "zoom_zones":[{"rect":[x,y,w,h], "level":"close", "seconds":1.0}],
 ##     "spawn": [x, y]
 ##   }
 ##
@@ -58,6 +60,14 @@ func _normalize(room: Dictionary) -> void:
 			room[key] = []
 	if not room.has("light"):
 		room["light"] = {}
+	# محیط زنده (قاعدهٔ ۹ CLAUDE.md، D-ART-42)
+	var amb = room.get("ambient", {})
+	room["ambient"] = amb if amb is Dictionary else {}
+	for key in ["motion", "particles"]:
+		if not (room["ambient"] as Dictionary).has(key):
+			(room["ambient"] as Dictionary)[key] = []
+	if not room.has("zoom_zones"):
+		room["zoom_zones"] = []
 	var sp: Array = room.get("spawn", [])
 	if sp.size() != 2:
 		room["spawn"] = [int(room["size"][0]) / 2, int(room["size"][1]) / 2]
@@ -111,12 +121,75 @@ func _validate(room: Dictionary) -> void:
 		if sp.size() != 2:
 			errors.append("اتاق «%s»: در «%s» نقطهٔ ورود مقصد را ندارد." % [rid, did])
 
+	_validate_living(room, rid)
+
 	# نقطهٔ شروع باید **داخل** ناحیهٔ قابل‌راه‌رفتن باشد، وگرنه بازیکن در
 	# دیوار ظاهر می‌شود و هیچ خطایی هم نمی‌بیند.
 	var spawn := Vector2(float(room["spawn"][0]), float(room["spawn"][1]))
 	if not walk.is_empty() and not point_walkable(room, spawn):
 		errors.append("اتاق «%s»: نقطهٔ شروع (%d,%d) بیرون ناحیهٔ قابل‌راه‌رفتن است."
 			% [rid, int(spawn.x), int(spawn.y)])
+
+
+## قاعدهٔ ۹: هر اتاق دست‌کم یک حرکت طبیعت + یک جریان ذره + یک نور متغیر
+## می‌خواهد. **هشدار است نه خطا**: هنر زندهٔ اتاق‌ها هنوز نرسیده
+## (REQ-019) و بازی نباید به‌خاطر نیامدن هنر بوت نشود. ولی هشدار سر جایش
+## می‌ماند تا «اتاق تمام شد» بی‌دلیل گفته نشود.
+func _validate_living(room: Dictionary, rid: String) -> void:
+	var amb: Dictionary = room["ambient"]
+	var missing: Array[String] = []
+	if (amb["motion"] as Array).is_empty():
+		missing.append("حرکت طبیعت")
+	if (amb["particles"] as Array).is_empty():
+		missing.append("جریان ذره")
+	var pulsing := false
+	for raw in (room["light"] as Dictionary).get("overlays", []):
+		if raw is Dictionary and float((raw as Dictionary).get("flicker", 0.0)) > 0.0:
+			pulsing = true
+			break
+	if not pulsing:
+		missing.append("نور متغیر")
+	if not missing.is_empty():
+		warnings.append("اتاق «%s» طبق قاعدهٔ ۹ تمام نیست: %s ندارد."
+			% [rid, ", ".join(missing)])
+
+	for raw in room["zoom_zones"]:
+		if not (raw is Dictionary):
+			errors.append("اتاق «%s»: ناحیهٔ زوم باید شیء باشد." % rid)
+			continue
+		var z: Dictionary = raw
+		var r: Array = z.get("rect", [])
+		if r.size() != 4 or float(r[2]) <= 0.0 or float(r[3]) <= 0.0:
+			errors.append("اتاق «%s»: ناحیهٔ زوم rect معتبر ندارد." % rid)
+		if String(z.get("level", "")) not in GameCamera.ZOOM_LEVELS:
+			errors.append("اتاق «%s»: سطح زوم «%s» وجود ندارد."
+				% [rid, z.get("level", "")])
+
+	# اتاقی هم‌اندازهٔ صفحه جا برای حرکت دوربین ندارد و زوم روی آن یعنی
+	# بریدن لبه. REQ-018 اتاق تازه را ۱٫۵ تا ۲ برابر صفحه می‌خواهد.
+	var w := float(room["size"][0])
+	var h := float(room["size"][1])
+	if not (room["zoom_zones"] as Array).is_empty() and w <= 1280.0 and h <= 720.0:
+		warnings.append(("اتاق «%s» %d×%d است (هم‌اندازهٔ صفحه) ولی ناحیهٔ زوم "
+			+ "دارد؛ زوم باز لبه را می‌برد. REQ-018.") % [rid, int(w), int(h)])
+
+
+## نواحی زوم را به شکلی می‌دهد که دوربین می‌خواهد (Rect2 نه آرایه).
+static func zoom_zones(room: Dictionary) -> Array:
+	var out: Array = []
+	for raw in room.get("zoom_zones", []):
+		if not (raw is Dictionary):
+			continue
+		var z: Dictionary = raw
+		var r: Array = z.get("rect", [])
+		if r.size() != 4:
+			continue
+		out.append({
+			"rect": Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3])),
+			"level": String(z.get("level", GameCamera.ZOOM_NORMAL)),
+			"seconds": float(z.get("seconds", GameCamera.ZOOM_SECONDS)),
+		})
+	return out
 
 
 func _check_poly(rid: String, what: String, poly) -> void:

@@ -16,6 +16,8 @@ func _ready() -> void:
 	_t_scale()
 	_t_door_transition()
 	await _t_follow()
+	await _t_zoom()
+	await _t_zoom_zones()
 	_report()
 
 
@@ -157,6 +159,122 @@ func _t_follow() -> void:
 		"= %s" % str(cam2.global_position))
 
 	for n in [made[0], body, cam, made2[0], body2, cam2]:
+		n.queue_free()
+
+
+## زوم زنده (قاعدهٔ ۹ CLAUDE.md، D-ART-42). سه چیز سنجیده می‌شود: عددها،
+## اینکه گذار **پرشی نیست**، و اینکه در زمان گفته‌شده تمام می‌شود.
+func _t_zoom() -> void:
+	print("— زوم نرم —")
+	_check("سه سطح زوم هست و نه بیشتر", GameCamera.ZOOM_LEVELS.size() == 3,
+		"= %d" % GameCamera.ZOOM_LEVELS.size())
+	_check("wide = ۰٫۸۵", is_equal_approx(GameCamera.ZOOM_LEVELS["wide"], 0.85))
+	_check("normal = ۱٫۰", is_equal_approx(GameCamera.ZOOM_LEVELS["normal"], 1.0))
+	_check("close = ۱٫۲۵", is_equal_approx(GameCamera.ZOOM_LEVELS["close"], 1.25))
+	_check("گذار پیش‌فرض در بازهٔ ۰٫۸ تا ۱٫۲ ثانیه است",
+		GameCamera.ZOOM_SECONDS >= GameCamera.ZOOM_SECONDS_MIN
+		and GameCamera.ZOOM_SECONDS <= GameCamera.ZOOM_SECONDS_MAX,
+		"= %.1f ث" % GameCamera.ZOOM_SECONDS)
+
+	var pano := Rect2(0, 0, 60 * TILE, 40 * TILE)
+	var made := _make_camera(pano, GameCamera.FOLLOW)
+	var body: CharacterBody2D = made[1]
+	var cam: GameCamera = made[2]
+	body.global_position = pano.get_center()
+	cam.snap_zoom(GameCamera.ZOOM_NORMAL)
+	cam.snap_to_target()
+	_check("شروع روی normal می‌نشیند بی‌گذار",
+		cam.zoom_settled() and is_equal_approx(cam.zoom.x, 1.0),
+		"= %.3f" % cam.zoom.x)
+
+	cam.request_zoom(GameCamera.ZOOM_CLOSE)
+	var seen: Array[float] = []
+	var biggest := 0.0
+	var prev := cam.zoom.x
+	for i in int(GameCamera.ZOOM_SECONDS * 60.0) + 4:
+		await get_tree().physics_frame
+		biggest = maxf(biggest, absf(cam.zoom.x - prev))
+		prev = cam.zoom.x
+		seen.append(cam.zoom.x)
+	# «هرگز پرشی» را عدد می‌سنجد: ۰٫۲۵ تغییر در ۶۰ فریم، پس هیچ فریمی
+	# نباید نزدیک یک‌دهم کل راه را یک‌جا برود.
+	_check("هیچ فریمی زوم را پرشی عوض نمی‌کند", biggest < 0.012,
+		"= بیشینهٔ %.4f در یک فریم" % biggest)
+	_check("زوم به close رسید", is_equal_approx(cam.zoom.x, 1.25),
+		"= %.3f" % cam.zoom.x)
+	_check("گذار در زمان گفته‌شده تمام شد", cam.zoom_settled())
+	_check("سطح فعلی close است", cam.zoom_level() == GameCamera.ZOOM_CLOSE,
+		"= %s" % cam.zoom_level())
+	# یکنوا بالا رفته باشد: زوم نباید در راه عقب و جلو برود
+	var monotone := true
+	for i in range(1, seen.size()):
+		if seen[i] < seen[i - 1] - 0.0001:
+			monotone = false
+	_check("زوم در راه عقب و جلو نمی‌رود", monotone)
+
+	# un-zoom هم باید نرم باشد، نه فقط zoom
+	cam.request_zoom(GameCamera.ZOOM_WIDE)
+	var back_biggest := 0.0
+	prev = cam.zoom.x
+	for i in int(GameCamera.ZOOM_SECONDS * 60.0) + 4:
+		await get_tree().physics_frame
+		back_biggest = maxf(back_biggest, absf(cam.zoom.x - prev))
+		prev = cam.zoom.x
+	_check("un-zoom هم نرم است", back_biggest < 0.015,
+		"= بیشینهٔ %.4f در یک فریم" % back_biggest)
+	_check("زوم به wide رسید", is_equal_approx(cam.zoom.x, 0.85),
+		"= %.3f" % cam.zoom.x)
+
+	# سطح ناشناخته نباید دوربین را از جا بکند
+	cam.request_zoom("telescope")
+	_check("سطح زوم ناشناخته نادیده گرفته می‌شود",
+		cam.zoom_level() == GameCamera.ZOOM_WIDE, "= %s" % cam.zoom_level())
+
+	for n in [made[0], body, cam]:
+		n.queue_free()
+
+
+## نواحی زوم: داده‌محور، و وقتی بازیکن بیرون رفت باید خودش به normal برگردد.
+func _t_zoom_zones() -> void:
+	print("— ناحیهٔ زوم اتاق —")
+	var pano := Rect2(0, 0, 60 * TILE, 40 * TILE)
+	var made := _make_camera(pano, GameCamera.FOLLOW)
+	var body: CharacterBody2D = made[1]
+	var cam: GameCamera = made[2]
+
+	var zone := Rect2(1000, 500, 400, 300)
+	cam.set_zoom_zones([{"rect": zone, "level": GameCamera.ZOOM_CLOSE, "seconds": 0.8}])
+	body.global_position = Vector2(200, 200)
+	cam.snap_zoom(GameCamera.ZOOM_NORMAL)
+	cam.snap_to_target()
+	await _frames(10)
+	_check("بیرون ناحیه روی normal می‌ماند",
+		cam.zoom_level() == GameCamera.ZOOM_NORMAL, "= %s" % cam.zoom_level())
+
+	body.global_position = zone.get_center()
+	await _frames(60)
+	_check("داخل ناحیه زوم نزدیک شد",
+		cam.zoom_level() == GameCamera.ZOOM_CLOSE and cam.zoom.x > 1.2,
+		"= %s %.3f" % [cam.zoom_level(), cam.zoom.x])
+
+	body.global_position = Vector2(200, 200)
+	# ۶۰ فریم بس نیست: یک فریم خرج تشخیص بیرون رفتن می‌شود، پس گذار
+	# ۶۰فریمی یک فریم دیرتر تمام می‌شود. `zoom_settled` خودِ شرط است.
+	await _frames(66)
+	_check("بیرون ناحیه خودش برگشت به normal",
+		cam.zoom_level() == GameCamera.ZOOM_NORMAL and cam.zoom_settled()
+		and is_equal_approx(cam.zoom.x, 1.0),
+		"= %s %.4f" % [cam.zoom_level(), cam.zoom.x])
+
+	# ناحیهٔ خالی نباید دوربین را به زور به normal بچسباند، چون صحنهٔ
+	# داستانی هم زوم را عوض می‌کند و نباید با اتاق بجنگد
+	cam.clear_zoom_zones()
+	cam.snap_zoom(GameCamera.ZOOM_WIDE)
+	await _frames(20)
+	_check("بی‌ناحیه، زوم دست صحنه است نه اتاق",
+		cam.zoom_level() == GameCamera.ZOOM_WIDE, "= %s" % cam.zoom_level())
+
+	for n in [made[0], body, cam]:
 		n.queue_free()
 
 

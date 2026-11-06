@@ -18,6 +18,7 @@ func _ready() -> void:
 	_t_real_room()
 	_t_mask_queries()
 	_t_layers()
+	_t_living()
 	_report()
 
 
@@ -154,6 +155,73 @@ func _t_layers() -> void:
 	_check("Y-sort روی دنیا و بازیگران روشن است",
 		node.world.y_sort_enabled and actors.y_sort_enabled)
 	node.queue_free()
+
+
+## محیط زنده (قاعدهٔ ۹ CLAUDE.md، D-ART-42). اتاق ساکن «تمام» نیست، و
+## کد باید **بگوید** کدام سه چیز را ندارد، نه اینکه بی‌صدا ساکن بماند.
+func _t_living() -> void:
+	print("— محیط زنده —")
+	var l := RoomData.new()
+	var room := l.load_room(ROOM)
+	if room.is_empty():
+		return
+	var node := PaintedRoom.new()
+	add_child(node)
+	node.build(room)
+
+	var motion: Node2D = node.get_node("World/Motion")
+	var parts: Node2D = node.get_node("World/Particles")
+	_check("لایهٔ حرکت روی نقاشی و زیر پراپ است",
+		motion.z_index > 0 and motion.z_index < node.get_node("World/Props").z_index,
+		"= z %d" % motion.z_index)
+	_check("لایهٔ ذره هم‌سطح نور است (روی occluder)",
+		parts.z_index > node.get_node("World/Occluders").z_index,
+		"= z %d" % parts.z_index)
+
+	var made := parts.get_child_count()
+	_check("جریان ذرهٔ اتاق ساخته شد", made >= 1, "= %d جریان" % made)
+	var pre_spread := true
+	for c in parts.get_children():
+		var ps := c as CPUParticles2D
+		if ps == null or ps.amount < 1 or ps.preprocess <= 0.0:
+			pre_spread = false
+	# بدون preprocess همهٔ ذره‌ها با هم از صفر می‌زنند و ورود به اتاق
+	# یک موج ناگهانی گرد می‌شود
+	_check("ذره‌ها از لحظهٔ ورود پخش‌شده‌اند", pre_spread)
+
+	var living: Dictionary = node.living_layers()
+	_check("نور متغیر دارد (سوسوی هاله)", bool(living["variable_light"]))
+	_check("شمارش جریان ذره با لایهٔ ساخته‌شده می‌خواند",
+		int(living["particles"]) == made, "= %d" % int(living["particles"]))
+	# این اتاق هنوز حرکت طبیعت ندارد (REQ-019). آزمون **همین** را ثبت
+	# می‌کند تا روزی که هنر رسید، سنجه خودش عوض شود و یادمان بیاید.
+	_check("اتاق بی‌حرکتِ طبیعت «تمام» شمرده نمی‌شود",
+		node.is_living() == (int(living["motion"]) > 0),
+		"= حرکت %d، زنده %s" % [int(living["motion"]), str(node.is_living())])
+	var warned := false
+	for w in l.warnings:
+		if w.contains("قاعدهٔ ۹"):
+			warned = true
+	_check("نبودِ لایهٔ زنده هشدار می‌دهد نه سکوت",
+		warned if not node.is_living() else true)
+
+	# ناحیهٔ زوم: اتاق هم‌اندازهٔ صفحه نباید ناحیهٔ زوم داشته باشد (REQ-018)
+	_check("ناحیهٔ زوم اتاق به شکل Rect2 درمی‌آید",
+		node.zoom_zones().size() == (room["zoom_zones"] as Array).size())
+	node.queue_free()
+
+	# دادهٔ غلط باید خطا بدهد، نه بی‌صدا رد شود
+	var bad := {"id": "z", "bg": "x.png", "size": [2560, 1080],
+		"walkable": [[0, 0, 100, 0, 100, 100]], "spawn": [10, 10],
+		"zoom_zones": [{"rect": [0, 0, 100, 100], "level": "telescope"}]}
+	var v := RoomData.new()
+	v._normalize(bad)
+	v._validate(bad)
+	var caught := false
+	for e in v.errors:
+		if e.contains("سطح زوم"):
+			caught = true
+	_check("سطح زوم ناموجود خطای اعتبارسنجی است", caught)
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:

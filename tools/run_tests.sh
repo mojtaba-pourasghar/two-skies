@@ -19,6 +19,7 @@ TESTS=(
   "res://tools/tests/test_art.tscn"
   "res://tools/tests/test_camera.tscn"
   "res://tools/tests/test_rooms.tscn"
+  "res://tools/tests/test_topdown.tscn"
   "res://tools/tests/test_sequence.tscn"
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_save_ui.tscn"
@@ -91,6 +92,13 @@ for t in "${TESTS[@]}"; do
   grep -vE "^\s*$|کلید صدا بدون فایل|^Godot Engine" "$log"
   if grep -q "ObjectDB instances leaked" "$log"; then
     echo "  ← $name: نشت ObjectDB (گره‌ای آزاد نشده)"
+    fail=1
+  fi
+  # خطای زمان اجرا تابع را نصفه رها می‌کند ولی آزمون همان‌جا «همه قبول
+  # شد» چاپ می‌کند و با کد ۰ بیرون می‌آید. امروز همین اتفاق افتاد: کل
+  # بخش «ترتیب لایه‌ها» اجرا نشد و گزارش سبز بود.
+  if grep -qE "^SCRIPT ERROR" "$log"; then
+    echo "  ← $name: خطای اسکریپت در زمان اجرا — بخشی از آزمون نصفه ماند"
     fail=1
   fi
   if grep -q "Failed to load script" "$log"; then

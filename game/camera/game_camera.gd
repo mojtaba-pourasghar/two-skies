@@ -13,6 +13,21 @@ extends Camera2D
 const FOLLOW := "follow"
 const ROOM := "room"
 
+## سطح‌های زوم (قاعدهٔ ۹ CLAUDE.md، D-ART-42، سند ۱۳ §۳).
+## در Godot زوم بزرگ‌تر یعنی نزدیک‌تر، پس عددها همان‌اند که سند می‌گوید.
+const ZOOM_WIDE := "wide"
+const ZOOM_NORMAL := "normal"
+const ZOOM_CLOSE := "close"
+const ZOOM_LEVELS := {
+	ZOOM_WIDE: 0.85,
+	ZOOM_NORMAL: 1.0,
+	ZOOM_CLOSE: 1.25,
+}
+## گذار پیش‌فرض ۱ ثانیه، در بازهٔ ۰٫۸ تا ۱٫۲ که سند ۱۳ می‌خواهد.
+const ZOOM_SECONDS: float = 1.0
+const ZOOM_SECONDS_MIN: float = 0.8
+const ZOOM_SECONDS_MAX: float = 1.2
+
 ## عددهای «مقدار دوربین» سند ۰۴، ستون سه‌چهارم، در WORLD_SCALE=2.
 ## ستون کناری با D-ART-32 بی‌موضوع شد.
 const DEAD_ZONE := Vector2(192, 128)
@@ -37,6 +52,14 @@ var _desired := Vector2.ZERO
 var _shake_px: float = 0.0
 var _shake_frames: int = 0
 var _last_target := Vector2.ZERO
+
+var _zoom_level: String = ZOOM_NORMAL
+var _zoom_from: float = 1.0
+var _zoom_to: float = 1.0
+var _zoom_frames_total: int = 0
+var _zoom_frames_left: int = 0
+## نواحی زوم اتاق: [{rect: Rect2, level: String, seconds: float}]
+var _zoom_zones: Array = []
 
 
 func _ready() -> void:
@@ -65,6 +88,57 @@ func set_room(rect: Rect2) -> void:
 	_has_room = rect.size.x > 0.0 and rect.size.y > 0.0
 
 
+## زوم را **نرم** به سطح خواسته‌شده می‌برد. هیچ مسیری زوم را پرشی عوض
+## نمی‌کند: کاربر صریح گفت «هرگز پرشی» (D-ART-42).
+func request_zoom(level: String, seconds: float = ZOOM_SECONDS) -> void:
+	if not ZOOM_LEVELS.has(level):
+		push_warning("سطح زوم ناشناخته «%s»؛ نادیده گرفته شد." % level)
+		return
+	# درخواست تکراری همان سطح **هیچ کاری نمی‌کند**. وگرنه ناحیهٔ زوم که هر
+	# فریم درخواست می‌دهد، گذار را هر فریم از نو شروع می‌کند و زوم به‌جای
+	# یک ثانیه، تا ابر‌فریم‌ها می‌خزد (در آزمون ۶۰ فریم فقط ۰٫۰۲ رفت).
+	if level == _zoom_level and is_equal_approx(_zoom_to, float(ZOOM_LEVELS[level])):
+		return
+	_zoom_level = level
+	_zoom_from = zoom.x
+	_zoom_to = float(ZOOM_LEVELS[level])
+	var secs := clampf(seconds, ZOOM_SECONDS_MIN, ZOOM_SECONDS_MAX)
+	# فریم‌محور، نه delta انباشته: نتیجهٔ headless و اجرای واقعی یکی بماند
+	_zoom_frames_total = maxi(1, int(round(secs * FPS)))
+	_zoom_frames_left = _zoom_frames_total
+
+
+func zoom_level() -> String:
+	return _zoom_level
+
+
+func zoom_settled() -> bool:
+	return _zoom_frames_left <= 0
+
+
+## بدون گذار — فقط برای شروع اتاق و آزمون.
+func snap_zoom(level: String) -> void:
+	if not ZOOM_LEVELS.has(level):
+		return
+	_zoom_level = level
+	var z := float(ZOOM_LEVELS[level])
+	_zoom_from = z
+	_zoom_to = z
+	_zoom_frames_left = 0
+	_zoom_frames_total = 0
+	zoom = Vector2(z, z)
+
+
+## نواحی زوم اتاق را می‌گیرد: وقتی بازیکن داخل مستطیلی رفت، زوم آرام عوض
+## می‌شود. داده‌محور است تا هر اتاق بتواند نفس خودش را داشته باشد.
+func set_zoom_zones(zones: Array) -> void:
+	_zoom_zones = zones
+
+
+func clear_zoom_zones() -> void:
+	_zoom_zones = []
+
+
 func snap_to_target() -> void:
 	if target == null:
 		return
@@ -86,6 +160,8 @@ func _physics_process(_delta: float) -> void:
 		_desired = _room_rect.get_center()
 	else:
 		_desired = _follow_point()
+	_tick_zoom()
+	_tick_zoom_zones()
 	var want := _clamped(_desired)
 	global_position = want + _shake_offset()
 	# «موقعیت دوربین به عدد صحیح گرد می‌شود؛ نیم‌پیکسل ممنوع» (سند ۰۴)
@@ -159,7 +235,38 @@ func _shake_offset() -> Vector2:
 	return Vector2(randf_range(-a, a), randf_range(-a, a)).round()
 
 
-## زوم ثابت است: کل بازی یک حالت دارد (D-ART-32). زوم صحنه‌ها را
-## `ScriptedSequence` با گام `zoom` عوض می‌کند، نه دوربین خودش.
+## گذار نرم زوم. منحنی smoothstep است تا نه شروعش تکان داشته باشد و نه
+## پایانش: زوم خطی در لحظهٔ ایستادن دیده می‌شود.
+func _tick_zoom() -> void:
+	if _zoom_frames_left <= 0:
+		return
+	_zoom_frames_left -= 1
+	var done := float(_zoom_frames_total - _zoom_frames_left) / float(_zoom_frames_total)
+	var e := done * done * (3.0 - 2.0 * done)
+	var z: float = lerpf(_zoom_from, _zoom_to, e)
+	if _zoom_frames_left <= 0:
+		z = _zoom_to
+	zoom = Vector2(z, z)
+
+
+## اگر هدف داخل ناحیهٔ زوم رفت، همان سطح را بخواه؛ بیرون همهٔ نواحی،
+## برگرد به `normal`.
+func _tick_zoom_zones() -> void:
+	if _zoom_zones.is_empty() or target == null:
+		return
+	var p := target.global_position
+	for raw in _zoom_zones:
+		if not (raw is Dictionary):
+			continue
+		var zone: Dictionary = raw
+		var r = zone.get("rect", null)
+		if not (r is Rect2) or not (r as Rect2).has_point(p):
+			continue
+		request_zoom(String(zone.get("level", ZOOM_NORMAL)),
+			float(zone.get("seconds", ZOOM_SECONDS)))
+		return
+	request_zoom(ZOOM_NORMAL, ZOOM_SECONDS)
+
+
 func _apply_presentation() -> void:
 	pass

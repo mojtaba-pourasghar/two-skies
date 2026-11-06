@@ -26,8 +26,13 @@ const SIZES := {
 	Art.SKY: Vector2i(480, 270),
 	Art.FAR: Vector2i(480, 270),
 	Art.MID: Vector2i(480, 270),
-	"res://art/tilesets/ch1_ground.png": Vector2i(64, 16),
 }
+
+## اطلس کاشی عدد ثابت ندارد: از **کاشی جهان** درمی‌آید. عدد خام ۶۴×۱۶ در
+## این جدول نشسته بود و پس از WORLD_SCALE=2 اطلس را در مقیاس غلط نگه
+## داشت؛ آزمون سبز بود و کف بازی برخورد نداشت (D-ART-43).
+static func ground_atlas_size() -> Vector2i:
+	return Vector2i(LevelLoader.TILE * LevelLoader.TILE_VARIANTS, LevelLoader.TILE)
 
 var _failures: Array[String] = []
 var _checks: int = 0
@@ -53,12 +58,14 @@ func _t_files() -> void:
 
 func _t_sizes() -> void:
 	print("— اندازهٔ بافت با جعبهٔ برخورد می‌خواند —")
-	for path in SIZES:
+	var wanted: Dictionary = SIZES.duplicate()
+	wanted[LevelLoader.GROUND_ATLAS] = ground_atlas_size()
+	for path in wanted:
 		if not ResourceLoader.exists(path):
 			_check("اندازهٔ %s" % String(path).get_file(), false, "بافت نیست")
 			continue
 		var tex: Texture2D = load(path)
-		var want: Vector2i = SIZES[path]
+		var want: Vector2i = wanted[path]
 		_check("اندازهٔ %s" % String(path).get_file(), tex.get_size() == Vector2(want),
 			"= %dx%d" % [int(tex.get_width()), int(tex.get_height())])
 
@@ -87,8 +94,20 @@ func _t_palette() -> void:
 
 func _t_tileset() -> void:
 	print("— گونه‌های کاشی فقط ظاهری‌اند —")
+	# اطلس باید هم‌مقیاس کاشی جهان باشد. وقتی نبود، هیچ کاشی‌ای ساخته
+	# نمی‌شد و کف بازی بی‌برخورد می‌ماند؛ خطا هم در گزارش سبز گم می‌شد
+	# (D-ART-43). پس اول خودِ تصویر سنجیده می‌شود.
+	if ResourceLoader.exists(LevelLoader.GROUND_ATLAS):
+		var atlas: Texture2D = load(LevelLoader.GROUND_ATLAS)
+		_check("اطلس کاشی هم‌مقیاس کاشی جهان است (۳۲)",
+			atlas.get_height() >= LevelLoader.TILE
+			and atlas.get_width() >= LevelLoader.TILE * LevelLoader.TILE_VARIANTS,
+			"= %dx%d برای کاشی %d × %d گونه" % [atlas.get_width(),
+				atlas.get_height(), LevelLoader.TILE, LevelLoader.TILE_VARIANTS])
+
 	var ts := LevelLoader.make_placeholder_tileset()
 	var src: TileSetAtlasSource = ts.get_source(0) as TileSetAtlasSource
+	_check("اطلس کاشی ساخت، نه نول", src != null, "")
 	_check("اطلس %d گونه دارد" % LevelLoader.TILE_VARIANTS,
 		src.get_tiles_count() == LevelLoader.TILE_VARIANTS,
 		"= %d" % src.get_tiles_count())

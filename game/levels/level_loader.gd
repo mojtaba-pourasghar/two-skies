@@ -334,8 +334,19 @@ static func make_placeholder_tileset(color: Color = Palette.NIGHT_ASH) -> TileSe
 	var source := TileSetAtlasSource.new()
 	var variants := TILE_VARIANTS
 
-	if ResourceLoader.exists(GROUND_ATLAS):
-		source.texture = load(GROUND_ATLAS)
+	# اطلس باید **جا بدهد**. اگر اندازه‌اش با کاشی جهان نخواند،
+	# `create_tile` بی‌صدا شکست می‌خورد، `get_tile_data` نول می‌دهد و کف
+	# بازی هیچ برخوردی پیدا نمی‌کند. دقیقاً همین افتاده بود: اطلس در
+	# ۱۶ مانده بود و پس از WORLD_SCALE=2 هیچ کاشی‌ای ساخته نمی‌شد
+	# (D-ART-43). پس اندازه سنجیده می‌شود، نه فقط بودنِ فایل.
+	var atlas: Texture2D = load(GROUND_ATLAS) if ResourceLoader.exists(GROUND_ATLAS) else null
+	if atlas != null and (atlas.get_height() < TILE or atlas.get_width() < TILE * variants):
+		push_warning(("LevelLoader: اطلس کاشی %dx%d است ولی کاشی %d و %d گونه "
+			+ "لازم است؛ کاشی یک‌رنگ جایش گرفت.")
+			% [atlas.get_width(), atlas.get_height(), TILE, variants])
+		atlas = null
+	if atlas != null:
+		source.texture = atlas
 	else:
 		# بازگشت امن: اگر هنر هنوز وارد نشده، بازی باید بالا بیاید
 		variants = 1
