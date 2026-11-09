@@ -37,6 +37,13 @@ var _restart_at := Vector2.ZERO
 ## شمارندهٔ مرگ همین اتاق چالش؛ با ورود به اتاق تازه صفر می‌شود.
 var room_deaths: int = 0
 var _deaths_label: Label
+## نبرد در جریان (M4-پ). تا وقتی هست، اتاق و بازیگرانش منجمدند.
+var battle: BattleScene = null
+var _battle_enemy: MapEnemy = null
+## آخرین جای کایرو که به هیچ دشمنی نخورده بود؛ فرار به همین‌جا برمی‌گردد.
+var _clear_at := Vector2.ZERO
+## بعد از فرار، دشمن تا وقتی کایرو از بردش بیرون نرفته دوباره نبرد نمی‌سازد
+var _flee_from: MapEnemy = null
 
 
 func _ready() -> void:
@@ -156,6 +163,8 @@ func _spawn_actors(at: Vector2) -> void:
 	# (۰،۰) است؛ بی این خط کایرو بعد از مرگ گوشهٔ بالا-چپ اتاق زنده می‌شد.
 	kairo.spawn_point = at
 	_restart_at = at
+	_clear_at = at
+	_flee_from = null
 	kairo.hazard_hit.connect(_on_hazard_hit)
 	kairo.died.connect(_on_kairo_died)
 	_dress(kairo, "kairo")
@@ -195,6 +204,8 @@ func _dress(actor: TdActor, who: String) -> void:
 
 func _physics_process(_delta: float) -> void:
 	GameMode.tick()
+	if battle != null:
+		return
 	director.tick()
 	_fade.color.a = director.fade_alpha()
 	if kairo == null or director.is_transitioning():
@@ -207,7 +218,63 @@ func _physics_process(_delta: float) -> void:
 	room.react_to(kairo.foot_position(), kairo.velocity.length())
 	# زوم که از حد بی‌هایرز گذشت، تصویر پرجزئیات بیاید
 	room.use_hires(camera.zoom.x > PaintedRoom.ZOOM_WITHOUT_HIRES)
+	if _check_enemy():
+		return
 	_check_door()
+
+
+signal battle_started(encounter: String)
+signal battle_ended(encounter: String, outcome: int)
+
+
+## برخورد با دشمن دیدنی = نبرد (سند ۰۹ §۲). نبرد روی همین اتاق باز می‌شود
+## و اتاق منجمد می‌ماند، پس برگشت از نبرد بارگذاری ندارد و بازیکن دقیقاً
+## همان‌جاست.
+func _check_enemy() -> bool:
+	var foot := kairo.foot_position()
+	var m := room.enemy_touching(foot)
+	if m == null:
+		_flee_from = null
+		_clear_at = kairo.global_position
+		return false
+	if m == _flee_from:
+		return false
+	_start_battle(m)
+	return true
+
+
+func _start_battle(m: MapEnemy) -> void:
+	_battle_enemy = m
+	kairo.velocity = Vector2.ZERO
+	room.process_mode = Node.PROCESS_MODE_DISABLED
+	battle = load("res://battle/battle_scene.tscn").instantiate()
+	battle.encounter_id = m.encounter
+	battle.battle_seed = hash(m.enemy_id) & 0xFFFF
+	battle.finished.connect(_on_battle_finished)
+	add_child(battle)
+	battle_started.emit(m.encounter)
+
+
+func _on_battle_finished(outcome: int, encounter: String) -> void:
+	var m := _battle_enemy
+	_battle_enemy = null
+	if battle != null:
+		battle.queue_free()
+		battle = null
+	room.process_mode = Node.PROCESS_MODE_INHERIT
+	GameMode.set_context(GameMode.Context.EXPLORE)
+	GameMode.set_control(GameMode.ControlMode.PLAY)
+	if outcome == BattleCore.Outcome.WIN:
+		room.remove_enemy(m)
+		# برد ذخیره می‌شود؛ بستن بازی همین‌جا دشمن را برنمی‌گرداند
+		GameState.save_explore(String(room.data.get("id", "")), kairo.global_position)
+	else:
+		# فرار: یک قدم عقب، بیرون برد دشمن، و دشمن تا بیرون رفتن کایرو
+		# دوباره نبرد نمی‌سازد
+		kairo.global_position = _clear_at
+		kairo.velocity = Vector2.ZERO
+		_flee_from = m
+	battle_ended.emit(encounter, outcome)
 
 
 signal door_refused(door: Dictionary, flag: String)

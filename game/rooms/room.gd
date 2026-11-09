@@ -56,6 +56,7 @@ func build(room: Dictionary) -> void:
 	_build_props()
 	actors = _layer("Actors", 3)
 	actors.y_sort_enabled = true
+	_build_enemies()
 	_build_effects()
 	_build_occluders()
 	_build_light()
@@ -170,6 +171,39 @@ func _build_props() -> void:
 		s.position = Vector2(float(at[0]) - tex.get_width() * 0.5,
 			float(at[1]) - tex.get_height())
 		_props.add_child(s)
+
+
+## دشمن‌های دیدنی (M4-پ). هم‌لایهٔ بازیگران، تا Y-sort پشت و جلوی
+## یاران را درست بچیند. دشمنی که نبردش برده شده دیگر ساخته نمی‌شود.
+var enemies: Array[MapEnemy] = []
+
+
+func _build_enemies() -> void:
+	enemies.clear()
+	for raw in data.get("enemies", []):
+		var e: Dictionary = raw
+		if bool(GameState.get_flag("battle_won_%s" % String(e.get("encounter", "")), false)):
+			continue
+		var m := MapEnemy.new()
+		actors.add_child(m)
+		m.setup(e)
+		for miss in m.missing:
+			_note_missing(miss)
+		enemies.append(m)
+
+
+## دشمنی که پای بازیگر به آن خورده، یا null.
+func enemy_touching(foot: Vector2) -> MapEnemy:
+	for m in enemies:
+		if is_instance_valid(m) and m.touches(foot):
+			return m
+	return null
+
+
+func remove_enemy(m: MapEnemy) -> void:
+	enemies.erase(m)
+	if is_instance_valid(m):
+		m.queue_free()
 
 
 ## افکت‌های اتاق از نقشهٔ تصویر (سند ۱۴، D-ART-46).

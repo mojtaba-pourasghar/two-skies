@@ -14,6 +14,8 @@
 ##     "hazard":   [{"id":..., "poly":[...], "kind":"pit"|"laser"|"electric"}],
 ##     "doors":    [{"id":..., "rect":[x,y,w,h], "to":"r1b", "spawn":[x,y]}],
 ##     "props":    [{"id":"save_statue", "at":[x,y]}],
+##     "enemies":  [{"id":..., "encounter":"ch1_a2_crawlers", "at":[x,y],
+##                   "art":"enemies/nexa_topdown/crawler_0.png", "radius":56}],
 ##     "occluders":[{"img":"occluders/ch1/arch_gothic.png", "at":[x,y]}],
 ##     "light":    {"overlays":[{"img":..., "at":[x,y], "flicker":2.0}]},
 ##     "ambient":  {"motion":   [{"img":..., "at":[x,y], "frames":6, "fps":8}],
@@ -55,7 +57,7 @@ func _normalize(room: Dictionary) -> void:
 	room["camera"] = String(room.get("camera", CameraDirector.BEHAVIOR_ROOM))
 	var size: Array = room.get("size", [1280, 720])
 	room["size"] = [int(size[0]), int(size[1])] if size.size() == 2 else [1280, 720]
-	for key in ["walkable", "blocked", "hazard", "doors", "props", "occluders"]:
+	for key in ["walkable", "blocked", "hazard", "doors", "props", "occluders", "enemies"]:
 		if not room.has(key):
 			room[key] = []
 	if not room.has("light"):
@@ -114,6 +116,24 @@ func _validate(room: Dictionary) -> void:
 		var sp: Array = d.get("spawn", [])
 		if sp.size() != 2:
 			errors.append("اتاق «%s»: در «%s» نقطهٔ ورود مقصد را ندارد." % [rid, did])
+
+	# دشمن دیدنی (سند ۰۹ §۲، M4-پ): نبرد تصادفی نیست، برخورد با دشمنِ روی
+	# نقشه نبرد را شروع می‌کند. دشمنی که بیرون ماسک بایستد هرگز لمس نمی‌شود.
+	var eseen: Dictionary = {}
+	for raw in room["enemies"]:
+		var e: Dictionary = raw
+		var eid := String(e.get("id", ""))
+		if eid == "" or eseen.has(eid):
+			errors.append("اتاق «%s»: شناسهٔ دشمن خالی یا تکراری «%s»." % [rid, eid])
+			continue
+		eseen[eid] = true
+		if String(e.get("encounter", "")) == "":
+			errors.append("اتاق «%s»: دشمن «%s» نبرد ندارد." % [rid, eid])
+		var at: Array = e.get("at", [])
+		if at.size() != 2:
+			errors.append("اتاق «%s»: دشمن «%s» جا ندارد." % [rid, eid])
+		elif not walk.is_empty() and not point_walkable(room, Vector2(float(at[0]), float(at[1]))):
+			errors.append("اتاق «%s»: دشمن «%s» بیرون ناحیهٔ قابل‌راه‌رفتن است." % [rid, eid])
 
 	_validate_living(room, rid)
 

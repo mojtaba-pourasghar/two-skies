@@ -24,6 +24,7 @@ TESTS=(
   "res://tools/tests/test_hazards.tscn"
   "res://tools/tests/test_battle.tscn"
   "res://tools/tests/test_battle_scene.tscn"
+  "res://tools/tests/test_encounters.tscn"
   "res://tools/tests/test_sequence.tscn"
   "res://tools/tests/test_levels.tscn"
   "res://tools/tests/test_save_ui.tscn"

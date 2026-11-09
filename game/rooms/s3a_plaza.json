@@ -53,10 +53,10 @@
       ],
       "to": "s2b_street",
       "spawn": [
-        984,
-        664
+        570,
+        470
       ],
-      "note": "برگشت به کوچه از لبهٔ چپ. نقطهٔ ورود قبلی داخل مستطیل در دیگری در مقصد می‌افتاد و بازیکن را در حلقه می‌انداخت؛ بیرون هر دری آورده شد."
+      "note": "برگشت به کوچه از لبهٔ چپ. نقطهٔ ورود قبلی داخل مستطیل در دیگری در مقصد می‌افتاد و بازیکن را در حلقه می‌انداخت؛ بیرون هر دری آورده شد. M4-پ: ورود به S2b حالا زیر در تازهٔ ته جاده است (۵۷۰،۴۷۰)، نه کنار دروازهٔ C2."
     },
     {
       "id": "to_hall",
@@ -86,5 +86,44 @@
     "overlays": [],
     "_note": "نور زنده در نقشهٔ افکت است."
   },
-  "zoom_zones": []
+  "zoom_zones": [],
+  "enemies": [
+    {
+      "id": "guard_patrol",
+      "encounter": "ch1_a3_guard_crawler",
+      "at": [
+        760,
+        650
+      ],
+      "art": "enemies/nexa_topdown/guard_idle.png",
+      "art_alt": "enemies/nexa_topdown/guard_scan.png",
+      "radius": 64,
+      "note": "نبرد ۱ ناحیهٔ ۳: نگهبان + خزنده (سند ۰۸ §۵)",
+      "height": 92
+    },
+    {
+      "id": "patrol_drone",
+      "encounter": "ch1_a3_patrol_drone",
+      "at": [
+        1180,
+        560
+      ],
+      "art": "hazards_topdown/patrol_drone.png",
+      "radius": 64,
+      "note": "نبرد ۲ ناحیهٔ ۳: پهپاد گشتی",
+      "height": 70
+    },
+    {
+      "id": "commander",
+      "encounter": "ch1_a3_commander",
+      "at": [
+        1440,
+        700
+      ],
+      "art": "hazards_topdown/patrol_drone.png",
+      "radius": 80,
+      "note": "اوج ناحیهٔ ۳: پهپاد فرمانده، جلوی دروازهٔ C3. تصویر خودش نیست (REQ-030).",
+      "height": 112
+    }
+  ]
 }
