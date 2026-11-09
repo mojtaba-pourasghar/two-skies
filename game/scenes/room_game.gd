@@ -31,6 +31,12 @@ var _door_block: String = ""
 var _fade: ColorRect
 var _hud: CanvasLayer
 var _pending_spawn := Vector2.ZERO
+## نقطهٔ شروع دوباره در اتاق چالش: همان جایی که کایرو وارد اتاق شد.
+## سند ۰۹ §۲ب: «چک‌پوینت فقط بین بخش‌ها» — هر اتاق چالش یک بخش است.
+var _restart_at := Vector2.ZERO
+## شمارندهٔ مرگ همین اتاق چالش؛ با ورود به اتاق تازه صفر می‌شود.
+var room_deaths: int = 0
+var _deaths_label: Label
 
 
 func _ready() -> void:
@@ -68,6 +74,13 @@ func _build_hud() -> void:
 	_fade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hud.add_child(_fade)
+	# شمارندهٔ مرگ — فقط در اتاق چالش دیده می‌شود (سند ۰۹ §۱ قاعدهٔ ۱)
+	_deaths_label = UIKit.make_label("", 22, Color(1.0, 0.92, 0.8))
+	_deaths_label.name = "Deaths"
+	_deaths_label.position = Vector2(1080, 20)
+	_deaths_label.size = Vector2(180, 32)
+	_deaths_label.visible = false
+	_hud.add_child(_deaths_label)
 
 
 func _build_camera() -> void:
@@ -119,6 +132,8 @@ func _enter_room(room_id: String, spawn_override: Vector2) -> bool:
 	camera.snap_zoom(GameCamera.ZOOM_NORMAL)
 	camera.set_zoom_zones(room.zoom_zones())
 	camera.snap_to_target()
+	room_deaths = 0
+	_update_deaths_label()
 	return true
 
 
@@ -137,6 +152,12 @@ func _spawn_actors(at: Vector2) -> void:
 	room.actors.add_child(kairo)
 	kairo.global_position = at
 	kairo.room = room
+	# `spawn_point` در `_ready` از جای گره خوانده می‌شود، ولی آن موقع هنوز
+	# (۰،۰) است؛ بی این خط کایرو بعد از مرگ گوشهٔ بالا-چپ اتاق زنده می‌شد.
+	kairo.spawn_point = at
+	_restart_at = at
+	kairo.hazard_hit.connect(_on_hazard_hit)
+	kairo.died.connect(_on_kairo_died)
 	_dress(kairo, "kairo")
 
 	if is_challenge(room.data):
@@ -190,6 +211,45 @@ func _physics_process(_delta: float) -> void:
 
 
 signal door_refused(door: Dictionary, flag: String)
+## تلهٔ اکتشاف جان گرفت و بازیکن به خانهٔ امن برگشت.
+signal hazard_hurt(hazard: Dictionary, hp_pct: float)
+
+
+## سه قاعدهٔ مرگ سند ۰۹ §۱ — اینجا دو تای اول:
+##   ۱ اتاق چالش: یک تماس = مرگ، شروع دوباره زیر ۰٫۳ ثانیه، بی‌نهایت، شمارنده
+##   ۲ اکتشاف: بدون مرگ؛ آسیب جزئی (`damage_pct`) + برگشت به خانهٔ امن
+## خطری با `damage_pct` ۱۰۰ بیرون اتاق چالش هم نمی‌کشد: اکتشاف مرگ ندارد
+## (GameState.damage_percent جان را زیر صفر نمی‌برد).
+func _on_hazard_hit(h: Dictionary) -> void:
+	if kairo == null or director.is_transitioning():
+		return
+	if is_challenge(room.data):
+		kairo.die()
+		return
+	GameState.damage_percent(float(h.get("damage_pct", 10.0)))
+	var safe: Array = h.get("safe", [])
+	var back := _restart_at
+	if safe.size() == 2:
+		back = Vector2(float(safe[0]), float(safe[1]))
+	# جای امن هم‌قرارداد نقطهٔ ورود در است: جای خود بازیگر، نه پا
+	kairo.global_position = back
+	kairo.velocity = Vector2.ZERO
+	hazard_hurt.emit(h, GameState.hp_percent())
+
+
+func _on_kairo_died() -> void:
+	room_deaths += 1
+	GameState.run["deaths"] = int(GameState.run.get("deaths", 0)) + 1
+	EventBus.player_died.emit("kairo")
+	_update_deaths_label()
+
+
+func _update_deaths_label() -> void:
+	if _deaths_label == null:
+		return
+	var on := room != null and is_challenge(room.data)
+	_deaths_label.visible = on
+	_deaths_label.text = "%s: %s" % [Fa.t("ui_deaths"), Fa.num(room_deaths)]
 
 
 ## دری که پرچمی لازم دارد (R1d تا فلش‌بک، R1e تا کلید) بدون آن باز
