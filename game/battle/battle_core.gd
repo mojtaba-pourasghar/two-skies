@@ -220,6 +220,17 @@ func intent_of(id: String) -> Dictionary:
 		"interrupt": it.get("interrupt", [])}
 
 
+## نوبت دشمن فعلی واقعاً حمله است؟ (نه گیج، نه در حال شارژ، و قصدش آسیب
+## دارد). صحنه فقط آن موقع حلقهٔ دفاع به‌موقع را نشان می‌دهد.
+func pending_attack() -> bool:
+	var u := current()
+	if u.is_empty() or u["side"] != "enemy" or outcome != Outcome.ONGOING:
+		return false
+	if int(u["stunned"]) > 0 or int(u["intent_left"]) > 0:
+		return false
+	return float(_intent_def(u).get("damage", 0)) > 0.0
+
+
 ## شناسهٔ ۶ نوبت بعدی (سند ۰۸ §۴). شبیه‌سازی روی رونوشت `ct`؛ کند شدن و
 ## گیج شدن هم حساب می‌شوند چون روی `ct` اثر دارند، نه روی این تابع.
 func preview(n: int = 6) -> Array[String]:

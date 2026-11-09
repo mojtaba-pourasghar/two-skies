@@ -7,6 +7,8 @@ signal changed
 var touch_scale: float = 1.0
 var haptics_enabled: bool = true
 var camera_shake_enabled: bool = true
+## دسترس‌پذیری نبرد: پنجرهٔ زمان‌بندی ×۲ (سند ۰۸ §۴)
+var assist_timing: bool = false
 
 ## حجم هر باس صدا، ۰ تا ۱ (§۱۴)
 var volume := {"Master": 1.0, "Music": 0.8, "SFX": 1.0, "UI": 1.0, "Ambience": 0.7}
@@ -89,6 +91,7 @@ func to_dict() -> Dictionary:
 		"touch_scale": touch_scale,
 		"haptics_enabled": haptics_enabled,
 		"camera_shake_enabled": camera_shake_enabled,
+		"assist_timing": assist_timing,
 		"volume": volume.duplicate(),
 	}
 
@@ -97,6 +100,7 @@ func from_dict(d: Dictionary) -> void:
 	touch_scale = clampf(float(d.get("touch_scale", 1.0)), 0.8, 1.3)
 	haptics_enabled = bool(d.get("haptics_enabled", true))
 	camera_shake_enabled = bool(d.get("camera_shake_enabled", true))
+	assist_timing = bool(d.get("assist_timing", false))
 	var v = d.get("volume", null)
 	if v is Dictionary:
 		for k in volume.keys():
