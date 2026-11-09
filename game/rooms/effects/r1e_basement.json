@@ -3,78 +3,6 @@
  "space": "1280x720",
  "effects": [
   {
-   "id": "vent_a",
-   "type": "anim",
-   "anim": "ambient/ch1/smoke",
-   "pos": [
-    80,
-    420
-   ],
-   "scale": 0.6,
-   "fps": 8,
-   "random_start": true
-  },
-  {
-   "id": "vent_b",
-   "type": "anim",
-   "anim": "ambient/ch1/smoke",
-   "pos": [
-    190,
-    545
-   ],
-   "scale": 0.6,
-   "fps": 8,
-   "random_start": true
-  },
-  {
-   "id": "vent_c",
-   "type": "anim",
-   "anim": "ambient/ch1/smoke",
-   "pos": [
-    700,
-    310
-   ],
-   "scale": 0.5,
-   "fps": 8,
-   "random_start": true
-  },
-  {
-   "id": "vent_d",
-   "type": "anim",
-   "anim": "ambient/ch1/smoke",
-   "pos": [
-    1090,
-    340
-   ],
-   "scale": 0.6,
-   "fps": 8,
-   "random_start": true
-  },
-  {
-   "id": "vent_e",
-   "type": "anim",
-   "anim": "ambient/ch1/smoke",
-   "pos": [
-    1150,
-    555
-   ],
-   "scale": 0.6,
-   "fps": 8,
-   "random_start": true
-  },
-  {
-   "id": "vent_f",
-   "type": "anim",
-   "anim": "ambient/ch1/smoke",
-   "pos": [
-    690,
-    110
-   ],
-   "scale": 0.5,
-   "fps": 8,
-   "random_start": true
-  },
-  {
    "id": "lamp_a",
    "type": "flicker_light",
    "pos": [
@@ -200,5 +128,6 @@
  "forbid": [
   "مه سراسری",
   "نور روی کف تاریک"
- ]
+ ],
+ "note": "REQ-028: بخار ستون‌ها در خود نقاشی هست؛ anim دود برداشته شد"
 }

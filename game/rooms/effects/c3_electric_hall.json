@@ -200,7 +200,10 @@
     1020,
     600
    ],
-   "mode": "additive_soft"
+   "mode": "additive_soft",
+   "base_alpha": 0.06,
+   "note": "فقط روی خود پنل‌ها (ماسک پنل)؛ کف تاریک بین پنل‌ها نه",
+   "clip_mask": "panel_cyan_components"
   },
   {
    "id": "red_beacon_a",
@@ -209,11 +212,18 @@
     555,
     100
    ],
-   "radius": 70,
+   "radius": 45,
    "color": "#ff3a3a",
    "amp": 0.1,
    "source": "چراغ قرمز بالا-چپ",
-   "signal": "noise2+3freq"
+   "signal": "noise2+3freq",
+   "base_alpha": 0.06,
+   "clip_rect": [
+    500,
+    60,
+    610,
+    150
+   ]
   },
   {
    "id": "red_beacon_b",
@@ -222,11 +232,18 @@
     695,
     100
    ],
-   "radius": 70,
+   "radius": 45,
    "color": "#ff3a3a",
    "amp": 0.1,
    "source": "چراغ قرمز بالا-راست",
-   "signal": "noise2+3freq"
+   "signal": "noise2+3freq",
+   "base_alpha": 0.06,
+   "clip_rect": [
+    640,
+    60,
+    750,
+    150
+   ]
   },
   {
    "id": "red_beacon_c",
@@ -235,11 +252,18 @@
     495,
     680
    ],
-   "radius": 80,
+   "radius": 45,
    "color": "#ff3a3a",
    "amp": 0.1,
    "source": "چراغ قرمز پایین-چپ",
-   "signal": "noise2+3freq"
+   "signal": "noise2+3freq",
+   "base_alpha": 0.06,
+   "clip_rect": [
+    440,
+    630,
+    560,
+    720
+   ]
   },
   {
    "id": "red_beacon_d",
@@ -248,11 +272,18 @@
     710,
     680
    ],
-   "radius": 80,
+   "radius": 45,
    "color": "#ff3a3a",
    "amp": 0.1,
    "source": "چراغ قرمز پایین-راست",
-   "signal": "noise2+3freq"
+   "signal": "noise2+3freq",
+   "base_alpha": 0.06,
+   "clip_rect": [
+    660,
+    630,
+    780,
+    720
+   ]
   },
   {
    "id": "door_red",
@@ -261,12 +292,13 @@
     640,
     60
    ],
-   "radius": 130,
+   "radius": 90,
    "color": "#ff4a3a",
    "amp": 0.06,
    "period_s": 6,
    "source": "تابلوی در قرمز",
-   "signal": "noise_lowpass"
+   "signal": "noise_lowpass",
+   "base_alpha": 0.06
   },
   {
    "id": "transformer_sparks",

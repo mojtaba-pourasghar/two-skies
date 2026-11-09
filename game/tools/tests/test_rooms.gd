@@ -7,6 +7,12 @@
 ## لایه‌ها (occluder باید **روی** بازیگر باشد).
 extends Node2D
 
+## اتاق‌هایی که بودجهٔ زندگی‌شان (قاعدهٔ ۹ CLAUDE.md) به خاطر نیامدن هنر
+## ناقص است، با REQ باز. فقط هنر این فهرست را کوتاه می‌کند، نه کد.
+const PENDING_LIVING_ART := {
+	"r1e_basement": "REQ-031 (دود برداشته شد، منبع حرکت ندارد)",
+}
+
 const ROOM := "r1a_living"
 
 var _failures: Array[String] = []
@@ -364,8 +370,14 @@ func _t_all_rooms() -> void:
 		for w in l.warnings:
 			if w.contains("بودجهٔ زندگی"):
 				budget = true
-		_check("  «%s» بودجهٔ زندگی را دارد" % rid, not budget,
-			"" if not budget else "هشدار دارد")
+		if PENDING_LIVING_ART.has(rid):
+			# منتظر هنر، با شمارهٔ REQ. دیده می‌شود، پنهان نمی‌شود؛ و اگر اتاق
+			# زنده شد این سنجه رد می‌شود تا فهرست پاک شود.
+			print("  ⚠   «%s» بودجهٔ زندگی ندارد — منتظر %s" % [rid, PENDING_LIVING_ART[rid]])
+			_check("  «%s» هنوز واقعاً منتظر هنر است (وگرنه از فهرست بردار)" % rid, budget)
+		else:
+			_check("  «%s» بودجهٔ زندگی را دارد" % rid, not budget,
+				"" if not budget else "هشدار دارد")
 		# در باید به اتاقی برود که وجود دارد، وگرنه بازیکن در هیچ‌جا
 		# می‌افتد و خطایی هم نمی‌بیند
 		for raw in room["doors"]:
