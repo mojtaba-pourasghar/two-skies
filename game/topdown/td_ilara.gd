@@ -18,6 +18,10 @@ var falls: int = 0
 const ARRIVE_PX: float = 3.0
 ## فاصله‌ای که تا نشانهٔ جهش می‌پذیرد تا همان جهش را بزند.
 const HOP_SNAP_PX: float = 12.0
+## فاصلهٔ شخصی: وقتی کایرو ایستاده، ردِ ۴۸ فریمی دقیقاً روی خود اوست و
+## ایلارا روی کایرو می‌ایستاد — یکی از دو شخصیت در اسکرین‌شات ناپدید می‌شد
+## (گام ۵۳، S3a). حدود نیم قد شخصیت.
+const PERSONAL_PX: float = 40.0
 
 var _wish := Vector2.ZERO
 
@@ -61,6 +65,10 @@ func _think() -> void:
 			return
 
 	var to_target := target - global_position
+	var lead := leader.global_position
+	if target.distance_to(lead) < PERSONAL_PX and global_position.distance_to(lead) <= PERSONAL_PX:
+		_wish = Vector2.ZERO
+		return
 	_wish = Vector2.ZERO if to_target.length() <= ARRIVE_PX else to_target.normalized()
 
 

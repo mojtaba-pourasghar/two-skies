@@ -31,6 +31,8 @@ const SPACE := Vector2(1280, 720)
 
 var missing: Array[String] = []
 var effects: Array[Dictionary] = []
+## شناسهٔ اتاق، برای پیدا کردن ماسک‌های `clip_mask` در `rooms/masks/<اتاق>/`
+var room_id: String = ""
 
 var _bg: Texture2D = null
 var _bg_scale: float = 1.0
@@ -48,6 +50,11 @@ var _led_nodes: Array[Dictionary] = []
 
 ## نقشهٔ افکت اتاق. نام فایل گاهی با شناسهٔ اتاق فرق دارد (`r1a_living`
 ## در برابر `r1a_house`)، پس اتاق می‌تواند صریح بگوید کدام نقشه.
+## ماسک تصویری `clip_mask` (ابزار: tools/panel_extract.py).
+static func clip_mask_path(room: String, mask: String) -> String:
+	return "res://rooms/masks/%s/%s.png" % [room, mask]
+
+
 static func map_path(name: String) -> String:
 	return MAPS + name + ".json"
 
@@ -182,6 +189,16 @@ func _make_glow(e: Dictionary) -> Node2D:
 		var r := corners(clip)
 		mat.set_shader_parameter("clip_rect",
 			Vector4(r.position.x, r.position.y, r.size.x, r.size.y))
+	var cm := String(e.get("clip_mask", ""))
+	if cm != "":
+		var mp := clip_mask_path(room_id, cm)
+		if ResourceLoader.exists(mp):
+			mat.set_shader_parameter("use_clip_tex", true)
+			mat.set_shader_parameter("clip_tex", load(mp))
+			mat.set_shader_parameter("space", SPACE)
+		elif mp not in missing:
+			# نبودن ماسک یعنی نور روی کف تاریک هم می‌افتد؛ گزارش می‌شود
+			missing.append(mp)
 	spr.material = mat
 
 	var kind := String(e.get("type", ""))

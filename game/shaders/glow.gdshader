@@ -15,6 +15,12 @@ uniform vec4 node_rect = vec4(0.0, 0.0, 1.0, 1.0);
 // ناحیهٔ مجاز در مختصات اتاق؛ w یا h صفر یعنی بی‌حد
 uniform vec4 clip_rect = vec4(0.0);
 uniform float feather = 40.0;
+// ماسک تصویری در مختصات اتاق (REQ-029، `clip_mask` نقشهٔ افکت): نور فقط
+// جایی که ماسک روشن است. برای نوری که باید فقط روی پنل‌ها بیفتد، نه کف
+// تاریک بینشان — کاری که یک مستطیل نمی‌تواند.
+uniform bool use_clip_tex = false;
+uniform sampler2D clip_tex : filter_linear, repeat_disable;
+uniform vec2 space = vec2(1280.0, 720.0);
 // توان افت: ۲ یعنی شبیه افت فیزیکی نور، ۱ یعنی خطی و مصنوعی
 uniform float falloff = 2.2;
 
@@ -33,6 +39,10 @@ void fragment() {
 		float my = smoothstep(lo.y - f, lo.y + f, room.y)
 			* (1.0 - smoothstep(hi.y - f, hi.y + f, room.y));
 		a *= mx * my;
+	}
+	if (use_clip_tex) {
+		vec2 room = node_rect.xy + UV * node_rect.zw;
+		a *= texture(clip_tex, room / space).r;
 	}
 	COLOR = vec4(tint.rgb, 1.0) * a * tint.a;
 }

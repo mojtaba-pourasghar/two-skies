@@ -26,6 +26,7 @@ func _ready() -> void:
 	await _t_hop_mark()
 	_t_death()
 	await _t_challenge_rooms()
+	await _t_personal_space()
 	_report()
 
 
@@ -210,6 +211,23 @@ func _t_challenge_rooms() -> void:
 		_check("و در حالت «بیا» است", il.order == TdIlara.Order.FOLLOW)
 		_check("و رهبرش کایروست", il.leader == game2.get("kairo"))
 	game2.queue_free()
+
+
+## کایروی ایستاده: ایلارا کنارش می‌ایستد نه رویش (گام ۵۳، S3a). روی
+## هم ایستادن یعنی یکی از دو شخصیت روی صفحه ناپدید است.
+func _t_personal_space() -> void:
+	print("— فاصلهٔ شخصی ایلارا —")
+	var game: RoomGame = load("res://scenes/room_game.tscn").instantiate()
+	game.start_room = "s3a_plaza"
+	game.resume = false
+	add_child(game)
+	for i in 120:
+		await get_tree().physics_frame
+	var d: float = game.ilara.global_position.distance_to(game.kairo.global_position)
+	_check("ایلارا روی کایروی ایستاده نمی‌ایستد", d >= 24.0, "= %.0f پیکسل" % d)
+	_check("ولی نزدیکش می‌ماند", d <= 64.0, "= %.0f پیکسل" % d)
+	game.queue_free()
+	await get_tree().physics_frame
 
 
 func _check(label: String, ok: bool, detail: String = "") -> void:

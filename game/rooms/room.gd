@@ -217,6 +217,7 @@ func _build_effects() -> void:
 	var map_name := String(data.get("fx_map", String(data.get("id", ""))))
 	_fx = RoomEffects.new()
 	_fx.name = "Effects"
+	_fx.room_id = String(data.get("id", ""))
 	if not _fx.load_map(map_name):
 		_fx.free()
 		_fx = null
