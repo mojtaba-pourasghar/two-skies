@@ -44,6 +44,15 @@ var _battle_enemy: MapEnemy = null
 var _clear_at := Vector2.ZERO
 ## بعد از فرار، دشمن تا وقتی کایرو از بردش بیرون نرفته دوباره نبرد نمی‌سازد
 var _flee_from: MapEnemy = null
+## جان صفر در اکتشاف (D-ART-51 مدیر): پردهٔ ۰٫۶ث و برگشت به مجسمه.
+const STATUE_FADE_FRAMES: int = 36
+const STATUE_RADIUS: float = 56.0
+## اتاق و جای مجسمهٔ پیش‌فرض، اگر بازیکن هنوز به هیچ مجسمه‌ای نرسیده
+const FIRST_STATUE_ROOM := "r1a_living"
+var _statue_frames: int = 0
+var _at_statue: bool = false
+signal statue_touched(room_id: String)
+signal returned_to_statue(room_id: String)
 
 
 func _ready() -> void:
@@ -206,6 +215,9 @@ func _physics_process(_delta: float) -> void:
 	GameMode.tick()
 	if battle != null:
 		return
+	if _statue_frames > 0:
+		_tick_statue_return()
+		return
 	director.tick()
 	_fade.color.a = director.fade_alpha()
 	if kairo == null or director.is_transitioning():
@@ -220,7 +232,78 @@ func _physics_process(_delta: float) -> void:
 	room.use_hires(camera.zoom.x > PaintedRoom.ZOOM_WITHOUT_HIRES)
 	if _check_enemy():
 		return
+	_check_statue()
 	_check_door()
+
+
+## مجسمهٔ ذخیره (سند ۰۹ §۱۱): لمس = جان پر + جای برگشت جان صفر. یک بار
+## در هر نزدیک شدن، نه هر فریم (ذخیره روی دیسک می‌نویسد).
+func _check_statue() -> void:
+	var st := _statue_in(room.data)
+	if st.is_empty():
+		_at_statue = false
+		return
+	var near := kairo.foot_position().distance_to(st["at"]) <= STATUE_RADIUS
+	if near and not _at_statue:
+		GameState.restore_full()
+		GameState.set_statue(String(room.data.get("id", "")), st["stand"])
+		statue_touched.emit(String(room.data.get("id", "")))
+	_at_statue = near
+
+
+## مجسمهٔ ذخیرهٔ یک اتاق: {at, stand} یا خالی.
+static func _statue_in(data: Dictionary) -> Dictionary:
+	for raw in data.get("props", []):
+		var p: Dictionary = raw
+		if not bool(p.get("save", false)):
+			continue
+		var at: Array = p.get("at", [0, 0])
+		var sd: Array = p.get("stand", at)
+		return {"at": Vector2(float(at[0]), float(at[1])),
+			"stand": Vector2(float(sd[0]), float(sd[1]))}
+	return {}
+
+
+func _begin_statue_return() -> void:
+	_statue_frames = STATUE_FADE_FRAMES
+	kairo.velocity = Vector2.ZERO
+	GameMode.set_control(GameMode.ControlMode.SCRIPTED)
+
+
+func _tick_statue_return() -> void:
+	_statue_frames -= 1
+	var t := 1.0 - float(_statue_frames) / float(STATUE_FADE_FRAMES)
+	_fade.color = Color(0, 0, 0, 1.0 - absf(t * 2.0 - 1.0))
+	# جابه‌جایی وسط پرده، وقتی صفحه کاملاً تاریک است
+	if _statue_frames == STATUE_FADE_FRAMES / 2:
+		_do_statue_return()
+	if _statue_frames == 0:
+		_fade.color = Color(room.light_tint(), 0.0)
+		GameMode.set_control(GameMode.ControlMode.PLAY)
+
+
+func _do_statue_return() -> void:
+	var st := GameState.statue()
+	if st.is_empty():
+		var first := _loader.load_room(FIRST_STATUE_ROOM)
+		var fs := _statue_in(first)
+		st = {"room": FIRST_STATUE_ROOM,
+			"at": fs.get("stand", first.get("spawn", [0, 0]))}
+		if st["at"] is Array:
+			st["at"] = Vector2(float(st["at"][0]), float(st["at"][1]))
+	var rid := String(st["room"])
+	if rid != String(room.data.get("id", "")):
+		_enter_room(rid, st["at"])
+	else:
+		kairo.global_position = st["at"]
+		kairo.velocity = Vector2.ZERO
+		if ilara != null:
+			ilara.global_position = st["at"] - Vector2(40, 0)
+		camera.snap_to_target()
+	# جلوی مجسمه ایستاده‌ایم؛ لمس دوباره‌اش ذخیرهٔ تکراری نسازد
+	_at_statue = true
+	GameState.restore_full()
+	returned_to_statue.emit(rid)
 
 
 signal battle_started(encounter: String)
@@ -288,12 +371,18 @@ signal hazard_hurt(hazard: Dictionary, hp_pct: float)
 ## خطری با `damage_pct` ۱۰۰ بیرون اتاق چالش هم نمی‌کشد: اکتشاف مرگ ندارد
 ## (GameState.damage_percent جان را زیر صفر نمی‌برد).
 func _on_hazard_hit(h: Dictionary) -> void:
-	if kairo == null or director.is_transitioning():
+	# وسط پردهٔ برگشت به مجسمه کایرو هنوز روی تله است؛ بی این شرط تله هر
+	# فریم پرده را از نو شروع می‌کرد و برگشت هرگز رخ نمی‌داد.
+	if kairo == null or director.is_transitioning() or _statue_frames > 0:
 		return
 	if is_challenge(room.data):
 		kairo.die()
 		return
 	GameState.damage_percent(float(h.get("damage_pct", 10.0)))
+	if GameState.hp_percent() <= 0.0:
+		hazard_hurt.emit(h, 0.0)
+		_begin_statue_return()
+		return
 	var safe: Array = h.get("safe", [])
 	var back := _restart_at
 	if safe.size() == 2:

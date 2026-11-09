@@ -73,12 +73,37 @@ func save_checkpoint(id: String) -> void:
 func save_explore(room_id: String, at: Vector2) -> void:
 	if room_id == "":
 		return
+	var prev_statue: Variant = (data.get("explore", {}) as Dictionary).get("statue", {})
 	data["explore"] = {
 		"room": room_id,
 		"at": [int(at.x), int(at.y)],
 		"flags": (run["flags"] as Dictionary).duplicate(true),
+		"statue": prev_statue if prev_statue is Dictionary else {},
 	}
 	save_game()
+
+
+## آخرین مجسمهٔ ذخیره (D-ART-51 مدیر): جان صفر در اکتشاف به همین‌جا
+## برمی‌گردد. `at` جای ایستادن جلوی مجسمه است، نه خود مجسمه.
+func set_statue(room_id: String, at: Vector2) -> void:
+	if not data.has("explore") or not (data["explore"] is Dictionary):
+		data["explore"] = {"room": room_id, "at": [int(at.x), int(at.y)],
+			"flags": (run["flags"] as Dictionary).duplicate(true)}
+	(data["explore"] as Dictionary)["statue"] = {"room": room_id,
+		"at": [int(at.x), int(at.y)]}
+	save_game()
+
+
+## {room, at} یا خالی اگر هنوز به هیچ مجسمه‌ای نرسیده.
+func statue() -> Dictionary:
+	var st: Variant = (data.get("explore", {}) as Dictionary).get("statue", {})
+	if not (st is Dictionary) or (st as Dictionary).is_empty():
+		return {}
+	var a: Array = (st as Dictionary).get("at", [])
+	if a.size() != 2:
+		return {}
+	return {"room": String((st as Dictionary).get("room", "")),
+		"at": Vector2(float(a[0]), float(a[1]))}
 
 
 ## اتاقی که باید از آن ادامه داد، یا خالی اگر هنوز جایی نرفته‌ایم.
