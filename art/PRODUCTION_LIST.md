@@ -194,3 +194,4 @@
 ## دستهٔ ۲۲ — مه tileable (thin/thick/smoke) — ارسال‌شده به Canva
 ## دستهٔ ۲۳ — شعلهٔ اجاق، نئون (بدون ماجنتا)، در باز/بسته — ارسال‌شده به Canva
 ### دستهٔ ۲۲/۲۳ — وضعیت: **برش و پوش شد** (`slice_ch1_v22.py`): مه tileable ×۳، stove_fire/neon_bar/neon_arrow/door_open، hires ۹ اتاق. نقشهٔ افکت ۴ اتاق: `rooms/ch1/effects/`.
+## دستهٔ ۲۴ — پهپاد فرمانده/کوچک (REQ-030) — ارسال‌شده به Canva
