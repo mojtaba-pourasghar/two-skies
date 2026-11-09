@@ -30,6 +30,11 @@
     "ct_base": 100.0,
     "_draft": ["command_guard_reduce", "ct_base"]
   },
+  "balance": {
+    "_source": "D-ART-51 مدیر (گام ۵۳): جان دشمن ×۲٫۵ و آسیب دشمن ×۱٫۵. جان و آسیب پایهٔ هر دشمن پایین‌تر همان عدد سند ۰۹ §۴ است؛ ضریب روی آن اعمال می‌شود تا عدد سند دیده بماند.",
+    "enemy_hp_mult": 2.5,
+    "enemy_damage_mult": 1.5
+  },
   "party": {
     "kairo": {"name_key": "name_kairo", "hp": 70, "speed": 12, "strike": 9,
       "skills": ["hack", "dash", "emp"], "_draft": ["speed"]},
@@ -134,12 +139,21 @@
     "ch1_a3_patrol_drone": {
       "_source": "سند ۰۸ §۵ مرحلهٔ ۳ نبرد ۲: پهپاد گشتی",
       "enemies": ["drone"], "bg": "battle_bg_street", "fleeable": true,
-      "reward": {"coins": 15}
+      "reward": {"coins": 15},
+      "balance": {
+        "_source": "D-ART-54: تک‌دشمن با ×۲٫۵ میانهٔ ۳۰ث بود، روی کف شرط ۳۰–۹۰ث مدیر.",
+        "enemy_hp_mult": 3.5
+      }
     },
     "ch1_a3_commander": {
       "_source": "سند ۰۸ §۵ مرحلهٔ ۳ اوج: پهپاد فرمانده؛ سند ۰۹ §۴: فاز ۲ در ۵۰٪ جان",
       "enemies": ["commander"], "bg": "battle_bg_launch", "fleeable": false,
-      "climax": true, "reward": {"coins": 30}
+      "climax": true, "reward": {"coins": 30},
+      "balance": {
+        "_source": "D-ART-54: ضریب سراسری ×۲٫۵/×۱٫۵ اوج را ۶۱ث نگه می‌داشت؛ هدف مدیر ۱۲۰–۱۸۰ث. با ۵ و ۲: بازیکن دقیق انسانی میانه ۱۴۱ث، ناشی و فقط‌سپر همیشه می‌بازند.",
+        "enemy_hp_mult": 5.0,
+        "enemy_damage_mult": 2.0
+      }
     }
   }
 }

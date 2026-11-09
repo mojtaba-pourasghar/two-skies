@@ -172,10 +172,20 @@ func _make_unit(id: String, side: String, kind: String, hp: int, speed: float) -
 
 func _add_enemy(kind: String, id: String) -> Dictionary:
 	var e: Dictionary = data["enemies"][kind]
-	var u := _make_unit(id, "enemy", kind, int(e["hp"]), float(e["speed"]))
+	var hp := int(round(float(e["hp"]) * _bal("enemy_hp_mult")))
+	var u := _make_unit(id, "enemy", kind, hp, float(e["speed"]))
 	units.append(u)
 	_next_intent(u)
 	return u
+
+
+## ضریب تعادل (D-ART-51 مدیر). نبرد می‌تواند ضریب خودش را داشته باشد
+## (اوج)، وگرنه ضریب سراسری؛ نبودن هر دو = ۱، یعنی اعداد خام سند.
+func _bal(key: String) -> float:
+	var own: Dictionary = encounter.get("balance", {})
+	if own.has(key):
+		return float(own[key])
+	return float((data.get("balance", {}) as Dictionary).get(key, 1.0))
 
 
 func _ct_base() -> float:
@@ -589,7 +599,7 @@ func _apply_to_party(t: Dictionary, it: Dictionary, defense: float) -> void:
 		t["slowed"] = true
 		t["ct"] = float(t["ct"]) + _ct_base() / float(t["speed"])
 		events.append({"type": "slow", "who": t["id"]})
-	var dmg := float(it.get("damage", 0))
+	var dmg := float(it.get("damage", 0)) * _bal("enemy_damage_mult")
 	if dmg <= 0.0:
 		return
 	var r: Dictionary = data["rules"]

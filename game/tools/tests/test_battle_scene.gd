@@ -23,6 +23,7 @@ func _ready() -> void:
 	await _t_layout()
 	await _t_ring_timing()
 	await _t_input_press()
+	await _t_enemy_tempo()
 	await _t_wins()
 	await _t_lose_restart()
 	_report()
@@ -141,6 +142,39 @@ func _t_input_press() -> void:
 	await _frames(2)
 
 
+## گام ۵۳ مدیر: «دشمن باید در بازهٔ ≤۴ث بعد از نوبتش حمله را شروع کند و
+## قصدش خوانا باشد». از شروع نوبت دشمن (نبض قصد) تا باز شدن حلقهٔ دفاع،
+## در صحنهٔ واقعی.
+func _t_enemy_tempo() -> void:
+	print("— ضرب‌آهنگ دشمن —")
+	var b := _make("ch1_a3_guard_crawler", "idle")
+	var start := -1
+	var worst := 0
+	var attacks := 0
+	var readable := true
+	var f := 0
+	while attacks < 4 and f < 60 * 300:
+		await get_tree().physics_frame
+		f += 1
+		if b.phase == BattleScene.Phase.TELEGRAPH and start < 0:
+			start = f
+			var n: Dictionary = b.get("_enemy_nodes").get(b.core.current()["id"], {})
+			if not n.is_empty() and not (n["icon"] as TextureRect).visible:
+				readable = false
+		elif b.phase == BattleScene.Phase.DEFENSE and start >= 0:
+			worst = maxi(worst, f - start)
+			attacks += 1
+			start = -1
+		elif b.phase != BattleScene.Phase.TELEGRAPH and b.phase != BattleScene.Phase.DEFENSE:
+			start = -1
+	_check("دشمن‌ها چند بار حمله کردند", attacks >= 4, "= %d" % attacks)
+	_check("حمله ≤۴ث بعد از شروع نوبت دشمن شروع شد", worst > 0 and worst <= 240,
+		"= بدترین %.2fث" % (worst / 60.0))
+	_check("قصد هر بار پیش از حمله دیده می‌شد", readable)
+	b.queue_free()
+	await _frames(2)
+
+
 func _t_wins() -> void:
 	print("— هر چهار نبرد v1 در صحنه —")
 	for enc in V1:
@@ -150,7 +184,7 @@ func _t_wins() -> void:
 		var got: Array = []
 		b.finished.connect(func(o, id): got.append([o, id]))
 		var frames := 0
-		while got.is_empty() and frames < 60 * 120:
+		while got.is_empty() and frames < 60 * 600:
 			await get_tree().physics_frame
 			frames += 1
 		_check("  «%s» برده و اعلام شد" % enc,

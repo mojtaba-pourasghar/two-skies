@@ -29,6 +29,7 @@ func _ready() -> void:
 	_t_phases()
 	_t_determinism()
 	_t_full_battles()
+	_t_balance()
 	_report()
 
 
@@ -207,15 +208,17 @@ func _t_interrupt() -> void:
 
 func _t_defense() -> void:
 	print("— دفاع به‌موقع —")
-	for row in [[BattleCore.NO_PRESS, 6, "بی‌دفاع"], [0.15, 3, "خوب −۵۰٪"],
-			[0.0, 2, "عالی −۷۰٪"]]:
+	# پنجهٔ خزنده ۶ (سند ۰۹) × ضریب آسیب ۱٫۵ (D-ART-51) = ۹؛
+	# خوب ۴٫۵ → ۵، عالی ۲٫۷ → ۳
+	for row in [[BattleCore.NO_PRESS, 9, "بی‌دفاع"], [0.15, 5, "خوب −۵۰٪"],
+			[0.0, 3, "عالی −۷۰٪"]]:
 		var b := _new("ch1_a2_crawlers", 3)
 		while b.current()["side"] != "enemy":
 			b.act("strike", "", "crawler_1", BattleCore.NO_PRESS)
 		var total0 := int(b.unit("kairo")["hp"]) + int(b.unit("ilara")["hp"])
 		b.run_enemy(float(row[0]))
 		var lost := total0 - int(b.unit("kairo")["hp"]) - int(b.unit("ilara")["hp"])
-		_check("پنجهٔ ۶: %s" % row[2], lost == int(row[1]), "= %d" % lost)
+		_check("پنجهٔ ۹: %s" % row[2], lost == int(row[1]), "= %d" % lost)
 	# سپرِ فرمان و دفاع به‌موقع ضرب می‌شوند، هرگز ۱۰۰٪ نمی‌شوند
 	var c := _new("ch1_a2_crawlers", 3)
 	c.act("guard")
@@ -323,7 +326,7 @@ func _t_phases() -> void:
 	var b := _new("ch1_a3_commander")
 	var c := b.unit("commander_1")
 	_check("فاز ۱ با لیزر شروع می‌شود", b.intent_of("commander_1").get("id", "") == "laser")
-	b._hurt_enemy(c, 41.0, "skill", "test")
+	b._hurt_enemy(c, float(c["max_hp"]) * 0.55, "skill", "test")
 	_check("زیر ۵۰٪ جان فاز ۲ شد", int(c["phase"]) == 1, "= جان %d" % int(c["hp"]))
 	_check("و قصد همان لحظه عوض شد (فراخوان)",
 		b.intent_of("commander_1").get("id", "") == "summon")
@@ -365,14 +368,57 @@ func _t_full_battles() -> void:
 		var cap: int = 60 if id.ends_with("commander") else 30
 		_check("  «%s»: کوتاه می‌ماند" % id, int(r["party_actions"]) <= cap,
 			"= %d کنش (سقف %d)" % [r["party_actions"], cap])
-	# اطلاعی، نه سنجه: طول نبرد با اعداد خود سند (DECISION_QUEUE ردیف ۹)
-	for id in V1:
-		var u := _play(id, false)
-		print("    · «%s» بازیکن ناشی: نتیجه %d، %d کنش یار"
-			% [id, u["outcome"], u["party_actions"]])
 	var t := _play("ch1_a2_crawlers", false)
 	_check("نبرد آموزشی حتی بدون یک ضربهٔ به‌موقع بردنی است",
 		t["outcome"] == BattleCore.Outcome.WIN, "= %s" % str(t))
+
+
+## تعادل D-ART-51 مدیر با شرط‌های گام ۵۳، روی ۶۰ اجرا با BattleSim (مدل
+## زمان بازیکن انسانی). «دقیق» = بازیکن دقیق انسانی (خطای زمان ۸۰ms)؛
+## پیشگوی بی‌خطا فقط باید همیشه ببرد (D-ART-54).
+const RUNS := 60
+## شرط‌هایی که با اعداد فعلی برآورده نمی‌شوند و تصمیم کاربر می‌خواهند.
+## دیده می‌شوند (⚠)، و اگر برآورده شدند سنجه رد می‌شود تا فهرست پاک شود.
+const PENDING_BALANCE := {
+	"climax_taken": "DECISION_QUEUE ردیف ۱۱ (همهٔ قصدهای فرمانده قطع‌شدنی‌اند)",
+}
+
+
+func _t_balance() -> void:
+	print("— تعادل (D-ART-51، شرط‌های گام ۵۳) —")
+	for id in ["ch1_a2_crawlers", "ch1_a3_guard_crawler", "ch1_a3_patrol_drone"]:
+		var r := BattleSim.summary(id, "skilled", RUNS)
+		_check("  «%s»: دقیق می‌برد" % id, r["win_rate"] >= 0.95, "= %.0f٪" % (r["win_rate"] * 100))
+		_check("  «%s»: ۳۰–۹۰ ثانیه" % id, r["median_s"] >= 30.0 and r["median_s"] <= 90.0,
+			"= میانه %.0fث [%.0f–%.0f]" % [r["median_s"], r["min_s"], r["max_s"]])
+	var p := BattleSim.summary("ch1_a3_commander", "perfect", RUNS)
+	_check("  اوج: پیشگوی بی‌خطا همیشه می‌برد", p["win_rate"] == 1.0)
+	var k := BattleSim.summary("ch1_a3_commander", "skilled", RUNS)
+	_check("  اوج: دقیق می‌برد", k["win_rate"] >= 0.95, "= %.0f٪" % (k["win_rate"] * 100))
+	_check("  اوج: ۱۲۰–۱۸۰ ثانیه", k["median_s"] >= 120.0 and k["median_s"] <= 180.0,
+		"= میانه %.0fث [%.0f–%.0f]" % [k["median_s"], k["min_s"], k["max_s"]])
+	var met: bool = k["median_taken"] >= 0.40
+	if PENDING_BALANCE.has("climax_taken"):
+		print("  ⚠   اوج: دقیق با ≥۴۰٪ آسیب می‌برد — الان %.0f٪؛ منتظر %s"
+			% [k["median_taken"] * 100, PENDING_BALANCE["climax_taken"]])
+		_check("  اوج: شرط ۴۰٪ هنوز واقعاً برآورده نشده (وگرنه از فهرست بردار)", not met)
+	else:
+		_check("  اوج: دقیق با ≥۴۰٪ آسیب می‌برد", met, "= %.0f٪" % (k["median_taken"] * 100))
+	for bot in ["clumsy", "guard_only"]:
+		var r := BattleSim.summary("ch1_a3_commander", bot, RUNS)
+		_check("  اوج: «%s» در ≥۳۰٪ اجراها می‌بازد" % bot, r["lose_rate"] >= 0.30,
+			"= %.0f٪" % (r["lose_rate"] * 100))
+	# دشمن واقعاً حمله می‌کند: در هر نبرد، روبات دقیق دست‌کم یک آسیب می‌خورد
+	for id in V1:
+		var r := BattleSim.summary(id, "skilled", 20)
+		var reach: bool = r["median_taken"] > 0.0
+		var key := "reach_%s" % id
+		if PENDING_BALANCE.has(key):
+			print("  ⚠   «%s»: دشمن به بازیکن دقیق نمی‌رسد (۰٪)؛ منتظر %s" % [id, PENDING_BALANCE[key]])
+			_check("  «%s»: هنوز واقعاً نمی‌رسد (وگرنه از فهرست بردار)" % id, not reach)
+		else:
+			_check("  «%s»: دشمن به یاران می‌رسد" % id, reach,
+				"= %.0f٪ آسیب" % (r["median_taken"] * 100))
 
 
 ## روبات ساده: هر جا قصد قطع‌شدنی هست و انرژی هست قطع می‌کند، جان کم را
