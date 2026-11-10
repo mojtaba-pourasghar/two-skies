@@ -123,11 +123,69 @@
    ],
    "size_px": 2,
    "source": "چراغ‌های رک سرور"
+  },
+  {
+   "id": "drip_pipe",
+   "type": "anim",
+   "anim": "ambient/ch1/drip",
+   "pos": [
+    1128,
+    240
+   ],
+   "scale": 0.8,
+   "fps": 6,
+   "random_start": true,
+   "source": "چکه از لولهٔ راست"
+  },
+  {
+   "id": "drip_floor",
+   "type": "anim",
+   "anim": "ambient/ch1/drip",
+   "pos": [
+    335,
+    430
+   ],
+   "scale": 0.8,
+   "fps": 6,
+   "random_start": true,
+   "source": "چکه روی کف نزدیک طاق"
+  },
+  {
+   "id": "wire_sway",
+   "type": "sway",
+   "rect": [
+    640,
+    0,
+    780,
+    120
+   ],
+   "pivot": [
+    710,
+    0
+   ],
+   "amp_px": 1.4,
+   "period_s": 5.5,
+   "gusts": true,
+   "what": "کابل‌های آویزان"
+  },
+  {
+   "id": "pipe_glint",
+   "type": "glow_pulse",
+   "pos": [
+    830,
+    320
+   ],
+   "radius": 90,
+   "color": "#ff9a50",
+   "amp": 0.05,
+   "period_s": 8,
+   "signal": "noise_lowpass",
+   "source": "بازتاب گرم روی کف خیس"
   }
  ],
  "forbid": [
   "مه سراسری",
   "نور روی کف تاریک"
  ],
- "note": "REQ-028: بخار ستون‌ها در خود نقاشی هست؛ anim دود برداشته شد"
+ "note": "REQ-031: بعد از برداشتن دود، منبع حرکت طبیعی اضافه شد (چکه، کابل، بازتاب)"
 }
