@@ -31,6 +31,10 @@ var _frames: Dictionary = {}
 var _current: String = ""
 var _frame: int = 0
 var _timer: float = 0.0
+var _ghost: Sprite2D = null
+var _ghost_mat: ShaderMaterial = null
+var _ghost_amount: float = 0.0
+var _ghost_target: float = 0.0
 var _breath_t: float = 0.0
 var _sprite_base_y: float = 0.0
 var _base := "res://assets/%s/home/"
@@ -64,8 +68,58 @@ func setup(actor_name: String) -> void:
 	# فاز تصادفی: کایرو و ایلارا نباید مثل دو ساعت با هم نفس بکشند
 	_breath_t = randf() * 10.0
 
+	_build_ghost()
 	_load_anims()
 	play("idle_down")
+
+
+## سیلوئتی که فقط وقتی بازیگر پشت مبل می‌رود روشن می‌شود.
+##
+## z نسبی ۱ یعنی **بالای** بریده‌های همان لایه، ولی هنوز زیر لایهٔ
+## occluderهای تصویری (طاق و پرده). سیلوئت نباید روی پرده بیفتد.
+const GHOST_FADE_S: float = 0.15
+const GHOST_ON: float = 0.60
+
+
+func _build_ghost() -> void:
+	_ghost = Sprite2D.new()
+	_ghost.name = "Ghost"
+	_ghost.centered = false
+	_ghost.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_ghost.position = _sprite.position
+	_ghost.z_index = 1
+	_ghost_mat = ShaderMaterial.new()
+	_ghost_mat.shader = load("res://shaders/silhouette.gdshader")
+	_ghost_mat.set_shader_parameter("amount", 0.0)
+	_ghost.material = _ghost_mat
+	add_child(_ghost)
+
+
+## چقدر از بازیگر زیر occluder است (۰ تا ۱). کد اتاق هر فریم می‌دهدش.
+func set_coverage(pct: float) -> void:
+	_ghost_target = 1.0 if pct >= GHOST_ON else 0.0
+
+
+func ghost_amount() -> float:
+	return _ghost_amount
+
+
+func _tick_ghost(delta: float) -> void:
+	if _ghost == null:
+		return
+	# ورود و خروج نرم (۰٫۱۵ ثانیه): ظاهر شدن ناگهانی بیشتر از پنهان
+	# شدن به چشم می‌آید و حواس را پرت می‌کند.
+	var step := delta / GHOST_FADE_S
+	_ghost_amount = move_toward(_ghost_amount, _ghost_target, step)
+	_ghost.visible = _ghost_amount > 0.001
+	if not _ghost.visible:
+		return
+	_ghost.texture = _sprite.texture
+	_ghost.flip_h = _sprite.flip_h
+	_ghost.position = _sprite.position
+	if _sprite.texture != null:
+		_ghost_mat.set_shader_parameter("tex_size", _sprite.texture.get_size())
+	_ghost_mat.set_shader_parameter("amount", _ghost_amount)
 
 
 func _load_anims() -> void:
@@ -119,6 +173,7 @@ func _apply() -> void:
 
 func _process(delta: float) -> void:
 	_tick_breath(delta)
+	_tick_ghost(delta)
 	if not _frames.has(_current):
 		return
 	_timer += delta

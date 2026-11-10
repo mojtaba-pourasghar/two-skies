@@ -301,6 +301,9 @@ func _t_cut_occluders(node: PaintedRoom) -> void:
 		_check("  و در لایهٔ بازیگران است، نه لایهٔ occluder",
 			c.get_parent() == node.actors)
 
+	# درصد پوشش و فعال شدن سیلوئت (تصمیم کاربر ۱۴۰۵/۰۸/۲۱)
+	_t_coverage(node)
+
 	# بازیکنی که **پشت** مبل است باید پایین‌تر از آن در صف Y-sort بیفتد
 	var sofa: Polygon2D = null
 	for c in cuts:
@@ -311,6 +314,54 @@ func _t_cut_occluders(node: PaintedRoom) -> void:
 		_check("  پای بازیکن در ۴۳۰ پشت مبل است (کمتر از %.0f)" % base,
 			430.0 < base)
 		_check("  و در ۵۸۰ جلوی آن", 580.0 > base)
+
+
+## پوشش و سیلوئت. سه چیز سنجیده می‌شود:
+##   ۱ پوشش **بیرون** هر بریده صفر است
+##   ۲ پوشش وسط بریده بالاست
+##   ۳ بریده‌ای که بازیگر **جلویش** ایستاده نباید پوشش بدهد
+func _t_coverage(node: PaintedRoom) -> void:
+	print("— پوشش و سیلوئت —")
+	var cuts: Array[Polygon2D] = []
+	for c in node.actors.get_children():
+		if c is Polygon2D and String(c.name).begins_with("Cut_"):
+			cuts.append(c)
+	if cuts.is_empty():
+		_check("اتاق بریده‌ای برای سنجش پوشش دارد", false)
+		return
+
+	# جایی دور از هر بریده
+	_check("دور از همهٔ occluderها پوشش صفر است",
+		is_equal_approx(node.coverage_at(Vector2(60, 690)), 0.0),
+		"= %.2f" % node.coverage_at(Vector2(60, 690)))
+
+	for c in cuts:
+		var base: float = float(c.get_meta("cut_base_y", 0.0))
+		# مرکز افقی بریده، کمی بالاتر از خط پایه → بازیگر پشت آن
+		var mid := Vector2(0, 0)
+		var n := 0
+		for v in c.polygon:
+			mid += v
+			n += 1
+		mid = mid / float(maxi(1, n)) + c.position
+		var behind := Vector2(mid.x, base - 12.0)
+		var cov: float = node.coverage_at(behind)
+		_check("  پشت «%s» پوشش بالاست" % c.name, cov >= 0.5,
+			"= %.0f٪" % (cov * 100.0))
+
+		# **جلوی** همان بریده نباید پوششی باشد
+		var front := Vector2(mid.x, base + 40.0)
+		_check("  ولی جلویش صفر است",
+			is_equal_approx(node.coverage_at(front), 0.0),
+			"= %.0f٪" % (node.coverage_at(front) * 100.0))
+
+	# آستانهٔ روشن شدن سیلوئت همان ۶۰٪ است که کاربر خواست
+	_check("آستانهٔ سیلوئت ۶۰٪ است",
+		is_equal_approx(ActorVisual.GHOST_ON, 0.60),
+		"= %.0f٪" % (ActorVisual.GHOST_ON * 100.0))
+	_check("گذارش ۰٫۱ تا ۰٫۲ ثانیه است",
+		ActorVisual.GHOST_FADE_S >= 0.1 and ActorVisual.GHOST_FADE_S <= 0.2,
+		"= %.2fث" % ActorVisual.GHOST_FADE_S)
 
 
 ## **سینوس خالص ممنوع است** (سند ۱۴ بند ۲). این را نمی‌شود با نگاه کردن

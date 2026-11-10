@@ -226,6 +226,8 @@ func _physics_process(_delta: float) -> void:
 		var a: TdActor = kairo if i == 0 else ilara
 		if a != null:
 			_visuals[i].update_from(a)
+			# سیلوئت وقتی بیش از ۶۰٪ بدنه زیر یک occluder بریده رفت
+			_visuals[i].set_coverage(room.coverage_at(a.foot_position()))
 	# محیط باید عبور بازیکن را حس کند (سند ۱۳ بند ۷)
 	room.react_to(kairo.foot_position(), kairo.velocity.length())
 	# زوم که از حد بی‌هایرز گذشت، تصویر پرجزئیات بیاید

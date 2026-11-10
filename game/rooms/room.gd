@@ -43,6 +43,7 @@ var _last_react := Vector2.ZERO
 ## ضریب نسخهٔ پرجزئیات: ۱ برای ۱۲۸۰×۷۲۰، ۱٫۳۱۲۵ برای hires.
 var _bg_scale: float = 1.0
 var _cuts: Array[Polygon2D] = []
+var _img_occ: Array[Dictionary] = []
 
 
 func build(room: Dictionary) -> void:
@@ -269,6 +270,12 @@ func _build_occluders() -> void:
 		s.centered = false
 		s.position = Vector2(float(at[0]), float(at[1]))
 		_occluders.add_child(s)
+		# برای سنجش پوشش، آلفای خود تصویر لازم است. یک بار خوانده و
+		# نگه داشته می‌شود؛ `get_image` هر فریم گران است.
+		_img_occ.append({
+			"rect": Rect2(s.position, tex.get_size()),
+			"img": tex.get_image(),
+		})
 
 
 ## بریده‌ای از نقاشی که در Y-sort با بازیگران می‌نشیند.
@@ -419,6 +426,61 @@ static func _distance_to_rect(p: Vector2, r: Rect2) -> float:
 	var dx: float = maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x)
 	var dy: float = maxf(maxf(r.position.y - p.y, 0.0), p.y - r.end.y)
 	return sqrt(dx * dx + dy * dy)
+
+
+## بدنهٔ دیداری بازیگر، برای سنجیدن پوشش. از پا به بالا.
+const BODY_W: float = 36.0
+const BODY_H: float = 88.0
+## شبکهٔ نمونه‌برداری: ۵×۸ یعنی ۴۰ نقطه — برای آستانهٔ ۶۰٪ بس است و
+## محاسبهٔ دقیق مساحت اشتراک چندضلعی‌ها را لازم ندارد.
+const COVER_COLS: int = 5
+const COVER_ROWS: int = 8
+
+
+## چه کسری از بدنهٔ بازیگری که پایش اینجاست، زیر یک `cut` می‌افتد؟
+##
+## فقط بریده‌هایی شمرده می‌شوند که بازیگر **پشتشان** است (`base_y` از
+## پای او جلوتر). بریده‌ای که بازیگر جلویش ایستاده او را نمی‌پوشاند،
+## پس شمردنش یعنی سیلوئت بی‌جا روشن شود.
+func coverage_at(foot: Vector2) -> float:
+	if _cuts.is_empty() and _img_occ.is_empty():
+		return 0.0
+	var hit := 0
+	var total := 0
+	for cx in COVER_COLS:
+		for cy in COVER_ROWS:
+			var p := Vector2(
+				foot.x - BODY_W * 0.5 + BODY_W * (float(cx) + 0.5) / float(COVER_COLS),
+				foot.y - BODY_H * (float(cy) + 0.5) / float(COVER_ROWS))
+			total += 1
+			if _covered(p, foot):
+				hit += 1
+	return float(hit) / float(maxi(1, total))
+
+
+## آیا این نقطه زیر occluderی است که بازیگر **پشتش** است؟
+func _covered(p: Vector2, foot: Vector2) -> bool:
+	for c in _cuts:
+		if float(c.get_meta("cut_base_y", 0.0)) <= foot.y:
+			continue
+		# نقاط چندضلعی نسبت به `base_y` بالا برده شده‌اند
+		if Geometry2D.is_point_in_polygon(p - c.position, c.polygon):
+			return true
+	# occluder تصویری همیشه روی بازیگر است، پس شرط `base_y` ندارد؛
+	# ولی فقط جایی می‌پوشاند که **خود تصویر** آنجا مات باشد.
+	for o in _img_occ:
+		var r: Rect2 = o["rect"]
+		if not r.has_point(p):
+			continue
+		var img: Image = o["img"]
+		if img == null:
+			continue
+		var q := Vector2i(p - r.position)
+		if q.x < 0 or q.y < 0 or q.x >= img.get_width() or q.y >= img.get_height():
+			continue
+		if img.get_pixelv(q).a > 0.5:
+			return true
+	return false
 
 
 ## رنگ نور اتاق، برای گذار در به در: پردهٔ گذار به‌جای سیاه خالص، به رنگ
