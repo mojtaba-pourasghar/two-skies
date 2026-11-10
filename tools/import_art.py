@@ -59,6 +59,28 @@ IMAGE_EXT = {".png", ".webp", ".jpg", ".jpeg"}
 WEBP_MIN_SIDE = 1280
 WEBP_QUALITY = 90
 
+#: کیفیت ویژهٔ بعضی فایل‌ها (شرط ۳ کاربر، ۱۴۰۵/۰۸/۲۱).
+#: کلید = تکه‌ای از مسیر؛ مقدار = کیفیت، یا `"lossless"`.
+#:
+#: لبهٔ نئون و پنل فیروزه‌ای پرکنتراست‌اند و اتلاف کنارشان حلقه می‌گذارد.
+#: اگر در ضبطی حلقه دیده شد، فایلش را اینجا اضافه کن — یک خط کافی است.
+WEBP_OVERRIDES: dict = {
+	# `tools/check_webp.py` این دو را بالای آستانه دید (میانگین ۳٫۱۵ و
+	# ۳٫۰۹). هر دو پرجزئیات و پرکنتراست‌اند: کف آبشار و خط افق بندر.
+	# با ۹۵ به ۲٫۷۶ و ۲٫۷۲ می‌رسند و ۸۰ کیلوبایت گران‌تر می‌شوند.
+	"env07_plateau_waterfall": 95,
+	"env09_harbor_town": 95,
+}
+
+
+def quality_for(rel: str):
+	"""کیفیت این فایل: عدد، یا `"lossless"` اگر نباید اتلاف بخورد."""
+	r = rel.replace("\\", "/")
+	for frag, q in WEBP_OVERRIDES.items():
+		if frag in r:
+			return q
+	return WEBP_QUALITY
+
 #: هرچه زیر این مسیرها باشد شخصیت یا اسپرایت است، هر اندازه که باشد.
 LOSSLESS_FAMILIES = (
 	"kairo/", "ilara/", "enemies/", "portraits/", "ui/", "icons/",
@@ -87,14 +109,18 @@ def is_background(src: Path, rel: str) -> bool:
 	return max(w, h) >= WEBP_MIN_SIDE
 
 
-def to_webp(src: Path, dst: Path) -> int:
-	"""تبدیل به WebP با اتلاف. اندازهٔ نتیجه را برمی‌گرداند."""
+def to_webp(src: Path, dst: Path, rel: str = "") -> int:
+	"""تبدیل به WebP. اندازهٔ نتیجه را برمی‌گرداند."""
 	from PIL import Image
+	q = quality_for(rel or str(src))
 	dst.parent.mkdir(parents=True, exist_ok=True)
 	with Image.open(src) as im:
 		if im.mode not in ("RGB", "RGBA"):
 			im = im.convert("RGBA")
-		im.save(dst, "WEBP", quality=WEBP_QUALITY, method=6)
+		if q == "lossless":
+			im.save(dst, "WEBP", lossless=True, method=6)
+		else:
+			im.save(dst, "WEBP", quality=int(q), method=6)
 	return dst.stat().st_size
 
 
@@ -222,7 +248,14 @@ def copy_asset(folder: Path, all_assets: list[Path], *, dry: bool,
 		# **مقایسه با مبدأ، نه با مقصد.** وقتی قالب عوض می‌شود دیگر
 		# نمی‌شود اندازه و هش مقصد را با مبدأ سنجید، پس هش مبدأ در
 		# مانیفست نگه داشته می‌شود.
-		want = sha(src)
+		#
+		# و **سیاست کدگذاری هم در کلید است**، نه فقط هش مبدأ: اگر کیفیت
+		# یک فایل را در `WEBP_OVERRIDES` عوض کنی ولی خود تصویر همان
+		# بماند، بدون این، ایمپورتر «تازه نیست» می‌گوید و فایل قدیمی با
+		# کیفیت قبلی در بسته می‌ماند. یک بار همین شد: چهار فایل را روی
+		# ۹۵ گذاشتم و هیچ‌کدام دوباره کدگذاری نشدند.
+		policy = "webp%s" % quality_for(rel_img) if lossy else "raw"
+		want = "%s|%s" % (sha(src), policy)
 		if dst.exists() and SRC_HASHES.get(rel_img) == want:
 			skipped += 1
 			out_bytes += dst.stat().st_size
@@ -232,16 +265,29 @@ def copy_asset(folder: Path, all_assets: list[Path], *, dry: bool,
 			continue
 		dst.parent.mkdir(parents=True, exist_ok=True)
 		if lossy:
-			out_bytes += to_webp(src, dst)
+			out_bytes += to_webp(src, dst, rel_img)
 			webp += 1
 			# نسخهٔ PNG قبلی اگر مانده بود برداشته می‌شود، وگرنه هر دو
 			# در بسته می‌روند و فشرده‌سازی بی‌اثر است
 			old = dst.with_suffix(".png")
 			if old.exists():
 				old.unlink()
+			old_imp = Path(str(old) + ".import")
+			if old_imp.exists():
+				old_imp.unlink()
 		else:
 			shutil.copy2(src, dst)
 			out_bytes += dst.stat().st_size
+			# قرینهٔ همان کار در شاخهٔ WebP: نسخهٔ قالب دیگر اگر مانده
+			# باشد برداشته می‌شود. بدون این، `--no-webp` هر دو قالب را
+			# کنار هم می‌گذاشت و بسته دو برابر می‌شد — یعنی «برگشت به
+			# PNG» عملاً حجم را بدتر می‌کرد.
+			old_webp = dst.with_suffix(".webp")
+			if old_webp.exists():
+				old_webp.unlink()
+			old_imp = Path(str(old_webp) + ".import")
+			if old_imp.exists():
+				old_imp.unlink()
 		NEW_HASHES[rel_img] = want
 
 	entry: dict = {

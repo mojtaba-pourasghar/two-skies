@@ -46,6 +46,16 @@ fi
 
 echo
 echo "=== ایمپورتر هنر (T2) ==="
+echo
+echo "=== کیفیت WebP (شرط ۲ کاربر: هر اتاق تازه خودش سنجیده شود) ==="
+if [ -d "$ROOT/game/assets" ]; then
+  if ! python3 -I "$ROOT/tools/check_webp.py"; then
+    fail=1
+  fi
+else
+  echo "game/assets/ نیست؛ رد شد."
+fi
+
 if ! python3 -I "$ROOT/tools/test_import_art.py"; then
   fail=1
 fi
