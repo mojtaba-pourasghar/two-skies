@@ -261,9 +261,56 @@ func _t_living() -> void:
 		_check("و بعد از دور شدن می‌خوابد",
 			float(mat.get_shader_parameter("push")) < 0.05)
 
+	_t_cut_occluders(node)
+
 	_check("رنگ گذار در، سیاه خالص نیست (تغییر نور نه خاموشی)",
 		node.light_tint() != Color(0, 0, 0), "= %s" % str(node.light_tint()))
 	node.queue_free()
+
+
+## occluder بریده از نقاشی (REQ-010 با روش گام ۵۴).
+##
+## قرارداد: گره در **لایهٔ بازیگران** است نه لایهٔ occluder، چون آنجا z
+## بالاتر است و همیشه می‌پوشاند. اینجا Y-sort تصمیم می‌گیرد، پس بازیکن
+## جلوی مبل دیده می‌شود و پشتش پنهان.
+func _t_cut_occluders(node: PaintedRoom) -> void:
+	print("— occluder بریده از نقاشی —")
+	var cuts: Array[Polygon2D] = []
+	for c in node.actors.get_children():
+		if c is Polygon2D and String(c.name).begins_with("Cut_"):
+			cuts.append(c)
+	var want := 0
+	for raw in node.data.get("occluders", []):
+		if ((raw as Dictionary).get("cut", []) as Array).size() >= 6:
+			want += 1
+	_check("برای هر `cut` یک گره ساخته شد", cuts.size() == want,
+		"= %d از %d" % [cuts.size(), want])
+	if cuts.is_empty():
+		return
+
+	for c in cuts:
+		var base: float = float(c.get_meta("cut_base_y", -1.0))
+		_check("  «%s» روی خط Y-sort خودش نشسته" % c.name,
+			is_equal_approx(c.position.y, base), "= y %.0f" % c.position.y)
+		_check("  و بافتش همان نقاشی اتاق است", c.texture != null)
+		# جابه‌جایی بافت باید دقیقاً همان مقدار جابه‌جایی نقاط باشد،
+		# وگرنه بریده از جای غلط تصویر برداشته می‌شود و مبل «می‌لغزد».
+		_check("  و بافت یک‌به‌یک روی مختصات اتاق می‌افتد",
+			is_equal_approx(c.texture_offset.y, base * c.texture_scale.y),
+			"= جابه‌جایی %.0f، مقیاس %.3f" % [c.texture_offset.y, c.texture_scale.y])
+		_check("  و در لایهٔ بازیگران است، نه لایهٔ occluder",
+			c.get_parent() == node.actors)
+
+	# بازیکنی که **پشت** مبل است باید پایین‌تر از آن در صف Y-sort بیفتد
+	var sofa: Polygon2D = null
+	for c in cuts:
+		if c.name == "Cut_sofa":
+			sofa = c
+	if sofa != null:
+		var base: float = float(sofa.get_meta("cut_base_y", 0.0))
+		_check("  پای بازیکن در ۴۳۰ پشت مبل است (کمتر از %.0f)" % base,
+			430.0 < base)
+		_check("  و در ۵۸۰ جلوی آن", 580.0 > base)
 
 
 ## **سینوس خالص ممنوع است** (سند ۱۴ بند ۲). این را نمی‌شود با نگاه کردن

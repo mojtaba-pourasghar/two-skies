@@ -42,6 +42,7 @@ var _dust_puff: GPUParticles2D = null
 var _last_react := Vector2.ZERO
 ## ضریب نسخهٔ پرجزئیات: ۱ برای ۱۲۸۰×۷۲۰، ۱٫۳۱۲۵ برای hires.
 var _bg_scale: float = 1.0
+var _cuts: Array[Polygon2D] = []
 
 
 func build(room: Dictionary) -> void:
@@ -118,6 +119,10 @@ func use_hires(on: bool) -> void:
 	_bg.scale = Vector2.ONE / _bg_scale
 	if _fx != null:
 		_fx.set_background(_bg.texture, _bg_scale)
+	for c in _cuts:
+		c.texture = _bg.texture
+		c.texture_offset = Vector2(0, float(c.get_meta("cut_base_y", 0.0))) * _bg_scale
+		c.texture_scale = Vector2.ONE * _bg_scale
 
 
 func _hires_path(bg_rel: String) -> String:
@@ -237,10 +242,23 @@ func _rect_of(d: Dictionary) -> Rect2:
 	return Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
 
 
+## occluder دو شکل دارد:
+##
+##   `img`  — تصویر جدا (طاق، ستون، پرده). همیشه **روی** بازیگران است،
+##            چون چیزهایی‌اند که بازیکن هرگز جلوشان نمی‌ایستد.
+##   `cut`  — چندضلعی روی **خود نقاشی** (مبل، بوفه، میز). اینجا بازیکن
+##            هم می‌تواند جلو باشد هم پشت، پس Y-sort تصمیم می‌گیرد.
+##
+## مدیر هنر گفت هنر occluder جدا نمی‌آید (گام ۵۴، REQ-010)، پس شکل دوم
+## راهی است که مبلمان بتواند شخصیت را بپوشاند بدون یک تکه هنر تازه:
+## همان پیکسل‌های نقاشی دوباره، ولی بریده و در Y-sort.
 func _build_occluders() -> void:
 	_occluders = _layer("Occluders", 4)
 	for raw in data.get("occluders", []):
 		var o: Dictionary = raw
+		if (o.get("cut", []) as Array).size() >= 6:
+			_add_cut_occluder(o)
+			continue
 		var tex := _load_tex(String(o.get("img", "")))
 		if tex == null:
 			continue
@@ -251,6 +269,47 @@ func _build_occluders() -> void:
 		s.centered = false
 		s.position = Vector2(float(at[0]), float(at[1]))
 		_occluders.add_child(s)
+
+
+## بریده‌ای از نقاشی که در Y-sort با بازیگران می‌نشیند.
+##
+## گره روی `base_y` نشانده می‌شود و نقاط چندضلعی به همان اندازه بالا
+## می‌روند: Y-sort گودو از **موقعیت گره** می‌چیند، نه از شکلش. پس اگر
+## گره روی (۰,۰) بماند، مبل همیشه ته صف می‌رود و هیچ‌وقت کسی را
+## نمی‌پوشاند.
+func _add_cut_occluder(o: Dictionary) -> void:
+	if _bg == null or _bg.texture == null:
+		return
+	var flat: Array = o["cut"]
+	var base_y := float(o.get("base_y", 0.0))
+	if base_y <= 0.0:
+		# نبودش یعنی پایین‌ترین نقطهٔ خود بریده
+		var i := 1
+		while i < flat.size():
+			base_y = maxf(base_y, float(flat[i]))
+			i += 2
+
+	var poly := PackedVector2Array()
+	var j := 0
+	while j + 1 < flat.size():
+		poly.append(Vector2(float(flat[j]), float(flat[j + 1]) - base_y))
+		j += 2
+
+	var n := Polygon2D.new()
+	n.name = "Cut_%s" % String(o.get("id", "x"))
+	n.polygon = poly
+	n.position = Vector2(0, base_y)
+	n.texture = _bg.texture
+	# بافت باید یک‌به‌یک روی مختصات اتاق بیفتد: جابه‌جایی به اندازهٔ
+	# همان `base_y` که از نقاط کم شد، و مقیاس به اندازهٔ نسخهٔ تصویر.
+	n.texture_offset = Vector2(0, base_y) * _bg_scale
+	n.texture_scale = Vector2.ONE * _bg_scale
+	n.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	n.set_meta("cut_base_y", base_y)
+	# **در لایهٔ بازیگران**، نه لایهٔ occluder: آنجا z بالاتر است و همیشه
+	# می‌پوشاند. اینجا Y-sort تصمیم می‌گیرد.
+	actors.add_child(n)
+	_cuts.append(n)
 
 
 ## لایهٔ نور ثابت. **سوسو اینجا نیست**: نور زنده از نقشهٔ افکت می‌آید
