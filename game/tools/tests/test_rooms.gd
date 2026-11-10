@@ -366,6 +366,20 @@ func _t_all_rooms() -> void:
 				"دارد" if node2.has_hires() else "ندارد"])
 		node2.queue_free()
 
+		# ناحیهٔ زوم بالای ۱٫۱۲ بدون hires باید **خطا** باشد، نه قفل
+		# بی‌صدا روی ۱٫۱۲ (D-ART-58).
+		var probe: Dictionary = room.duplicate(true)
+		probe["hires"] = ""
+		probe["zoom_zones"] = [{"rect": [0, 0, 100, 100], "level": "close"}]
+		var pv := RoomData.new()
+		pv._normalize(probe)
+		pv._validate(probe)
+		var caught := false
+		for e in pv.errors:
+			if e.contains("نسخهٔ پرجزئیات"):
+				caught = true
+		_check("  زوم بالای ۱٫۱۲ بی‌هایرز در «%s» خطا می‌دهد" % rid, caught)
+
 		var budget := false
 		for w in l.warnings:
 			if w.contains("بودجهٔ زندگی"):

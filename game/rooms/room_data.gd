@@ -202,9 +202,20 @@ func _validate_living(room: Dictionary, rid: String) -> void:
 		var r: Array = z.get("rect", [])
 		if r.size() != 4 or float(r[2]) <= 0.0 or float(r[3]) <= 0.0:
 			errors.append("اتاق «%s»: ناحیهٔ زوم rect معتبر ندارد." % rid)
-		if String(z.get("level", "")) not in GameCamera.ZOOM_LEVELS:
-			errors.append("اتاق «%s»: سطح زوم «%s» وجود ندارد."
-				% [rid, z.get("level", "")])
+		var lvl := String(z.get("level", ""))
+		if lvl not in GameCamera.ZOOM_LEVELS:
+			errors.append("اتاق «%s»: سطح زوم «%s» وجود ندارد." % [rid, lvl])
+			continue
+		# **زوم بالای ۱٫۱۲ بدون نسخهٔ پرجزئیات ممنوع است** (تصمیم کاربر،
+		# D-ART-58). بدون این قاعده، اتاقی می‌توانست ناحیهٔ زوم `close`
+		# بگذارد و دوربین بی‌صدا روی ۱٫۱۲ قفل شود — یعنی ناحیهٔ زوم
+		# نوشته شده و کار نمی‌کند، و هیچ‌کس نمی‌فهمد.
+		if float(GameCamera.ZOOM_LEVELS[lvl]) > PaintedRoom.ZOOM_WITHOUT_HIRES \
+				and not AssetPath.exists(String(room.get("hires", ""))):
+			errors.append(("اتاق «%s»: ناحیهٔ زوم «%s» (%.2f×) نسخهٔ پرجزئیات "
+				+ "لازم دارد. یا `hires` اتاق را بده، یا سطح زوم را به "
+				+ "`normal` یا `wide` ببر.")
+				% [rid, lvl, float(GameCamera.ZOOM_LEVELS[lvl])])
 
 	# اتاقی هم‌اندازهٔ صفحه جا برای حرکت دوربین ندارد و زوم روی آن یعنی
 	# بریدن لبه. REQ-018 اتاق تازه را ۱٫۵ تا ۲ برابر صفحه می‌خواهد.
