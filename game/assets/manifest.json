@@ -9,6 +9,8 @@
    "bytes": 28247,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 28247,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -19,6 +21,8 @@
    "bytes": 51304,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 51304,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -29,6 +33,8 @@
    "bytes": 111623,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 111623,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -39,6 +45,8 @@
    "bytes": 12199,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 12199,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -49,6 +57,8 @@
    "bytes": 31470,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 31470,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -59,6 +69,8 @@
    "bytes": 44529,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 44529,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -69,6 +81,8 @@
    "bytes": 17087,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 17087,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -79,6 +93,8 @@
    "bytes": 30967,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 30967,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -89,6 +105,8 @@
    "bytes": 70831,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 70831,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -99,6 +117,8 @@
    "bytes": 86204,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 86204,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -109,6 +129,8 @@
    "bytes": 12719,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 12719,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -119,6 +141,8 @@
    "bytes": 33104,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 33104,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -129,6 +153,8 @@
    "bytes": 44313,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 44313,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -139,6 +165,8 @@
    "bytes": 57328,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 57328,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -148,7 +176,9 @@
    "images": 6,
    "bytes": 3490629,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 3490629,
+   "webp": 0
   },
   {
    "path": "battle_bg",
@@ -158,6 +188,8 @@
    "bytes": 6064272,
    "copied": 0,
    "unchanged": 5,
+   "out_bytes": 698838,
+   "webp": 0,
    "camera": "battle-3q"
   },
   {
@@ -168,6 +200,8 @@
    "bytes": 130704,
    "copied": 0,
    "unchanged": 9,
+   "out_bytes": 130704,
+   "webp": 0,
    "camera": "battle-3q"
   },
   {
@@ -178,6 +212,8 @@
    "bytes": 81934,
    "copied": 0,
    "unchanged": 18,
+   "out_bytes": 81934,
+   "webp": 0,
    "camera": "battle-3q"
   },
   {
@@ -188,6 +224,8 @@
    "bytes": 114127,
    "copied": 0,
    "unchanged": 12,
+   "out_bytes": 114127,
+   "webp": 0,
    "camera": "ui"
   },
   {
@@ -197,7 +235,9 @@
    "images": 6,
    "bytes": 34586,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 34586,
+   "webp": 0
   },
   {
    "path": "bolt/emotions_topdown",
@@ -206,7 +246,9 @@
    "images": 6,
    "bytes": 35381,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 35381,
+   "webp": 0
   },
   {
    "path": "bolt/forms_sideview",
@@ -215,7 +257,9 @@
    "images": 6,
    "bytes": 33392,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 33392,
+   "webp": 0
   },
   {
    "path": "bolt/forms_topdown",
@@ -224,7 +268,9 @@
    "images": 6,
    "bytes": 34711,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 34711,
+   "webp": 0
   },
   {
    "path": "boss/guardian_battle",
@@ -234,6 +280,8 @@
    "bytes": 420401,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 420401,
+   "webp": 0,
    "camera": "battle-3q"
   },
   {
@@ -243,7 +291,9 @@
    "images": 4,
    "bytes": 171935,
    "copied": 0,
-   "unchanged": 4
+   "unchanged": 4,
+   "out_bytes": 171935,
+   "webp": 0
   },
   {
    "path": "boss/guardian_topdown",
@@ -252,7 +302,9 @@
    "images": 4,
    "bytes": 158130,
    "copied": 0,
-   "unchanged": 4
+   "unchanged": 4,
+   "out_bytes": 158130,
+   "webp": 0
   },
   {
    "path": "challenge/traps",
@@ -262,6 +314,8 @@
    "bytes": 220011,
    "copied": 0,
    "unchanged": 24,
+   "out_bytes": 220011,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -271,7 +325,9 @@
    "images": 9,
    "bytes": 1693179,
    "copied": 0,
-   "unchanged": 9
+   "unchanged": 9,
+   "out_bytes": 1693179,
+   "webp": 0
   },
   {
    "path": "effects/bond_two_skies",
@@ -281,6 +337,8 @@
    "bytes": 407599,
    "copied": 0,
    "unchanged": 4,
+   "out_bytes": 407599,
+   "webp": 0,
    "camera": "battle-3q"
   },
   {
@@ -291,6 +349,8 @@
    "bytes": 274398,
    "copied": 0,
    "unchanged": 47,
+   "out_bytes": 274398,
+   "webp": 0,
    "camera": "battle-3q"
   },
   {
@@ -301,6 +361,8 @@
    "bytes": 143065,
    "copied": 0,
    "unchanged": 12,
+   "out_bytes": 143065,
+   "webp": 0,
    "camera": "battle-3q"
   },
   {
@@ -310,7 +372,9 @@
    "images": 6,
    "bytes": 46244,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 46244,
+   "webp": 0
   },
   {
    "path": "enemies/nexa_topdown",
@@ -320,6 +384,8 @@
    "bytes": 33266,
    "copied": 0,
    "unchanged": 6,
+   "out_bytes": 33266,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -329,7 +395,9 @@
    "images": 1,
    "bytes": 1513811,
    "copied": 0,
-   "unchanged": 1
+   "unchanged": 1,
+   "out_bytes": 253888,
+   "webp": 0
   },
   {
    "path": "env/env08_night_cave",
@@ -338,7 +406,9 @@
    "images": 1,
    "bytes": 1384393,
    "copied": 0,
-   "unchanged": 1
+   "unchanged": 1,
+   "out_bytes": 176624,
+   "webp": 0
   },
   {
    "path": "env/env09_harbor_town",
@@ -347,7 +417,9 @@
    "images": 1,
    "bytes": 1668964,
    "copied": 0,
-   "unchanged": 1
+   "unchanged": 1,
+   "out_bytes": 308530,
+   "webp": 0
   },
   {
    "path": "env/env10_coral_bay",
@@ -356,7 +428,9 @@
    "images": 1,
    "bytes": 1575527,
    "copied": 0,
-   "unchanged": 1
+   "unchanged": 1,
+   "out_bytes": 293890,
+   "webp": 0
   },
   {
    "path": "explore/pickups",
@@ -366,6 +440,8 @@
    "bytes": 89747,
    "copied": 0,
    "unchanged": 28,
+   "out_bytes": 89747,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -376,6 +452,8 @@
    "bytes": 117370,
    "copied": 0,
    "unchanged": 13,
+   "out_bytes": 117370,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -385,7 +463,9 @@
    "images": 7,
    "bytes": 765477,
    "copied": 0,
-   "unchanged": 7
+   "unchanged": 7,
+   "out_bytes": 765477,
+   "webp": 0
   },
   {
    "path": "fx_ch1",
@@ -394,7 +474,9 @@
    "images": 24,
    "bytes": 43798,
    "copied": 0,
-   "unchanged": 24
+   "unchanged": 24,
+   "out_bytes": 43798,
+   "webp": 0
   },
   {
    "path": "hackables",
@@ -403,7 +485,9 @@
    "images": 8,
    "bytes": 1351283,
    "copied": 0,
-   "unchanged": 8
+   "unchanged": 8,
+   "out_bytes": 1351283,
+   "webp": 0
   },
   {
    "path": "hazards",
@@ -412,7 +496,9 @@
    "images": 15,
    "bytes": 1036772,
    "copied": 0,
-   "unchanged": 15
+   "unchanged": 15,
+   "out_bytes": 1036772,
+   "webp": 0
   },
   {
    "path": "hazards_ch1",
@@ -421,7 +507,9 @@
    "images": 12,
    "bytes": 26113,
    "copied": 0,
-   "unchanged": 12
+   "unchanged": 12,
+   "out_bytes": 26113,
+   "webp": 0
   },
   {
    "path": "hazards_ch1_sideview/electric_floor",
@@ -431,6 +519,8 @@
    "bytes": 9794,
    "copied": 0,
    "unchanged": 3,
+   "out_bytes": 9794,
+   "webp": 0,
    "camera": "side"
   },
   {
@@ -441,6 +531,8 @@
    "bytes": 14975,
    "copied": 0,
    "unchanged": 3,
+   "out_bytes": 14975,
+   "webp": 0,
    "camera": "side"
   },
   {
@@ -451,6 +543,8 @@
    "bytes": 19640,
    "copied": 0,
    "unchanged": 3,
+   "out_bytes": 19640,
+   "webp": 0,
    "camera": "side"
   },
   {
@@ -460,7 +554,9 @@
    "images": 6,
    "bytes": 52391,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 52391,
+   "webp": 0
   },
   {
    "path": "hazards_ch1_topdown/fragile_platform",
@@ -469,7 +565,9 @@
    "images": 6,
    "bytes": 53023,
    "copied": 0,
-   "unchanged": 6
+   "unchanged": 6,
+   "out_bytes": 53023,
+   "webp": 0
   },
   {
    "path": "hazards_topdown",
@@ -478,7 +576,9 @@
    "images": 8,
    "bytes": 1365651,
    "copied": 0,
-   "unchanged": 8
+   "unchanged": 8,
+   "out_bytes": 1365651,
+   "webp": 0
   },
   {
    "path": "icons",
@@ -487,7 +587,9 @@
    "images": 19,
    "bytes": 2879311,
    "copied": 0,
-   "unchanged": 19
+   "unchanged": 19,
+   "out_bytes": 2879311,
+   "webp": 0
   },
   {
    "path": "icons/tools_v2",
@@ -496,7 +598,9 @@
    "images": 4,
    "bytes": 44413,
    "copied": 0,
-   "unchanged": 4
+   "unchanged": 4,
+   "out_bytes": 44413,
+   "webp": 0
   },
   {
    "path": "ilara",
@@ -506,6 +610,8 @@
    "bytes": 574903,
    "copied": 0,
    "unchanged": 54,
+   "out_bytes": 574903,
+   "webp": 0,
    "anims": {
     "death": 3,
     "hop": 3,
@@ -526,6 +632,8 @@
    "bytes": 848486,
    "copied": 0,
    "unchanged": 89,
+   "out_bytes": 848486,
+   "webp": 0,
    "anims": {
     "climb_up": 6,
     "death": 6,
@@ -548,6 +656,8 @@
    "bytes": 478808,
    "copied": 0,
    "unchanged": 54,
+   "out_bytes": 478808,
+   "webp": 0,
    "anims": {
     "dash": 3,
     "death": 3,
@@ -568,6 +678,8 @@
    "bytes": 1183756,
    "copied": 0,
    "unchanged": 117,
+   "out_bytes": 1183756,
+   "webp": 0,
    "anims": {
     "climb_up": 6,
     "dash": 3,
@@ -600,6 +712,8 @@
    "bytes": 62445,
    "copied": 0,
    "unchanged": 8,
+   "out_bytes": 62445,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -610,6 +724,8 @@
    "bytes": 225722,
    "copied": 0,
    "unchanged": 12,
+   "out_bytes": 225722,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -619,7 +735,9 @@
    "images": 3,
    "bytes": 2880647,
    "copied": 0,
-   "unchanged": 3
+   "unchanged": 3,
+   "out_bytes": 2880647,
+   "webp": 0
   },
   {
    "path": "overlays/lights",
@@ -628,7 +746,9 @@
    "images": 9,
    "bytes": 706763,
    "copied": 0,
-   "unchanged": 9
+   "unchanged": 9,
+   "out_bytes": 706763,
+   "webp": 0
   },
   {
    "path": "overlays/particles",
@@ -638,6 +758,8 @@
    "bytes": 182585,
    "copied": 0,
    "unchanged": 15,
+   "out_bytes": 182585,
+   "webp": 0,
    "camera": "any"
   },
   {
@@ -648,6 +770,8 @@
    "bytes": 105377,
    "copied": 0,
    "unchanged": 12,
+   "out_bytes": 105377,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -658,6 +782,8 @@
    "bytes": 110491,
    "copied": 0,
    "unchanged": 15,
+   "out_bytes": 110491,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -667,7 +793,9 @@
    "images": 22,
    "bytes": 17686373,
    "copied": 0,
-   "unchanged": 22
+   "unchanged": 22,
+   "out_bytes": 2053366,
+   "webp": 0
   },
   {
    "path": "portraits",
@@ -676,7 +804,9 @@
    "images": 60,
    "bytes": 18512206,
    "copied": 0,
-   "unchanged": 60
+   "unchanged": 60,
+   "out_bytes": 18512206,
+   "webp": 0
   },
   {
    "path": "props",
@@ -685,7 +815,9 @@
    "images": 12,
    "bytes": 1614345,
    "copied": 0,
-   "unchanged": 12
+   "unchanged": 12,
+   "out_bytes": 1614345,
+   "webp": 0
   },
   {
    "path": "props_ch1",
@@ -694,7 +826,9 @@
    "images": 12,
    "bytes": 62702,
    "copied": 0,
-   "unchanged": 12
+   "unchanged": 12,
+   "out_bytes": 62702,
+   "webp": 0
   },
   {
    "path": "rooms/ch1",
@@ -704,6 +838,8 @@
    "bytes": 12116816,
    "copied": 0,
    "unchanged": 7,
+   "out_bytes": 1581192,
+   "webp": 0,
    "camera": "topdown"
   },
   {
@@ -713,7 +849,9 @@
    "images": 9,
    "bytes": 20200799,
    "copied": 0,
-   "unchanged": 9
+   "unchanged": 9,
+   "out_bytes": 2437892,
+   "webp": 0
   },
   {
    "path": "scenes",
@@ -722,7 +860,9 @@
    "images": 17,
    "bytes": 22615398,
    "copied": 0,
-   "unchanged": 17
+   "unchanged": 17,
+   "out_bytes": 2885742,
+   "webp": 0
   },
   {
    "path": "screens",
@@ -731,7 +871,9 @@
    "images": 3,
    "bytes": 4149065,
    "copied": 0,
-   "unchanged": 3
+   "unchanged": 3,
+   "out_bytes": 525338,
+   "webp": 0
   },
   {
    "path": "side_ch1/platforms",
@@ -741,6 +883,8 @@
    "bytes": 64626,
    "copied": 0,
    "unchanged": 13,
+   "out_bytes": 64626,
+   "webp": 0,
    "camera": "side"
   },
   {
@@ -750,7 +894,9 @@
    "images": 2,
    "bytes": 1716759,
    "copied": 0,
-   "unchanged": 2
+   "unchanged": 2,
+   "out_bytes": 1716759,
+   "webp": 0
   },
   {
    "path": "terrain",
@@ -759,7 +905,9 @@
    "images": 54,
    "bytes": 2279158,
    "copied": 0,
-   "unchanged": 54
+   "unchanged": 54,
+   "out_bytes": 2279158,
+   "webp": 0
   },
   {
    "path": "tiles_ch1/basement",
@@ -768,7 +916,9 @@
    "images": 36,
    "bytes": 216892,
    "copied": 0,
-   "unchanged": 36
+   "unchanged": 36,
+   "out_bytes": 216892,
+   "webp": 0
   },
   {
    "path": "tiles_ch1/house",
@@ -777,7 +927,9 @@
    "images": 36,
    "bytes": 217011,
    "copied": 0,
-   "unchanged": 36
+   "unchanged": 36,
+   "out_bytes": 217011,
+   "webp": 0
   },
   {
    "path": "tiles_ch1/street",
@@ -786,7 +938,9 @@
    "images": 36,
    "bytes": 233407,
    "copied": 0,
-   "unchanged": 36
+   "unchanged": 36,
+   "out_bytes": 233407,
+   "webp": 0
   },
   {
    "path": "tiles_ch1_v2/basement",
@@ -796,6 +950,8 @@
    "bytes": 220294,
    "copied": 0,
    "unchanged": 36,
+   "out_bytes": 220294,
+   "webp": 0,
    "camera": "topdown",
    "tiles": 18
   },
@@ -807,6 +963,8 @@
    "bytes": 230332,
    "copied": 0,
    "unchanged": 36,
+   "out_bytes": 230332,
+   "webp": 0,
    "camera": "topdown",
    "tiles": 18
   },
@@ -818,6 +976,8 @@
    "bytes": 226357,
    "copied": 0,
    "unchanged": 36,
+   "out_bytes": 226357,
+   "webp": 0,
    "camera": "topdown",
    "tiles": 18
   },
@@ -829,6 +989,8 @@
    "bytes": 110629,
    "copied": 0,
    "unchanged": 38,
+   "out_bytes": 110629,
+   "webp": 0,
    "camera": "side",
    "tiles": 19
   },
@@ -840,6 +1002,8 @@
    "bytes": 76559,
    "copied": 0,
    "unchanged": 40,
+   "out_bytes": 76559,
+   "webp": 0,
    "camera": "side",
    "tiles": 20
   },
@@ -851,6 +1015,8 @@
    "bytes": 78756,
    "copied": 0,
    "unchanged": 36,
+   "out_bytes": 78756,
+   "webp": 0,
    "camera": "side",
    "tiles": 18
   },
@@ -861,7 +1027,9 @@
    "images": 29,
    "bytes": 1327742,
    "copied": 0,
-   "unchanged": 29
+   "unchanged": 29,
+   "out_bytes": 1327742,
+   "webp": 0
   },
   {
    "path": "ui/explore_hud",
@@ -871,6 +1039,8 @@
    "bytes": 93920,
    "copied": 0,
    "unchanged": 7,
+   "out_bytes": 93920,
+   "webp": 0,
    "camera": "ui"
   },
   {
@@ -881,6 +1051,8 @@
    "bytes": 644242,
    "copied": 0,
    "unchanged": 10,
+   "out_bytes": 644242,
+   "webp": 0,
    "camera": "ui"
   },
   {
@@ -890,7 +1062,9 @@
    "images": 42,
    "bytes": 4942851,
    "copied": 0,
-   "unchanged": 42
+   "unchanged": 42,
+   "out_bytes": 4942851,
+   "webp": 0
   }
  ]
 }

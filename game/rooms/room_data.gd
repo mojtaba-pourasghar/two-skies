@@ -77,7 +77,7 @@ func _validate(room: Dictionary) -> void:
 
 	if String(room["bg"]) == "":
 		errors.append("اتاق «%s»: تصویر پس‌زمینه ندارد. اتاق نقاشی‌شده بدون تصویر معنا ندارد." % rid)
-	elif not ResourceLoader.exists("res://assets/" + String(room["bg"])):
+	elif not AssetPath.exists(String(room["bg"])):
 		# هنر نرسیده: هشدار، نه خطا — بازی نباید به‌خاطر هنر نیامده نشکند
 		warnings.append("اتاق «%s»: تصویر «%s» هنوز در assets نیست." % [rid, room["bg"]])
 

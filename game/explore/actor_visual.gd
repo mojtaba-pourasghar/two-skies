@@ -79,6 +79,11 @@ func _load_anims() -> void:
 
 
 func _texture(path: String) -> Texture2D:
+	# شخصیت‌ها بی‌اتلاف و PNG می‌مانند، ولی از AssetPath می‌گذرند تا اگر
+	# روزی سیاست فشرده‌سازی عوض شد اینجا نشکند (D-ART-56).
+	var found := AssetPath.find(path)
+	if found != "":
+		return load(found)
 	if not ResourceLoader.exists(path):
 		if path not in missing:
 			missing.append(path)

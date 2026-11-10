@@ -278,8 +278,9 @@ func commands(id: String) -> Array[Dictionary]:
 		var need := String(s.get("needs_flag", ""))
 		if need != "" and not bool(flags.get(need, false)):
 			continue
-		out.append({"cmd": "skill", "skill": sid, "cost": int(s["cost"]),
-			"ok": energy >= int(s["cost"])})
+		var c := max_skill_cost(sid)
+		out.append({"cmd": "skill", "skill": sid, "cost": c,
+			"base_cost": int(s["cost"]), "ok": energy >= c})
 	var link: Dictionary = data["skills"]["link"]
 	out.append({"cmd": "link", "cost": int(link["cost"]),
 		"ok": energy >= int(link["cost"]) and alive("party").size() == 2})
@@ -384,6 +385,28 @@ func _do_strike(me: Dictionary, target: String, timing: float, hits: int) -> boo
 	return true
 
 
+## هزینهٔ یک مهارت رو به یک نوع دشمن. دشمن می‌تواند `skill_cost` داشته
+## باشد و مهارت‌های نام‌برده را گران‌تر کند (D-ART-55، تصمیم مدیر گام ۵۴:
+## «هزینهٔ هک/نور ۳ فقط برای فرمانده»).
+func skill_cost(sid: String, enemy_kind: String = "") -> int:
+	var base := int((data["skills"] as Dictionary).get(sid, {}).get("cost", 0))
+	if enemy_kind == "":
+		return base
+	var e: Dictionary = (data["enemies"] as Dictionary).get(enemy_kind, {})
+	var over: Dictionary = e.get("skill_cost", {})
+	return int(over.get(sid, base))
+
+
+## گران‌ترین حالت این مهارت در نبرد جاری: اگر دشمنی در میدان باشد که
+## گران‌ترش می‌کند، فهرست فرمان باید **همان** را نشان بدهد، وگرنه رابط
+## هزینهٔ ۲ می‌نویسد و کنش با ۲ انرژی رد می‌شود.
+func max_skill_cost(sid: String) -> int:
+	var worst := skill_cost(sid)
+	for t in alive("enemy"):
+		worst = maxi(worst, skill_cost(sid, String(t["kind"])))
+	return worst
+
+
 func _do_skill(me: Dictionary, sid: String, target: String, timing: float) -> bool:
 	if not data["skills"].has(sid) or not sid in data["party"][me["kind"]].get("skills", []):
 		return false
@@ -392,12 +415,16 @@ func _do_skill(me: Dictionary, sid: String, target: String, timing: float) -> bo
 	if need != "" and not bool(flags.get(need, false)):
 		return false
 	var cost := int(s["cost"])
-	if energy < cost:
-		return false
 	match String(s["target"]):
 		"enemy":
 			var t := _enemy_target(target)
 			if t.is_empty():
+				return false
+			# **هزینه به هدف بستگی دارد** (D-ART-55): فرمانده هک و نور را
+			# گران‌تر می‌کند. تا پیش از این، هزینه پیش از دانستن هدف از
+			# انرژی کم می‌شد و چنین چیزی ممکن نبود.
+			cost = skill_cost(sid, String(t["kind"]))
+			if energy < cost:
 				return false
 			energy -= cost
 			if s.has("hits"):
@@ -411,6 +438,8 @@ func _do_skill(me: Dictionary, sid: String, target: String, timing: float) -> bo
 				_try_interrupt(t, sid)
 				_hurt_enemy(t, float(s.get("damage", 0)), "skill", me["id"])
 		"all_enemies":
+			if energy < cost:
+				return false
 			energy -= cost
 			for t in alive("enemy"):
 				if int(s.get("stun", 0)) > 0:
@@ -422,6 +451,8 @@ func _do_skill(me: Dictionary, sid: String, target: String, timing: float) -> bo
 			var a := _ally_target(target if target != "" else String(me["id"]),
 				s.has("heal"))
 			if a.is_empty():
+				return false
+			if energy < cost:
 				return false
 			energy -= cost
 			if s.has("heal"):

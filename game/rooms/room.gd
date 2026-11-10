@@ -78,11 +78,12 @@ func _note_missing(path: String) -> void:
 
 
 func _load_tex(rel: String) -> Texture2D:
-	var p := ASSETS + rel
-	if not ResourceLoader.exists(p):
+	# از AssetPath می‌گذرد تا پس‌زمینهٔ تبدیل‌شده به WebP هم پیدا شود
+	# (D-ART-56): داده `.png` می‌نویسد، دیسک ممکن است `.webp` داشته باشد.
+	var tex: Texture2D = AssetPath.texture(rel)
+	if tex == null:
 		_note_missing(rel)
-		return null
-	return load(p)
+	return tex
 
 
 ## نسخهٔ پرجزئیات همان اتاق، برای زوم شفاف تا ۱٫۳× (سند ۱۴، D-ART-46).
@@ -147,8 +148,8 @@ func _build_background() -> void:
 	var hp := String(data.get("hires", ""))
 	if hp == "":
 		hp = _hires_path(String(data.get("bg", "")))
-	if hp != "" and ResourceLoader.exists(ASSETS + hp):
-		_hires = load(ASSETS + hp)
+	if hp != "":
+		_hires = AssetPath.texture(hp)
 
 
 func _build_props() -> void:

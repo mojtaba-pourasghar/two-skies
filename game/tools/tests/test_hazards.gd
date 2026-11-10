@@ -239,7 +239,13 @@ func _t_statue() -> void:
 func _t_c3_panels() -> void:
 	print("— پنل‌های C3 از روی تصویر —")
 	var room := RoomData.new().load_room("c3_electric_hall")
-	var img: Image = (load("res://assets/" + String(room["bg"])) as Texture2D).get_image()
+	# از AssetPath می‌گذرد: `bg` در داده `.png` است ولی روی دیسک ممکن
+	# است WebP باشد (D-ART-56).
+	var bg_tex := AssetPath.texture(String(room["bg"]))
+	_check("تصویر C3 پیدا شد", bg_tex != null, String(room["bg"]))
+	if bg_tex == null:
+		return
+	var img: Image = bg_tex.get_image()
 	var panels := 0
 	var off_cyan: Array[String] = []
 	for raw in room["hazard"]:

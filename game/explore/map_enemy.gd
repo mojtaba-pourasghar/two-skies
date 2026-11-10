@@ -34,8 +34,10 @@ func setup(e: Dictionary) -> void:
 		var rel := String(e.get(key, ""))
 		if rel == "":
 			continue
-		if ResourceLoader.exists(ASSETS + rel):
-			_frames.append(load(ASSETS + rel))
+		# AssetPath، نه مسیر خام: دشمن روی نقشه هم ممکن است WebP باشد
+		var t: Texture2D = AssetPath.texture(rel)
+		if t != null:
+			_frames.append(t)
 		else:
 			missing.append(rel)
 	var count := maxi(1, int(e.get("count", 1)))

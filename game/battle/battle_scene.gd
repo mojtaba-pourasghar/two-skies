@@ -364,10 +364,10 @@ func _label(text: String, size: int, color: Color) -> Label:
 
 
 func _tex(rel: String) -> Texture2D:
-	var p := ASSETS + rel
-	if not ResourceLoader.exists(p):
-		return null
-	return load(p)
+	# از AssetPath می‌گذرد تا پس‌زمینهٔ نبردِ تبدیل‌شده به WebP هم پیدا شود
+	# (D-ART-56). بدون این، صحنهٔ نبرد بی‌پس‌زمینه باز می‌شد و فقط آزمون
+	# می‌گفت، نه خود بازی.
+	return AssetPath.texture(rel)
 
 
 # ---------- نمایش وضعیت ----------
@@ -676,6 +676,13 @@ func _choose_target(id: String) -> void:
 func _commit(target: String, timing: float = BattleCore.NO_PRESS) -> void:
 	var ok := core.act(String(_pending["cmd"]), String(_pending.get("arg", "")), target, timing)
 	if not ok:
+		# بازیکن انسانی به منو برمی‌گردد و چیز دیگری می‌زند. ولی ربات
+		# همان انتخاب را دوباره می‌کند و نبرد قفل می‌شود، پس برایش
+		# کنشی می‌زنیم که **همیشه** ممکن است.
+		if autoplay != "":
+			core.act("guard")
+			_after_action()
+			return
 		_set_phase(Phase.MENU)
 		return
 	_after_action()
@@ -911,8 +918,12 @@ func _auto_menu() -> void:
 	for e in core.alive("enemy"):
 		var it := core.intent_of(String(e["id"]))
 		for sid in it.get("interrupt", []):
-			var s: Dictionary = core.data["skills"][sid]
-			if sid in core.data["party"][me["kind"]]["skills"] and core.energy >= int(s["cost"]):
+			# **هزینه به هدف بستگی دارد** (D-ART-55): هک و نور رو به
+			# فرمانده ۳ است. با هزینهٔ پایهٔ ۲، ربات با ۲ انرژی مهارت را
+			# می‌زد، هسته ردش می‌کرد، صحنه به منو برمی‌گشت و همین حلقه
+			# تا ابد تکرار می‌شد — نبرد اوج در آزمون صحنه هرگز تمام نشد.
+			var need := core.skill_cost(sid, String(e["kind"]))
+			if sid in core.data["party"][me["kind"]]["skills"] and core.energy >= need:
 				_pending = {"cmd": "skill", "arg": sid}
 				_commit(String(e["id"]))
 				return

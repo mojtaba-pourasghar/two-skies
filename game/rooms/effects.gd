@@ -104,12 +104,10 @@ func _add(n: Node2D, e: Dictionary) -> void:
 
 
 func _tex(rel: String) -> Texture2D:
-	var p := ASSETS + rel
-	if not ResourceLoader.exists(p):
-		if rel not in missing:
-			missing.append(rel)
-		return null
-	return load(p)
+	var tex: Texture2D = AssetPath.texture(rel)
+	if tex == null and rel not in missing:
+		missing.append(rel)
+	return tex
 
 
 ## نقشه‌ها در فضای ۱۲۸۰×۷۲۰ نوشته شده‌اند و `rect` با **گوشه** می‌آید
@@ -192,9 +190,10 @@ func _make_glow(e: Dictionary) -> Node2D:
 	var cm := String(e.get("clip_mask", ""))
 	if cm != "":
 		var mp := clip_mask_path(room_id, cm)
-		if ResourceLoader.exists(mp):
+		var mt: Texture2D = AssetPath.texture(mp)
+		if mt != null:
 			mat.set_shader_parameter("use_clip_tex", true)
-			mat.set_shader_parameter("clip_tex", load(mp))
+			mat.set_shader_parameter("clip_tex", mt)
 			mat.set_shader_parameter("space", SPACE)
 		elif mp not in missing:
 			# نبودن ماسک یعنی نور روی کف تاریک هم می‌افتد؛ گزارش می‌شود

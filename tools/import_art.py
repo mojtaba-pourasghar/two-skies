@@ -48,6 +48,55 @@ FRAME_RE = re.compile(r"^(?P<anim>.+?)_(?P<num>\d{2,3})\.png$")
 
 IMAGE_EXT = {".png", ".webp", ".jpg", ".jpeg"}
 
+# ---------------------------------------------------------------- فشرده‌سازی
+#
+# تصمیم مدیر، گام ۵۴ (ردیف ۷ DECISION_QUEUE): بسته باید زیر ۱۰۰ مگابایت
+# برود. پس‌زمینه‌های بزرگ WebP با اتلاف کیفیت ۹۰ می‌شوند؛ شخصیت و اسپرایت
+# **بی‌اتلاف** می‌مانند چون پیکسل‌آرت‌اند و اتلاف لبه‌هایشان را خراب می‌کند.
+#
+# «پس‌زمینه» از روی اندازه شناخته می‌شود (ضلع بلند ≥۱۲۸۰) **و** اینکه در
+# خانوادهٔ شخصیت/اسپرایت نباشد.
+WEBP_MIN_SIDE = 1280
+WEBP_QUALITY = 90
+
+#: هرچه زیر این مسیرها باشد شخصیت یا اسپرایت است، هر اندازه که باشد.
+LOSSLESS_FAMILIES = (
+	"kairo/", "ilara/", "enemies/", "portraits/", "ui/", "icons/",
+	"ambient/", "overlays/", "props", "tiles", "battle_fx/", "battle_ui/",
+	"app_icon/", "effects/", "fx/", "traps/", "challenge/",
+)
+
+
+def is_background(src: Path, rel: str) -> bool:
+	"""آیا این تصویر پس‌زمینه است و اتلاف برایش مجاز؟"""
+	r = rel.replace("\\", "/")
+	if any(f in r for f in LOSSLESS_FAMILIES):
+		return False
+	# ورق و فریم اسپرایت، هر چقدر هم پهن باشند، اسپرایت‌اند نه پس‌زمینه.
+	# بدون این، `fx/coin_sparkle_strip.png` چون ۱۲۸۰ پیکسل پهن است
+	# پس‌زمینه شمرده می‌شد و لبه‌های پیکسلی‌اش با اتلاف خراب می‌شدند.
+	name = Path(r).name
+	if name.endswith("_strip.png") or FRAME_RE.match(name):
+		return False
+	try:
+		from PIL import Image
+		with Image.open(src) as im:
+			w, h = im.size
+	except Exception:
+		return False
+	return max(w, h) >= WEBP_MIN_SIDE
+
+
+def to_webp(src: Path, dst: Path) -> int:
+	"""تبدیل به WebP با اتلاف. اندازهٔ نتیجه را برمی‌گرداند."""
+	from PIL import Image
+	dst.parent.mkdir(parents=True, exist_ok=True)
+	with Image.open(src) as im:
+		if im.mode not in ("RGB", "RGBA"):
+			im = im.convert("RGBA")
+		im.save(dst, "WEBP", quality=WEBP_QUALITY, method=6)
+	return dst.stat().st_size
+
 
 def sha(path: Path) -> str:
 	h = hashlib.sha256()
@@ -124,7 +173,32 @@ def group_anims(images: list[Path], folder: Path) -> dict:
 	return anims
 
 
-def copy_asset(folder: Path, all_assets: list[Path], *, dry: bool) -> dict:
+#: هش **مبدأ** هر تصویر، برای اجرای افزایشی وقتی قالب عوض می‌شود.
+#: (با `MANIFEST` که مسیر فایل خلاصهٔ دارایی‌هاست فرق دارد.)
+SRC_HASHES: dict = {}
+NEW_HASHES: dict = {}
+HASHES_PATH = DEST / ".source_hashes.json"
+
+
+def load_hashes() -> None:
+	global SRC_HASHES
+	if HASHES_PATH.exists():
+		try:
+			SRC_HASHES = json.loads(HASHES_PATH.read_text(encoding="utf-8"))
+		except Exception:
+			SRC_HASHES = {}
+	NEW_HASHES.update(SRC_HASHES)
+
+
+def save_hashes() -> None:
+	HASHES_PATH.parent.mkdir(parents=True, exist_ok=True)
+	HASHES_PATH.write_text(
+		json.dumps(NEW_HASHES, ensure_ascii=False, indent=0, sort_keys=True),
+		encoding="utf-8")
+
+
+def copy_asset(folder: Path, all_assets: list[Path], *, dry: bool,
+		no_webp: bool = False) -> dict:
 	rel = folder.relative_to(DROP)
 	target = DEST / rel
 	meta = json.loads((folder / "asset.json").read_text(encoding="utf-8"))
@@ -134,17 +208,41 @@ def copy_asset(folder: Path, all_assets: list[Path], *, dry: bool) -> dict:
 	copied = 0
 	skipped = 0
 	total_bytes = 0
+	out_bytes = 0
+	webp = 0
 	for src in images:
+		rel_img = str((rel / src.relative_to(folder))).replace("\\", "/")
+		lossy = not no_webp and src.suffix.lower() == ".png" \
+			and is_background(src, rel_img)
 		dst = target / src.relative_to(folder)
+		if lossy:
+			dst = dst.with_suffix(".webp")
 		total_bytes += src.stat().st_size
-		if dst.exists() and dst.stat().st_size == src.stat().st_size and sha(dst) == sha(src):
+
+		# **مقایسه با مبدأ، نه با مقصد.** وقتی قالب عوض می‌شود دیگر
+		# نمی‌شود اندازه و هش مقصد را با مبدأ سنجید، پس هش مبدأ در
+		# مانیفست نگه داشته می‌شود.
+		want = sha(src)
+		if dst.exists() and SRC_HASHES.get(rel_img) == want:
 			skipped += 1
+			out_bytes += dst.stat().st_size
 			continue
 		copied += 1
 		if dry:
 			continue
 		dst.parent.mkdir(parents=True, exist_ok=True)
-		shutil.copy2(src, dst)
+		if lossy:
+			out_bytes += to_webp(src, dst)
+			webp += 1
+			# نسخهٔ PNG قبلی اگر مانده بود برداشته می‌شود، وگرنه هر دو
+			# در بسته می‌روند و فشرده‌سازی بی‌اثر است
+			old = dst.with_suffix(".png")
+			if old.exists():
+				old.unlink()
+		else:
+			shutil.copy2(src, dst)
+			out_bytes += dst.stat().st_size
+		NEW_HASHES[rel_img] = want
 
 	entry: dict = {
 		"path": str(rel).replace("\\", "/"),
@@ -154,6 +252,8 @@ def copy_asset(folder: Path, all_assets: list[Path], *, dry: bool) -> dict:
 		"bytes": total_bytes,
 		"copied": copied,
 		"unchanged": skipped,
+		"out_bytes": out_bytes,
+		"webp": webp,
 	}
 	if "camera" in meta:
 		entry["camera"] = meta["camera"]
@@ -198,6 +298,8 @@ def main(argv: list[str] | None = None) -> int:
 	ap.add_argument("--dry-run", action="store_true", help="فقط گزارش؛ چیزی نوشته نشود")
 	ap.add_argument("--list", action="store_true", help="فهرست دارایی‌ها و وضعیتشان")
 	ap.add_argument("--godot", help="مسیر موتور، برای ساخت فایل‌های .import")
+	ap.add_argument("--no-webp", action="store_true",
+		help="هیچ تصویری به WebP تبدیل نشود (همه PNG بمانند)")
 	args = ap.parse_args(argv)
 
 	if not DROP.exists():
@@ -220,10 +322,12 @@ def main(argv: list[str] | None = None) -> int:
 				str(folder.relative_to(DROP)), meta.get("status", "-"), imgs))
 		return 0
 
+	load_hashes()
 	entries: list[dict] = []
 	drafts: list[str] = []
 	for folder in picked:
-		entry = copy_asset(folder, all_assets, dry=args.dry_run)
+		entry = copy_asset(folder, all_assets, dry=args.dry_run,
+			no_webp=args.no_webp)
 		entries.append(entry)
 		if not entry["approved"]:
 			drafts.append("%s (%s)" % (entry["path"], entry["status"]))
@@ -235,8 +339,11 @@ def main(argv: list[str] | None = None) -> int:
 	total_images = sum(e["images"] for e in entries)
 	total_copied = sum(e["copied"] for e in entries)
 	total_bytes = sum(e["bytes"] for e in entries)
+	total_out = sum(e.get("out_bytes", 0) for e in entries)
+	total_webp = sum(e.get("webp", 0) for e in entries)
 
 	if not args.dry_run:
+		save_hashes()
 		DEST.mkdir(parents=True, exist_ok=True)
 		MANIFEST.write_text(json.dumps({
 			"note": "ساختهٔ tools/import_art.py — دستی ویرایش نکن.",
@@ -244,8 +351,17 @@ def main(argv: list[str] | None = None) -> int:
 		}, ensure_ascii=False, indent=1), encoding="utf-8")
 
 	print("\n— خلاصه —")
-	print("  %d دارایی، %d تصویر، %d تازه کپی شد، %.1f مگابایت"
-		  % (len(entries), total_images, total_copied, total_bytes / 1e6))
+	print("  %d دارایی، %d تصویر، %d تازه کپی شد"
+		  % (len(entries), total_images, total_copied))
+	if total_out > 0:
+		saved = total_bytes - total_out
+		print("  مبدأ %.1f مگابایت → مقصد %.1f مگابایت (%.0f٪ کمتر)"
+			  % (total_bytes / 1e6, total_out / 1e6,
+				 saved / total_bytes * 100.0 if total_bytes else 0.0))
+		print("  %d تصویر به WebP کیفیت %d تبدیل شد؛ بقیه بی‌اتلاف ماندند"
+			  % (total_webp, WEBP_QUALITY))
+	else:
+		print("  %.1f مگابایت" % (total_bytes / 1e6))
 	if drafts:
 		# هشدار است نه خطا: همهٔ هنر تا تأیید کاربر پیش‌نویس است (CLAUDE.md)
 		print("  ⚠ %d دارایی هنوز تأیید کاربر ندارد (پیش‌نویس، مانع ساخت نیست)"

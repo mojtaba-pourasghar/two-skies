@@ -1,159 +1,442 @@
 {
-  "_comment": "دادهٔ نبرد نوبتی (M4). منبع: سند ۰۸ §۴ و §۵، سند ۰۹ §۳ و §۴. اعداد پیش‌نویس‌اند؛ هر عددی که در سند نبود با «_draft» علامت خورده و در DECISIONS.md (D-ART-50) دلیلش آمده.",
-  "timing": {
-    "_source": "سند ۰۸ §۴: پنجرهٔ ±۰٫۱۰ عالی ×۱٫۵ و +۱ انرژی، ±۰٫۲۰ خوب ×۱٫۲، بیرون ×۱٫۰ (هرگز صفر)، دسترس‌پذیری پنجره ×۲؛ دفاع به‌موقع −۵۰٪، عالی −۷۰٪",
-    "perfect_s": 0.10,
-    "good_s": 0.20,
-    "perfect_mult": 1.5,
-    "good_mult": 1.2,
-    "miss_mult": 1.0,
-    "assist_window_mult": 2.0,
-    "guard_perfect_reduce": 0.7,
-    "guard_good_reduce": 0.5,
-    "ring_time_s": 0.8,
-    "_draft": ["ring_time_s"]
+ "_comment": "دادهٔ نبرد نوبتی (M4). منبع: سند ۰۸ §۴ و §۵، سند ۰۹ §۳ و §۴. اعداد پیش‌نویس‌اند؛ هر عددی که در سند نبود با «_draft» علامت خورده و در DECISIONS.md (D-ART-50) دلیلش آمده.",
+ "timing": {
+  "_source": "سند ۰۸ §۴: پنجرهٔ ±۰٫۱۰ عالی ×۱٫۵ و +۱ انرژی، ±۰٫۲۰ خوب ×۱٫۲، بیرون ×۱٫۰ (هرگز صفر)، دسترس‌پذیری پنجره ×۲؛ دفاع به‌موقع −۵۰٪، عالی −۷۰٪",
+  "perfect_s": 0.1,
+  "good_s": 0.2,
+  "perfect_mult": 1.5,
+  "good_mult": 1.2,
+  "miss_mult": 1.0,
+  "assist_window_mult": 2.0,
+  "guard_perfect_reduce": 0.7,
+  "guard_good_reduce": 0.5,
+  "ring_time_s": 0.8,
+  "_draft": [
+   "ring_time_s"
+  ]
+ },
+ "energy": {
+  "_source": "سند ۰۸ §۴: سقف ۱۰، ضربهٔ عالی +۱، پیوند ۱۰",
+  "max": 10,
+  "start": 3,
+  "perfect_gain": 1,
+  "_draft": [
+   "start"
+  ]
+ },
+ "rules": {
+  "_source": "سند ۰۸ §۲ و §۴: فرار ۱ انرژی؛ شکست = شروع دوباره زیر ۲ ثانیه؛ قطع = دشمن یک نوبت از دست می‌دهد و شکننده ×۱٫۵",
+  "flee_cost": 1,
+  "retry_max_s": 2.0,
+  "fragile_mult": 1.5,
+  "command_guard_reduce": 0.5,
+  "mark_mult": 1.3,
+  "ct_base": 100.0,
+  "_draft": [
+   "command_guard_reduce",
+   "ct_base"
+  ]
+ },
+ "balance": {
+  "_source": "D-ART-51 مدیر (گام ۵۳): جان دشمن ×۲٫۵ و آسیب دشمن ×۱٫۵. جان و آسیب پایهٔ هر دشمن پایین‌تر همان عدد سند ۰۹ §۴ است؛ ضریب روی آن اعمال می‌شود تا عدد سند دیده بماند.",
+  "enemy_hp_mult": 2.5,
+  "enemy_damage_mult": 1.5
+ },
+ "party": {
+  "kairo": {
+   "name_key": "name_kairo",
+   "hp": 70,
+   "speed": 12,
+   "strike": 9,
+   "skills": [
+    "hack",
+    "dash",
+    "emp"
+   ],
+   "_draft": [
+    "speed"
+   ]
   },
-  "energy": {
-    "_source": "سند ۰۸ §۴: سقف ۱۰، ضربهٔ عالی +۱، پیوند ۱۰",
-    "max": 10,
-    "start": 3,
-    "perfect_gain": 1,
-    "_draft": ["start"]
-  },
-  "rules": {
-    "_source": "سند ۰۸ §۲ و §۴: فرار ۱ انرژی؛ شکست = شروع دوباره زیر ۲ ثانیه؛ قطع = دشمن یک نوبت از دست می‌دهد و شکننده ×۱٫۵",
-    "flee_cost": 1,
-    "retry_max_s": 2.0,
-    "fragile_mult": 1.5,
-    "command_guard_reduce": 0.5,
-    "mark_mult": 1.3,
-    "ct_base": 100.0,
-    "_draft": ["command_guard_reduce", "ct_base"]
-  },
-  "balance": {
-    "_source": "D-ART-51 مدیر (گام ۵۳): جان دشمن ×۲٫۵ و آسیب دشمن ×۱٫۵. جان و آسیب پایهٔ هر دشمن پایین‌تر همان عدد سند ۰۹ §۴ است؛ ضریب روی آن اعمال می‌شود تا عدد سند دیده بماند.",
-    "enemy_hp_mult": 2.5,
-    "enemy_damage_mult": 1.5
-  },
-  "party": {
-    "kairo": {"name_key": "name_kairo", "hp": 70, "speed": 12, "strike": 9,
-      "skills": ["hack", "dash", "emp"], "_draft": ["speed"]},
-    "ilara": {"name_key": "name_ilara", "hp": 60, "speed": 10, "strike": 8,
-      "skills": ["light", "seed", "heal"], "_draft": ["speed"]}
-  },
-  "skills": {
-    "hack":  {"user": "kairo", "cost": 2, "target": "enemy", "damage": 4, "fx": "hack"},
-    "dash":  {"user": "kairo", "cost": 2, "target": "enemy", "hits": 2, "fx": "hit"},
-    "emp":   {"user": "kairo", "cost": 3, "target": "all_enemies", "stun": 1, "fx": "hack",
-              "needs_flag": "emp_unlocked"},
-    "light": {"user": "ilara", "cost": 2, "target": "enemy", "damage": 12, "fx": "light_leaf"},
-    "seed":  {"user": "ilara", "cost": 2, "target": "ally", "barrier": 15, "fx": "shield_block",
-              "_draft": ["barrier"]},
-    "heal":  {"user": "ilara", "cost": 3, "target": "ally", "heal": 20, "fx": "light_leaf",
-              "_draft": ["heal"]},
-    "link":  {"user": "both", "cost": 10, "target": "all_enemies", "damage": 40, "fragile": true,
-              "fx": "link"}
-  },
-  "items": {
-    "battery":    {"name_key": "item_battery", "energy": 3, "_draft": ["energy"]},
-    "repair_kit": {"name_key": "item_repair_kit", "heal": 25, "_draft": ["heal"]},
-    "smoke_bomb": {"name_key": "item_smoke_bomb", "flee": true}
-  },
-  "start_items": {"battery": 1, "repair_kit": 2, "smoke_bomb": 1},
-  "enemies": {
-    "crawler": {
-      "name_key": "enemy_crawler", "hp": 24, "speed": 8, "art": "crawler",
-      "pattern": ["claw", "claw", "cling"],
-      "intents": {
-        "claw":  {"icon": "strike", "damage": 6, "target": "one", "windup": 0,
-                  "interrupt": ["light", "hack"]},
-        "cling": {"icon": "stun", "damage": 0, "target": "one", "windup": 0, "slow": true,
-                  "interrupt": ["light", "hack"]}
-      }
-    },
-    "guard": {
-      "name_key": "enemy_guard", "hp": 45, "speed": 6, "art": "guard",
-      "pattern": ["shoot", "shield"],
-      "intents": {
-        "shoot":  {"icon": "strike", "damage": 10, "target": "one", "windup": 1,
-                   "interrupt": ["hack"]},
-        "shield": {"icon": "antihack", "damage": 0, "target": "self", "windup": 0,
-                   "shield": 0.5, "interrupt": ["hack"]}
-      }
-    },
-    "drone": {
-      "name_key": "enemy_drone", "hp": 36, "speed": 11, "art": "drone",
-      "pattern": ["scan", "dive"],
-      "intents": {
-        "scan": {"icon": "scan", "damage": 0, "target": "one", "windup": 0, "mark": true,
-                 "interrupt": ["hack"]},
-        "dive": {"icon": "strike", "damage": 8, "target": "one", "windup": 0,
-                 "interrupt": ["hack"]}
-      }
-    },
-    "kamikaze": {
-      "name_key": "enemy_kamikaze", "hp": 18, "speed": 9, "art": "kamikaze",
-      "pattern": ["explode"],
-      "intents": {
-        "explode": {"icon": "explosion", "damage": 18, "target": "all", "windup": 2,
-                    "self_destruct": true, "interrupt": ["light", "hack"]}
-      }
-    },
-    "drone_small": {
-      "name_key": "enemy_drone_small", "hp": 12, "speed": 12, "art": "drone",
-      "_draft": ["hp", "speed", "dive.damage"],
-      "pattern": ["dive"],
-      "intents": {
-        "dive": {"icon": "strike", "damage": 4, "target": "one", "windup": 0,
-                 "interrupt": ["light", "hack"]}
-      }
-    },
-    "commander": {
-      "name_key": "enemy_commander", "hp": 80, "speed": 9, "art": "drone",
-      "_draft": ["speed", "laser.damage", "summon.max"],
-      "phases": [
-        {"below_pct": 100, "pattern": ["laser", "summon", "shield"]},
-        {"below_pct": 50, "pattern": ["summon", "laser", "laser", "shield"]}
-      ],
-      "intents": {
-        "laser":  {"icon": "strike", "damage": 12, "target": "one", "windup": 1,
-                   "interrupt": ["light", "hack"]},
-        "summon": {"icon": "summon", "damage": 0, "target": "self", "windup": 0,
-                   "summon": "drone_small", "max": 2, "interrupt": ["light", "hack"]},
-        "shield": {"icon": "antihack", "damage": 0, "target": "self", "windup": 0,
-                   "shield": 0.5, "interrupt": ["light", "hack"]}
-      }
-    }
-  },
-  "encounters": {
-    "ch1_a2_crawlers": {
-      "_source": "سند ۰۸ §۵ مرحلهٔ ۲: نبرد اختیاری-آموزشی، ۲ ربات خزنده؛ ضربهٔ هم‌زمان و سپر",
-      "enemies": ["crawler", "crawler"], "bg": "battle_bg_street", "fleeable": true,
-      "tutorial": true, "reward": {"coins": 10}
-    },
-    "ch1_a3_guard_crawler": {
-      "_source": "سند ۰۸ §۵ مرحلهٔ ۳ نبرد ۱: نگهبان + خزنده؛ قصد دشمن و قطع با هک/نور",
-      "enemies": ["guard", "crawler"], "bg": "battle_bg_street", "fleeable": true,
-      "reward": {"coins": 15}
-    },
-    "ch1_a3_patrol_drone": {
-      "_source": "سند ۰۸ §۵ مرحلهٔ ۳ نبرد ۲: پهپاد گشتی",
-      "enemies": ["drone"], "bg": "battle_bg_street", "fleeable": true,
-      "reward": {"coins": 15},
-      "balance": {
-        "_source": "D-ART-54: تک‌دشمن با ×۲٫۵ میانهٔ ۳۰ث بود، روی کف شرط ۳۰–۹۰ث مدیر.",
-        "enemy_hp_mult": 3.5
-      }
-    },
-    "ch1_a3_commander": {
-      "_source": "سند ۰۸ §۵ مرحلهٔ ۳ اوج: پهپاد فرمانده؛ سند ۰۹ §۴: فاز ۲ در ۵۰٪ جان",
-      "enemies": ["commander"], "bg": "battle_bg_launch", "fleeable": false,
-      "climax": true, "reward": {"coins": 30},
-      "balance": {
-        "_source": "D-ART-54: ضریب سراسری ×۲٫۵/×۱٫۵ اوج را ۶۱ث نگه می‌داشت؛ هدف مدیر ۱۲۰–۱۸۰ث. با ۵ و ۲: بازیکن دقیق انسانی میانه ۱۴۱ث، ناشی و فقط‌سپر همیشه می‌بازند.",
-        "enemy_hp_mult": 5.0,
-        "enemy_damage_mult": 2.0
-      }
-    }
+  "ilara": {
+   "name_key": "name_ilara",
+   "hp": 60,
+   "speed": 10,
+   "strike": 8,
+   "skills": [
+    "light",
+    "seed",
+    "heal"
+   ],
+   "_draft": [
+    "speed"
+   ]
   }
+ },
+ "skills": {
+  "hack": {
+   "user": "kairo",
+   "cost": 2,
+   "target": "enemy",
+   "damage": 4,
+   "fx": "hack"
+  },
+  "dash": {
+   "user": "kairo",
+   "cost": 2,
+   "target": "enemy",
+   "hits": 2,
+   "fx": "hit"
+  },
+  "emp": {
+   "user": "kairo",
+   "cost": 3,
+   "target": "all_enemies",
+   "stun": 1,
+   "fx": "hack",
+   "needs_flag": "emp_unlocked"
+  },
+  "light": {
+   "user": "ilara",
+   "cost": 2,
+   "target": "enemy",
+   "damage": 12,
+   "fx": "light_leaf"
+  },
+  "seed": {
+   "user": "ilara",
+   "cost": 2,
+   "target": "ally",
+   "barrier": 15,
+   "fx": "shield_block",
+   "_draft": [
+    "barrier"
+   ]
+  },
+  "heal": {
+   "user": "ilara",
+   "cost": 3,
+   "target": "ally",
+   "heal": 20,
+   "fx": "light_leaf",
+   "_draft": [
+    "heal"
+   ]
+  },
+  "link": {
+   "user": "both",
+   "cost": 10,
+   "target": "all_enemies",
+   "damage": 40,
+   "fragile": true,
+   "fx": "link"
+  }
+ },
+ "items": {
+  "battery": {
+   "name_key": "item_battery",
+   "energy": 3,
+   "_draft": [
+    "energy"
+   ]
+  },
+  "repair_kit": {
+   "name_key": "item_repair_kit",
+   "heal": 25,
+   "_draft": [
+    "heal"
+   ]
+  },
+  "smoke_bomb": {
+   "name_key": "item_smoke_bomb",
+   "flee": true
+  }
+ },
+ "start_items": {
+  "battery": 1,
+  "repair_kit": 2,
+  "smoke_bomb": 1
+ },
+ "enemies": {
+  "crawler": {
+   "name_key": "enemy_crawler",
+   "hp": 24,
+   "speed": 8,
+   "art": "crawler",
+   "pattern": [
+    "claw",
+    "claw",
+    "cling"
+   ],
+   "intents": {
+    "claw": {
+     "icon": "strike",
+     "damage": 6,
+     "target": "one",
+     "windup": 0,
+     "interrupt": [
+      "light",
+      "hack"
+     ]
+    },
+    "cling": {
+     "icon": "stun",
+     "damage": 0,
+     "target": "one",
+     "windup": 0,
+     "slow": true,
+     "interrupt": [
+      "light",
+      "hack"
+     ]
+    }
+   }
+  },
+  "guard": {
+   "name_key": "enemy_guard",
+   "hp": 45,
+   "speed": 6,
+   "art": "guard",
+   "pattern": [
+    "shoot",
+    "shield"
+   ],
+   "intents": {
+    "shoot": {
+     "icon": "strike",
+     "damage": 10,
+     "target": "one",
+     "windup": 1,
+     "interrupt": [
+      "hack"
+     ]
+    },
+    "shield": {
+     "icon": "antihack",
+     "damage": 0,
+     "target": "self",
+     "windup": 0,
+     "shield": 0.5,
+     "interrupt": [
+      "hack"
+     ]
+    }
+   }
+  },
+  "drone": {
+   "name_key": "enemy_drone",
+   "hp": 36,
+   "speed": 11,
+   "art": "drone",
+   "pattern": [
+    "scan",
+    "dive"
+   ],
+   "intents": {
+    "scan": {
+     "icon": "scan",
+     "damage": 0,
+     "target": "one",
+     "windup": 0,
+     "mark": true,
+     "interrupt": [
+      "hack"
+     ]
+    },
+    "dive": {
+     "icon": "strike",
+     "damage": 8,
+     "target": "one",
+     "windup": 0,
+     "interrupt": [
+      "hack"
+     ]
+    }
+   }
+  },
+  "kamikaze": {
+   "name_key": "enemy_kamikaze",
+   "hp": 18,
+   "speed": 9,
+   "art": "kamikaze",
+   "pattern": [
+    "explode"
+   ],
+   "intents": {
+    "explode": {
+     "icon": "explosion",
+     "damage": 18,
+     "target": "all",
+     "windup": 2,
+     "self_destruct": true,
+     "interrupt": [
+      "light",
+      "hack"
+     ]
+    }
+   }
+  },
+  "drone_small": {
+   "name_key": "enemy_drone_small",
+   "hp": 12,
+   "speed": 12,
+   "art": "drone",
+   "_draft": [
+    "hp",
+    "speed",
+    "dive.damage"
+   ],
+   "pattern": [
+    "dive"
+   ],
+   "intents": {
+    "dive": {
+     "icon": "strike",
+     "damage": 4,
+     "target": "one",
+     "windup": 0,
+     "interrupt": [
+      "light",
+      "hack"
+     ]
+    }
+   }
+  },
+  "commander": {
+   "name_key": "enemy_commander",
+   "hp": 80,
+   "speed": 9,
+   "art": "drone",
+   "_draft": [
+    "speed",
+    "laser.damage",
+    "summon.max"
+   ],
+   "phases": [
+    {
+     "below_pct": 100,
+     "pattern": [
+      "laser",
+      "summon",
+      "shield"
+     ]
+    },
+    {
+     "below_pct": 50,
+     "pattern": [
+      "summon",
+      "laser_locked",
+      "laser_locked",
+      "shield"
+     ]
+    }
+   ],
+   "intents": {
+    "laser": {
+     "icon": "strike",
+     "damage": 12,
+     "target": "one",
+     "windup": 1,
+     "interrupt": [
+      "light",
+      "hack"
+     ]
+    },
+    "summon": {
+     "icon": "summon",
+     "damage": 0,
+     "target": "self",
+     "windup": 0,
+     "summon": "drone_small",
+     "max": 2,
+     "interrupt": [
+      "light",
+      "hack"
+     ]
+    },
+    "shield": {
+     "icon": "antihack",
+     "damage": 0,
+     "target": "self",
+     "windup": 0,
+     "shield": 0.5,
+     "interrupt": [
+      "light",
+      "hack"
+     ]
+    },
+    "laser_locked": {
+     "icon": "strike",
+     "damage": 12,
+     "target": "one",
+     "windup": 1,
+     "interrupt": [],
+     "_note": "لیزر فاز ۲: قطع‌نشدنی. فقط با دفاع به‌موقع یا سپر. سند ۰۹ اصلاحیهٔ §۴."
+    }
+   },
+   "skill_cost": {
+    "hack": 3,
+    "light": 3
+   },
+   "_balance_note": "تصمیم مدیر گام ۵۴ (الف+ب): لیزر فاز ۲ قطع‌نشدنی و هزینهٔ هک/نور ۳ فقط رو به فرمانده. معیار: بازیکن دقیق ۲۵ تا ۴۰٪ جان از دست بدهد و نبرد ۱۲۰ تا ۱۸۰ ثانیه باشد."
+  }
+ },
+ "encounters": {
+  "ch1_a2_crawlers": {
+   "_source": "سند ۰۸ §۵ مرحلهٔ ۲: نبرد اختیاری-آموزشی، ۲ ربات خزنده؛ ضربهٔ هم‌زمان و سپر",
+   "enemies": [
+    "crawler",
+    "crawler"
+   ],
+   "bg": "battle_bg_street",
+   "fleeable": true,
+   "tutorial": true,
+   "reward": {
+    "coins": 10
+   }
+  },
+  "ch1_a3_guard_crawler": {
+   "_source": "سند ۰۸ §۵ مرحلهٔ ۳ نبرد ۱: نگهبان + خزنده؛ قصد دشمن و قطع با هک/نور",
+   "enemies": [
+    "guard",
+    "crawler"
+   ],
+   "bg": "battle_bg_street",
+   "fleeable": true,
+   "reward": {
+    "coins": 15
+   }
+  },
+  "ch1_a3_patrol_drone": {
+   "_source": "سند ۰۸ §۵ مرحلهٔ ۳ نبرد ۲: پهپاد گشتی",
+   "enemies": [
+    "drone"
+   ],
+   "bg": "battle_bg_street",
+   "fleeable": true,
+   "reward": {
+    "coins": 15
+   },
+   "balance": {
+    "_source": "D-ART-54: تک‌دشمن با ×۲٫۵ میانهٔ ۳۰ث بود، روی کف شرط ۳۰–۹۰ث مدیر.",
+    "enemy_hp_mult": 3.5
+   }
+  },
+  "ch1_a3_commander": {
+   "_source": "سند ۰۸ §۵ مرحلهٔ ۳ اوج: پهپاد فرمانده؛ سند ۰۹ §۴: فاز ۲ در ۵۰٪ جان",
+   "enemies": [
+    "commander"
+   ],
+   "bg": "battle_bg_launch",
+   "fleeable": false,
+   "climax": true,
+   "reward": {
+    "coins": 30
+   },
+   "balance": {
+    "_source": "D-ART-54: ضریب سراسری ×۲٫۵/×۱٫۵ اوج را ۶۱ث نگه می‌داشت؛ هدف مدیر ۱۲۰–۱۸۰ث. با ۵ و ۲: بازیکن دقیق انسانی میانه ۱۴۱ث، ناشی و فقط‌سپر همیشه می‌بازند.",
+    "enemy_hp_mult": 5.0,
+    "enemy_damage_mult": 2.0
+   }
+  }
+ }
 }

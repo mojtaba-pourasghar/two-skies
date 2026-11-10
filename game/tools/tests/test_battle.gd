@@ -379,9 +379,15 @@ func _t_full_battles() -> void:
 const RUNS := 60
 ## شرط‌هایی که با اعداد فعلی برآورده نمی‌شوند و تصمیم کاربر می‌خواهند.
 ## دیده می‌شوند (⚠)، و اگر برآورده شدند سنجه رد می‌شود تا فهرست پاک شود.
-const PENDING_BALANCE := {
-	"climax_taken": "DECISION_QUEUE ردیف ۱۱ (همهٔ قصدهای فرمانده قطع‌شدنی‌اند)",
-}
+##
+## ردیف «climax_taken» با تصمیم مدیر در گام ۵۴ بسته شد (D-ART-55): لیزر
+## فاز ۲ قطع‌نشدنی و هزینهٔ هک/نور ۳ رو به فرمانده. معیار هم از «≥۴۰٪»
+## به **۲۵ تا ۴۰٪** عوض شد.
+const PENDING_BALANCE := {}
+
+## معیار تازهٔ مدیر برای نبرد اوج (گام ۵۴).
+const CLIMAX_TAKEN_MIN := 0.25
+const CLIMAX_TAKEN_MAX := 0.40
 
 
 func _t_balance() -> void:
@@ -397,13 +403,28 @@ func _t_balance() -> void:
 	_check("  اوج: دقیق می‌برد", k["win_rate"] >= 0.95, "= %.0f٪" % (k["win_rate"] * 100))
 	_check("  اوج: ۱۲۰–۱۸۰ ثانیه", k["median_s"] >= 120.0 and k["median_s"] <= 180.0,
 		"= میانه %.0fث [%.0f–%.0f]" % [k["median_s"], k["min_s"], k["max_s"]])
-	var met: bool = k["median_taken"] >= 0.40
-	if PENDING_BALANCE.has("climax_taken"):
-		print("  ⚠   اوج: دقیق با ≥۴۰٪ آسیب می‌برد — الان %.0f٪؛ منتظر %s"
-			% [k["median_taken"] * 100, PENDING_BALANCE["climax_taken"]])
-		_check("  اوج: شرط ۴۰٪ هنوز واقعاً برآورده نشده (وگرنه از فهرست بردار)", not met)
-	else:
-		_check("  اوج: دقیق با ≥۴۰٪ آسیب می‌برد", met, "= %.0f٪" % (k["median_taken"] * 100))
+	var taken: float = k["median_taken"]
+	_check("  اوج: دقیق ۲۵ تا ۴۰٪ جان از دست می‌دهد (گام ۵۴)",
+		taken >= CLIMAX_TAKEN_MIN and taken <= CLIMAX_TAKEN_MAX,
+		"= %.0f٪" % (taken * 100.0))
+
+	# ساختار تصمیم مدیر، نه فقط نتیجه‌اش: اگر کسی لیزر فاز ۲ را دوباره
+	# قطع‌شدنی کند یا هزینه را به ۲ برگرداند، عدد بالا ممکن است هنوز
+	# تصادفاً در بازه بیفتد ولی تصمیم از بین رفته باشد.
+	var core := BattleCore.new()
+	core.load_data()
+	var cmd: Dictionary = core.data["enemies"]["commander"]
+	var p2: Array = (cmd["phases"][1] as Dictionary)["pattern"]
+	_check("  اوج: فاز ۲ لیزر قطع‌نشدنی دارد", "laser_locked" in p2,
+		"= %s" % str(p2))
+	_check("  و آن لیزر واقعاً قطع نمی‌شود",
+		(cmd["intents"]["laser_locked"] as Dictionary).get("interrupt", []).is_empty())
+	_check("  اوج: هک رو به فرمانده ۳ است", core.skill_cost("hack", "commander") == 3,
+		"= %d" % core.skill_cost("hack", "commander"))
+	_check("  اوج: نور رو به فرمانده ۳ است", core.skill_cost("light", "commander") == 3,
+		"= %d" % core.skill_cost("light", "commander"))
+	_check("  ولی رو به بقیه همان ۲ می‌ماند",
+		core.skill_cost("hack", "guard") == 2 and core.skill_cost("light", "crawler") == 2)
 	for bot in ["clumsy", "guard_only"]:
 		var r := BattleSim.summary("ch1_a3_commander", bot, RUNS)
 		_check("  اوج: «%s» در ≥۳۰٪ اجراها می‌بازد" % bot, r["lose_rate"] >= 0.30,
