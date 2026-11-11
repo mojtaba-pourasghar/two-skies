@@ -204,6 +204,12 @@ func _anchor_box(c: Control, from_bottom: int, to_bottom: int, side: int = 64) -
 	c.offset_bottom = -to_bottom
 
 
+## رد کردن فوری — برای آزمون سرتاسری و برای دکمهٔ «رد کردن».
+func skip_now() -> void:
+	if is_playing:
+		_skip_requested = true
+
+
 ## یک صحنه را از JSON اجرا می‌کند. تا پایان صحنه await می‌شود.
 func play(id: String) -> void:
 	var path := "res://data/cutscenes/%s.json" % id

@@ -48,6 +48,9 @@ var _flee_from: MapEnemy = null
 ## این را خاموش می‌کنند: گفت‌وگو کنترل را می‌گیرد و کوروتینِ معلقش
 ## هنگام `quit()` به صورت نشت ObjectDB گزارش می‌شود.
 @export var play_story: bool = true
+## اگر پر باشد، نبردهایی که از روی نقشه شروع می‌شوند خودکار بازی
+## می‌شوند ("skilled" یا "idle"). فقط برای آزمون سرتاسری.
+@export var battle_autoplay: String = ""
 var story: StoryDirector = null
 var _story_busy: bool = false
 ## آخرین نبرد با حملهٔ از پشت شروع شد؟ برای آزمون و HUD.
@@ -184,13 +187,19 @@ signal chapter_finished()
 func _run_beats(trigger: String, value: String) -> void:
 	if story == null or _story_busy or not play_story:
 		return
-	var list := story.pending(trigger, value)
-	if list.is_empty():
+	if story.pending(trigger, value).is_empty():
 		return
 	_story_busy = true
 	await get_tree().process_frame
-	for b in list:
-		await story.play(b, self)
+	# **بعد از هر بیت دوباره پرسیده می‌شود.** بیتی که `after` دارد تا
+	# پیش‌نیازش اجرا نشده در فهرست نمی‌آید؛ اگر فهرست را یک‌بار بگیریم،
+	# زنجیرهٔ «ارتقا → صحنهٔ پایانی» هرگز به حلقهٔ دوم نمی‌رسد و فصل
+	# بی‌صدا تمام نمی‌شود. اجرای سرتاسری همین را گرفت.
+	for i in 24:
+		var list := story.pending(trigger, value)
+		if list.is_empty():
+			break
+		await story.play(list[0], self)
 	_story_busy = false
 
 
@@ -385,6 +394,7 @@ func _start_battle(m: MapEnemy, ambush: bool = false) -> void:
 	battle = load("res://battle/battle_scene.tscn").instantiate()
 	battle.encounter_id = m.encounter
 	battle.ambush = ambush
+	battle.autoplay = battle_autoplay
 	battle.battle_seed = hash(m.enemy_id) & 0xFFFF
 	battle.finished.connect(_on_battle_finished)
 	add_child(battle)

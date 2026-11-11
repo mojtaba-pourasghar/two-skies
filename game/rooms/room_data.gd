@@ -170,6 +170,14 @@ func _validate(room: Dictionary) -> void:
 	if not walk.is_empty() and not point_walkable(room, spawn):
 		errors.append("اتاق «%s»: نقطهٔ شروع (%d,%d) بیرون ناحیهٔ قابل‌راه‌رفتن است."
 			% [rid, int(spawn.x), int(spawn.y)])
+	# **پا، نه بدن.** جای بازیگر از بدنش گرفته می‌شود ولی برخورد از
+	# پایش. نقطهٔ شروع تالار برق روی مرز بود: بدن داخل، پا بیرون — و
+	# بازیکن با سرعت کامل یک پیکسل هم تکان نمی‌خورد، چون هر گام محوری
+	# رد می‌شد. هیچ آزمونی نمی‌دیدش تا اجرای سرتاسری.
+	elif not walk.is_empty() \
+			and not point_walkable(room, spawn + Vector2(0, TdConst.FOOT_OFFSET_Y)):
+		errors.append("اتاق «%s»: **پای** نقطهٔ شروع (%d,%d) بیرون ماسک است."
+			% [rid, int(spawn.x), int(spawn.y + TdConst.FOOT_OFFSET_Y)])
 
 
 

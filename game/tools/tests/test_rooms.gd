@@ -26,6 +26,7 @@ func _ready() -> void:
 	_t_layers()
 	await _t_living()
 	_t_stand_occluders()
+	_t_doors_reachable()
 	_t_all_rooms()
 	_report()
 
@@ -373,6 +374,52 @@ func _t_coverage(node: PaintedRoom) -> void:
 		ActorVisual.GHOST_FADE_S >= 0.1 and ActorVisual.GHOST_FADE_S <= 0.2,
 		"= %.2fث" % ActorVisual.GHOST_FADE_S)
 
+
+
+## **چند درصد هر در روی کف واقعی است؟** (گام ۵۷)
+##
+## دری که مستطیلش بیشتر بیرون ماسک باشد، در عمل یک شکاف باریک است:
+## بازیکن جلوی در می‌ایستد و رد نمی‌شود و فکر می‌کند بازی خراب است.
+## آزمون سرتاسری همین را در S2b گرفت (۲۰٪) و اندازه‌گیری دو در دیگر را
+## هم لو داد. ملاک: دست‌کم یک‌چهارم مستطیل، با پهنای جعبهٔ پا.
+const DOOR_MIN_PCT := 0.25
+
+func _t_doors_reachable() -> void:
+	print("— در‌ها روی کف —")
+	var worst := 1.0
+	var worst_id := ""
+	for rid in ALL_ROOMS:
+		var l := RoomData.new()
+		var room := l.load_room(rid)
+		if room.is_empty():
+			continue
+		for raw in room["doors"]:
+			var d: Dictionary = raw
+			var r: Array = d["rect"]
+			var hit := 0
+			var total := 0
+			for ix in 6:
+				for iy in 6:
+					var p := Vector2(
+						float(r[0]) + float(r[2]) * (float(ix) + 0.5) / 6.0,
+						float(r[1]) + float(r[3]) * (float(iy) + 0.5) / 6.0)
+					total += 1
+					var ok := true
+					for dx in [-9.0, 0.0, 9.0]:
+						var q := p + Vector2(dx, 0)
+						if not RoomData.point_walkable(room, q) \
+								or not RoomData.hazard_at(room, q).is_empty():
+							ok = false
+					if ok:
+						hit += 1
+			var pct := float(hit) / float(maxi(1, total))
+			if pct < worst:
+				worst = pct
+				worst_id = "%s/%s" % [rid, d["id"]]
+			_check("  «%s» در «%s» ≥۲۵٪ روی کف است" % [d["id"], rid],
+				pct >= DOOR_MIN_PCT, "= %.0f٪" % (pct * 100.0))
+	_check("باریک‌ترین در", worst >= DOOR_MIN_PCT,
+		"= %s با %.0f٪" % [worst_id, worst * 100.0])
 
 
 ## occluderهای ایستادهٔ دستهٔ ۱۶ (گام ۵۵، REQ-032).

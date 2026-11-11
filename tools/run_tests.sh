@@ -133,6 +133,22 @@ for t in "${TESTS[@]}"; do
   fi
 done
 
+# اجرای سرتاسری فصل ۱ (گام ۵۷ بند ۵). **پیش‌فرض خاموش است**، چون حدود
+# هفت دقیقه طول می‌کشد؛ با SMOKE=1 روشن می‌شود.
+if [ "${SMOKE:-0}" = "1" ]; then
+  echo
+  echo "=== اجرای سرتاسری فصل ۱ ==="
+  smoke="$LOGDIR/smoke_ch1.log"
+  ( cd "$GAME" && timeout 1800 "$GODOT" --headless --fixed-fps 60 \
+      res://tools/tests/smoke_ch1.tscn >"$smoke" 2>&1 )
+  code=$?
+  tail -n 3 "$smoke"
+  if [ $code -ne 0 ]; then
+    grep -E "✘" "$smoke" | head -10
+    fail=1
+  fi
+fi
+
 # اجرای واقعی بازی: --import خطای کامپایل اسکریپت صحنه‌ها را نشان نمی‌دهد،
 # ولی اجرای واقعی نشان می‌دهد. پس بوت تا منوی اصلی هم سنجیده می‌شود.
 echo
