@@ -347,6 +347,7 @@ func _t_challenge_fair() -> void:
 
 func _start(room_id: String) -> RoomGame:
 	var game: RoomGame = load("res://scenes/room_game.tscn").instantiate()
+	game.set("play_story", false)
 	game.start_room = room_id
 	game.resume = false
 	add_child(game)

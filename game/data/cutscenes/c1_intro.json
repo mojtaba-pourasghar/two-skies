@@ -20,10 +20,12 @@
         {
           "key": "c1_intro_01",
           "speaker": "",
-          "blip": ""
+          "blip": "",
+          "portrait": "neutral"
         }
       ],
-      "choice": null
+      "choice": null,
+      "bg": "scenes/ch1/intro_1280x720.png"
     },
     {
       "code": "ک",
@@ -35,10 +37,12 @@
         {
           "key": "c1_intro_02",
           "speaker": "kairo",
-          "blip": "kairo"
+          "blip": "kairo",
+          "portrait": "shocked"
         }
       ],
-      "choice": null
+      "choice": null,
+      "bg": "scenes/ch1/ilara_bedroom_1280x720.png"
     },
     {
       "code": "ک",
@@ -50,10 +54,12 @@
         {
           "key": "c1_intro_03",
           "speaker": "ilara",
-          "blip": "ilara"
+          "blip": "ilara",
+          "portrait": "crying"
         }
       ],
-      "choice": null
+      "choice": null,
+      "bg": "scenes/ch1/house_1280x720.png"
     },
     {
       "code": "ج",
@@ -65,10 +71,12 @@
         {
           "key": "c1_intro_04",
           "speaker": "kairo",
-          "blip": "kairo"
+          "blip": "kairo",
+          "portrait": "sad"
         }
       ],
-      "choice": null
+      "choice": null,
+      "bg": "scenes/ch1/street_1280x720.png"
     }
   ]
 }

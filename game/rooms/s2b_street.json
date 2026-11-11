@@ -150,5 +150,17 @@
     "overlays": [],
     "_note": "نور زنده در نقشهٔ افکت است."
   },
-  "zoom_zones": []
+  "zoom_zones": [],
+  "pickups": [
+    {
+      "id": "coin_street",
+      "kind": "coin",
+      "amount": 8,
+      "at": [
+        640,
+        560
+      ],
+      "height": 26
+    }
+  ]
 }

@@ -44,6 +44,12 @@ var _battle_enemy: MapEnemy = null
 var _clear_at := Vector2.ZERO
 ## بعد از فرار، دشمن تا وقتی کایرو از بردش بیرون نرفته دوباره نبرد نمی‌سازد
 var _flee_from: MapEnemy = null
+## کارگردان داستان (M5-ج). آزمون‌هایی که فقط حرکت و خطر را می‌سنجند
+## این را خاموش می‌کنند: گفت‌وگو کنترل را می‌گیرد و کوروتینِ معلقش
+## هنگام `quit()` به صورت نشت ObjectDB گزارش می‌شود.
+@export var play_story: bool = true
+var story: StoryDirector = null
+var _story_busy: bool = false
 ## آخرین نبرد با حملهٔ از پشت شروع شد؟ برای آزمون و HUD.
 var last_ambush: bool = false
 ## جان صفر در اکتشاف (D-ART-51 مدیر): پردهٔ ۰٫۶ث و برگشت به مجسمه.
@@ -58,6 +64,10 @@ signal returned_to_statue(room_id: String)
 
 
 func _ready() -> void:
+	story = StoryDirector.new()
+	story.name = "Story"
+	story.chapter_ended.connect(_on_chapter_ended)
+	add_child(story)
 	director = CameraDirector.new()
 	director.name = "Director"
 	add_child(director)
@@ -152,7 +162,36 @@ func _enter_room(room_id: String, spawn_override: Vector2) -> bool:
 	camera.snap_to_target()
 	room_deaths = 0
 	_update_deaths_label()
+	_run_beats("enter", room_id)
 	return true
+
+
+## بیت‌های داستانی این ماشه را، یکی پس از دیگری، اجرا می‌کند.
+##
+## **بی‌درنگ نیست و نباید باشد:** اجرا در یک تابع async جداست تا ساخت
+## اتاق تمام شود و بعد صحنه بیاید؛ وگرنه دیالوگ روی اتاق نیمه‌ساخته
+## می‌افتد و دوربین هنوز سر جایش ننشسته است.
+## پایان فصل: پردهٔ «پایان فصل ۱» روی همین صحنه باز می‌شود.
+func _on_chapter_ended() -> void:
+	var ui := ChapterEnd.new()
+	add_child(ui)
+	chapter_finished.emit()
+
+
+signal chapter_finished()
+
+
+func _run_beats(trigger: String, value: String) -> void:
+	if story == null or _story_busy or not play_story:
+		return
+	var list := story.pending(trigger, value)
+	if list.is_empty():
+		return
+	_story_busy = true
+	await get_tree().process_frame
+	for b in list:
+		await story.play(b, self)
+	_story_busy = false
 
 
 ## «ایلارا وارد C1/C2/C3 نمی‌شود؛ کنار در منتظر می‌ماند» (D-ART-35،
@@ -241,6 +280,7 @@ func _physics_process(_delta: float) -> void:
 		return
 	_check_hack(get_physics_process_delta_time())
 	_check_checkpoint()
+	_check_pickup()
 	_check_statue()
 	_check_door()
 
@@ -362,6 +402,7 @@ func _on_battle_finished(outcome: int, encounter: String) -> void:
 	GameMode.set_control(GameMode.ControlMode.PLAY)
 	if outcome == BattleCore.Outcome.WIN:
 		room.remove_enemy(m)
+		_run_beats("after_battle", encounter)
 		# برد ذخیره می‌شود؛ بستن بازی همین‌جا دشمن را برنمی‌گرداند
 		GameState.save_explore(String(room.data.get("id", "")), kairo.global_position)
 	else:
@@ -417,6 +458,35 @@ func _check_hack(delta: float) -> void:
 		_hack_t = 0.0
 		hack_done.emit(hid)
 		GameState.save_explore(String(room.data.get("id", "")), kairo.global_position)
+
+
+## قلمی برداشته شد (یا صندوقی باز شد).
+signal item_taken(id: String, gained: Dictionary)
+
+
+## اقلام زمینی با رد شدن، صندوق با دکمه (M5-ج).
+func _check_pickup() -> void:
+	if kairo == null or room == null:
+		return
+	var foot := kairo.foot_position()
+	var pk := room.pickup_at(foot, false)
+	if pk.is_empty() and GameMode.just_pressed("action"):
+		pk = room.pickup_at(foot, true)
+	if pk.is_empty():
+		return
+	var gained := room.take_pickup(String(pk["id"]))
+	for k in gained.keys():
+		var n := int(gained[k])
+		match String(k):
+			"coin":
+				GameState.add_coins(n)
+			"gem":
+				GameState.add_gems(n)
+			_:
+				GameState.set_flag("item_%s" % String(k), true)
+	Audio.play_sfx("chest" if bool(pk["needs_action"]) else String(pk["kind"]))
+	item_taken.emit(String(pk["id"]), gained)
+	GameState.save_explore(String(room.data.get("id", "")), kairo.global_position)
 
 
 ## چک‌پوینت روشن شد — جای شروع دوباره عوض شد.

@@ -18,6 +18,13 @@ const MAX_CHARS: int = 40
 const CHAR_TIME: float = 0.035
 ## بلیپ هر ۲ حرف پخش می‌شود (§۱۸)
 const BLIP_EVERY: int = 2
+## چیدمان برای ۱۲۸۰×۷۲۰. تا گام ۵۷ عددها برای ۴۸۰×۲۷۰ بودند، یعنی جعبهٔ
+## متن وسط صفحه می‌افتاد و فونت ۱۱ پیکسلی روی ۷۲۰ خوانا نبود.
+const BAR_H: int = 56
+const BOX_X: int = 64
+const BOX_Y: int = 520
+const BOX_W: int = 1152
+const BOX_H: int = 132
 
 ## کد نما → زوم دوربین (§۱۸)
 const SHOT_ZOOM := {
@@ -41,6 +48,10 @@ const TRANSITIONS := {
 var is_playing: bool = false
 
 var _layer: CanvasLayer
+var _root: Control
+var _bg: TextureRect
+var _portrait: TextureRect
+var _box: ColorRect
 var _fade: ColorRect
 var _bars_top: ColorRect
 var _bars_bottom: ColorRect
@@ -61,15 +72,71 @@ func _build_ui() -> void:
 	_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_layer)
 
+	# **ریشهٔ چیدمان LTR.** پروژه `root_node_layout_direction=2` (راست‌به‌چپ)
+	# دارد، و در آن حالت گودو `position.x` کنترل‌ها را آینه می‌کند: جعبهٔ
+	# متن با x=۶۴ در واقع روی ۱۳۴۴ می‌نشست، یعنی **بیرون صفحه**. متن و
+	# جعبه هر دو «visible=true» بودند و هیچ‌کدام دیده نمی‌شدند — فقط با
+	# چاپ `get_global_rect()` معلوم شد. مختصات‌ها اینجا LTR می‌مانند؛
+	# راست‌به‌چپ بودن **متن** کار خود Labelهاست.
+	_root = Control.new()
+	_root.name = "Ui"
+	_root.layout_direction = Control.LAYOUT_DIRECTION_LTR
+	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.anchor_right = 1.0
+	_root.anchor_bottom = 1.0
+	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_layer.add_child(_root)
+
+	# تصویر صحنه، **زیر** همهٔ چیزهای رابط. تا گام ۵۷ هیچ صحنه‌ای تصویر
+	# نداشت و صحنهٔ آغاز فصل یک صفحهٔ خاکستری با نوار سینمایی بود — در
+	# عکس گرفته شد و دیده شد، هیچ آزمونی نمی‌گفت.
+	_bg = TextureRect.new()
+	_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_bg.anchor_right = 1.0
+	_bg.anchor_bottom = 1.0
+	_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_bg.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_bg.visible = false
+	_root.add_child(_bg)
+
+	# پرتره‌ی گوینده، گوشهٔ پایین-راست بالای جعبهٔ متن
+	_portrait = TextureRect.new()
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	# لنگر نسبی، نه مختصات مطلق: در چیدمان راست‌به‌چپ مختصات آینه می‌شود
+	# و پرتره بیرون صفحه می‌افتاد.
+	_portrait.anchor_left = 0.72
+	_portrait.anchor_right = 0.98
+	_portrait.anchor_top = 0.40
+	_portrait.anchor_bottom = 0.84
+	_portrait.offset_left = 0
+	_portrait.offset_right = 0
+	_portrait.offset_top = 0
+	_portrait.offset_bottom = 0
+	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_portrait.visible = false
+	_root.add_child(_portrait)
+
+	# جعبهٔ متن: پس‌زمینهٔ نیمه‌شفاف تا متن روی هر تصویری خوانا بماند
+	_box = ColorRect.new()
+	_box.color = Color(0.03, 0.04, 0.06, 0.78)
+	_anchor_box(_box, 200, 68)
+	_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_box.visible = false
+	_root.add_child(_box)
+
 	# نوار سینمایی ۱۶:۹ با نوارهای ۳۲ پیکسلی (§۱۸)
 	_bars_top = ColorRect.new()
 	_bars_top.color = Color.BLACK
 	_bars_top.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	_bars_top.anchor_right = 1.0
-	_bars_top.offset_bottom = 32
+	_bars_top.offset_bottom = BAR_H
 	_bars_top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bars_top.visible = false
-	_layer.add_child(_bars_top)
+	_root.add_child(_bars_top)
 
 	_bars_bottom = ColorRect.new()
 	_bars_bottom.color = Color.BLACK
@@ -77,36 +144,41 @@ func _build_ui() -> void:
 	_bars_bottom.anchor_right = 1.0
 	_bars_bottom.anchor_top = 1.0
 	_bars_bottom.anchor_bottom = 1.0
-	_bars_bottom.offset_top = -32
+	_bars_bottom.offset_top = -BAR_H
 	_bars_bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bars_bottom.visible = false
-	_layer.add_child(_bars_bottom)
+	_root.add_child(_bars_bottom)
 
 	_speaker = Label.new()
-	_speaker.add_theme_font_size_override("font_size", 9)
+	_speaker.add_theme_font_size_override("font_size", 20)
+	_speaker.add_theme_color_override("font_color", Color(0.78, 0.88, 1.0))
 	_speaker.layout_direction = Control.LAYOUT_DIRECTION_RTL
 	_speaker.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_speaker.position = Vector2(12, 196)
-	_speaker.size = Vector2(456, 12)
+	_anchor_box(_speaker, 190, 160, 80)
 	_speaker.visible = false
-	_layer.add_child(_speaker)
+	_root.add_child(_speaker)
 
 	_text = Label.new()
-	_text.add_theme_font_size_override("font_size", 11)
+	_text.add_theme_font_size_override("font_size", 26)
 	_text.layout_direction = Control.LAYOUT_DIRECTION_RTL
 	_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_text.position = Vector2(12, 210)
-	_text.size = Vector2(456, 32)
+	_anchor_box(_text, 156, 80, 80)
 	_text.visible = false
-	_layer.add_child(_text)
+	_root.add_child(_text)
 
 	_skip_hint = Label.new()
-	_skip_hint.add_theme_font_size_override("font_size", 8)
+	_skip_hint.add_theme_font_size_override("font_size", 18)
 	_skip_hint.text = "⏭"
-	_skip_hint.position = Vector2(452, 4)
+	_skip_hint.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_skip_hint.anchor_right = 1.0
+	_skip_hint.offset_left = 0
+	_skip_hint.offset_right = -24
+	_skip_hint.offset_top = 64
+	_skip_hint.offset_bottom = 90
+	_skip_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_skip_hint.visible = false
-	_layer.add_child(_skip_hint)
+	_root.add_child(_skip_hint)
 
 	_fade = ColorRect.new()
 	_fade.color = Color(0, 0, 0, 0)
@@ -114,7 +186,22 @@ func _build_ui() -> void:
 	_fade.anchor_right = 1.0
 	_fade.anchor_bottom = 1.0
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_layer.add_child(_fade)
+	_root.add_child(_fade)
+
+
+## جعبه را به **لبهٔ پایین** می‌چسباند با حاشیهٔ چپ و راست قرینه.
+## قرینه بودن عمدی است: در چیدمان راست‌به‌چپ گودو چپ و راست را عوض
+## می‌کند، و با حاشیهٔ برابر، عوض شدنشان هیچ فرقی نمی‌کند.
+func _anchor_box(c: Control, from_bottom: int, to_bottom: int, side: int = 64) -> void:
+	c.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	c.anchor_left = 0.0
+	c.anchor_right = 1.0
+	c.anchor_top = 1.0
+	c.anchor_bottom = 1.0
+	c.offset_left = side
+	c.offset_right = -side
+	c.offset_top = -from_bottom
+	c.offset_bottom = -to_bottom
 
 
 ## یک صحنه را از JSON اجرا می‌کند. تا پایان صحنه await می‌شود.
@@ -147,8 +234,44 @@ func play(id: String) -> void:
 	finished.emit(id)
 
 
+## گفت‌وگوی **داخل اتاق** (M5-ج): همان جعبه و همان تایپ، بی نوار
+## سینمایی و بی پرده. دوربین و اتاق سر جایشان می‌مانند و فقط کنترل
+## گرفته می‌شود، چون این‌ها لحظه‌های کوتاه‌اند نه صحنه.
+##
+## `lines` فهرستی از {key, speaker, portrait} است، یا رشتهٔ ساده‌ی کلید.
+func say(lines: Array, source: String = "say") -> void:
+	if lines.is_empty() or is_playing:
+		return
+	is_playing = true
+	_skip_requested = false
+	_current_id = source
+	var before := GameMode.control
+	GameMode.set_control(GameMode.ControlMode.CUTSCENE)
+	for raw in lines:
+		if _skip_requested:
+			break
+		var line: Dictionary = raw if raw is Dictionary else {"key": String(raw)}
+		await _type_line(line)
+	_box.visible = false
+	_portrait.visible = false
+	_text.visible = false
+	_speaker.visible = false
+	GameMode.set_control(before)
+	is_playing = false
+	finished.emit(source)
+
+
 func _play_shot(index: int, shot: Dictionary) -> void:
 	shot_started.emit(index, shot)
+
+	# تصویر صحنه
+	var bg_rel := String(shot.get("bg", ""))
+	if bg_rel != "":
+		var tex: Texture2D = AssetPath.texture(bg_rel)
+		_bg.texture = tex
+		_bg.visible = tex != null
+		if tex == null:
+			push_warning("Cutscene: تصویر «%s» پیدا نشد." % bg_rel)
 
 	# تبدیل ورودی نما
 	var tin := String(shot.get("transition_in", "cut"))
@@ -194,6 +317,15 @@ func _type_line(line: Dictionary) -> void:
 
 	_speaker.visible = speaker != ""
 	_speaker.text = _speaker_name(speaker)
+	_box.visible = true
+	# پرتره: `portrait` خط، وگرنه حالت خنثای گوینده
+	var mood := String(line.get("portrait", "neutral"))
+	if speaker in ["kairo", "ilara"] and mood != "":
+		var ptex: Texture2D = AssetPath.texture("portraits/%s/%s_alpha.png" % [speaker, mood])
+		_portrait.texture = ptex
+		_portrait.visible = ptex != null
+	else:
+		_portrait.visible = false
 	_text.visible = true
 	_text.text = ""
 
@@ -318,6 +450,10 @@ func _show_frame(on: bool) -> void:
 		_text.visible = false
 		_speaker.visible = false
 		_skip_hint.visible = false
+		_box.visible = false
+		_portrait.visible = false
+		_bg.visible = false
+		_bg.texture = null
 		_fade.color = Color(0, 0, 0, 0)
 
 

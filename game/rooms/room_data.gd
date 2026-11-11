@@ -58,7 +58,7 @@ func _normalize(room: Dictionary) -> void:
 	var size: Array = room.get("size", [1280, 720])
 	room["size"] = [int(size[0]), int(size[1])] if size.size() == 2 else [1280, 720]
 	for key in ["walkable", "blocked", "hazard", "doors", "props", "occluders", "enemies",
-			"hackables", "checkpoints"]:
+			"hackables", "checkpoints", "pickups"]:
 		if not room.has(key):
 			room[key] = []
 	if not room.has("light"):
@@ -206,6 +206,27 @@ func _validate_gear(room: Dictionary, rid: String) -> void:
 			if not hz.has(String(d)):
 				errors.append("اتاق «%s»: پایانهٔ «%s» خطر ناموجود «%s» را صدا می‌زند."
 					% [rid, hid, String(d)])
+
+	var pseen: Dictionary = {}
+	for raw in room.get("pickups", []):
+		var pk: Dictionary = raw
+		var pid := String(pk.get("id", ""))
+		if pid == "" or pseen.has(pid):
+			errors.append("اتاق «%s»: شناسهٔ قلم خالی یا تکراری «%s»." % [rid, pid])
+			continue
+		pseen[pid] = true
+		var pat: Array = pk.get("at", [])
+		if pat.size() != 2:
+			errors.append("اتاق «%s»: قلم «%s» جا ندارد." % [rid, pid])
+			continue
+		var pp := Vector2(float(pat[0]), float(pat[1]))
+		# قلمی بیرون ماسک هرگز برداشته نمی‌شود و بازیکن فکر می‌کند باگ است
+		if not walk.is_empty() and not point_walkable(room, pp):
+			errors.append("اتاق «%s»: قلم «%s» (%d,%d) بیرون ماسک است."
+				% [rid, pid, int(pp.x), int(pp.y)])
+		if bool(pk.get("needs_action", false)) \
+				and (pk.get("contains", {}) as Dictionary).is_empty():
+			warnings.append("اتاق «%s»: صندوق «%s» خالی است." % [rid, pid])
 
 	var cseen: Dictionary = {}
 	for raw in room.get("checkpoints", []):

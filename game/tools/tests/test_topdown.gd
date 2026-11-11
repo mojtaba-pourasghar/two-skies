@@ -185,6 +185,7 @@ func _t_challenge_rooms() -> void:
 
 	# اجرای واقعی: ورود به C1 نباید ایلارا بسازد
 	var game: Node2D = load("res://scenes/room_game.tscn").instantiate()
+	game.set("play_story", false)
 	game.set("start_room", "c1_balcony")
 	add_child(game)
 	await get_tree().process_frame
@@ -201,6 +202,7 @@ func _t_challenge_rooms() -> void:
 
 	# و در اتاق عادی باید باشد و دنبال کند
 	var game2: Node2D = load("res://scenes/room_game.tscn").instantiate()
+	game2.set("play_story", false)
 	game2.set("start_room", "r1a_living")
 	add_child(game2)
 	await get_tree().process_frame
@@ -218,6 +220,7 @@ func _t_challenge_rooms() -> void:
 func _t_personal_space() -> void:
 	print("— فاصلهٔ شخصی ایلارا —")
 	var game: RoomGame = load("res://scenes/room_game.tscn").instantiate()
+	game.set("play_story", false)
 	game.start_room = "s3a_plaza"
 	game.resume = false
 	add_child(game)

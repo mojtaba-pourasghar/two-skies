@@ -157,5 +157,24 @@
   "zoom_zones": [],
   "fx_map": "r1c_kitchen",
   "_fx_note": "افکت‌های زنده از `rooms/effects/r1c_kitchen.json` می‌آیند (نقشهٔ مدیر هنر، سند ۱۴). بلوک `ambient` دستی برداشته شد: همان لایه‌های سراسری بود که کاربر «غیرطبیعی» خواندشان.",
-  "hires": "rooms/ch1/hires/r1c_kitchen_1680x944.png"
+  "hires": "rooms/ch1/hires/r1c_kitchen_1680x944.png",
+  "pickups": [
+    {
+      "id": "chest_pantry",
+      "kind": "chest",
+      "needs_action": true,
+      "at": [
+        420,
+        600
+      ],
+      "img": "explore/props/chest_wood.png",
+      "height": 44,
+      "radius": 52,
+      "contains": {
+        "gem": 1,
+        "coin": 10
+      },
+      "note": "صندوق آشپزخانه — با دکمهٔ action باز می‌شود."
+    }
+  ]
 }

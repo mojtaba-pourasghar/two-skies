@@ -204,5 +204,17 @@
   "_door_note": "سند ۱۲ §۶ب، هر پنج دربند. دوتاشان `needs_flag` دارند: بدون پرچم، در باز نمی‌شود و بازیکن پیام می‌گیرد — نه اینکه بی‌صدا هیچ اتفاقی نیفتد.",
   "fx_map": "r1b_corridor",
   "_fx_note": "افکت‌های زنده از `rooms/effects/r1b_corridor.json` می‌آیند (نقشهٔ مدیر هنر، سند ۱۴). بلوک `ambient` دستی برداشته شد: همان لایه‌های سراسری بود که کاربر «غیرطبیعی» خواندشان.",
-  "hires": "rooms/ch1/hires/r1b_corridor_1680x944.png"
+  "hires": "rooms/ch1/hires/r1b_corridor_1680x944.png",
+  "pickups": [
+    {
+      "id": "coin_hall",
+      "kind": "coin",
+      "amount": 5,
+      "at": [
+        700,
+        500
+      ],
+      "height": 26
+    }
+  ]
 }

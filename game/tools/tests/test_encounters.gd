@@ -225,6 +225,7 @@ func _start(room_id: String) -> RoomGame:
 	var game: RoomGame = load("res://scenes/room_game.tscn").instantiate()
 	game.start_room = room_id
 	game.resume = false
+	game.play_story = false
 	add_child(game)
 	return game
 

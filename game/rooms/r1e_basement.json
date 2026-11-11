@@ -186,5 +186,18 @@
     "overlays": [],
     "_note": "نور زنده در نقشهٔ افکت است."
   },
-  "zoom_zones": []
+  "zoom_zones": [],
+  "pickups": [
+    {
+      "id": "key_basement",
+      "kind": "key",
+      "amount": 1,
+      "at": [
+        640,
+        600
+      ],
+      "img": "icons/keycard.png",
+      "height": 30
+    }
+  ]
 }

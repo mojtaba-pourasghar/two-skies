@@ -161,6 +161,7 @@ func _t_save_resume() -> void:
 
 	# اجرای واقعی: صحنه با resume باید همان اتاق را باز کند
 	var game: Node2D = load("res://scenes/room_game.tscn").instantiate()
+	game.set("play_story", false)
 	game.set("resume", true)
 	add_child(game)
 	await get_tree().process_frame

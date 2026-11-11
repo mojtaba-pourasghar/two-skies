@@ -283,5 +283,29 @@
   "fx_map": "r1a_house",
   "_fx_note": "افکت‌های زنده از `rooms/effects/r1a_house.json` می‌آیند (نقشهٔ مدیر هنر، سند ۱۴). بلوک `ambient` دستی برداشته شد: همان لایه‌های سراسری بود که کاربر «غیرطبیعی» خواندشان.",
   "hires": "rooms/ch1/hires/r1a_house_1680x944.png",
-  "_hires_note": "تصویر اتاق در scenes/ است ولی نسخهٔ پرجزئیاتش با نام دیگری در rooms/ch1/hires/ — پس مسیرش صریح نوشته شد، نه حدسی."
+  "_hires_note": "تصویر اتاق در scenes/ است ولی نسخهٔ پرجزئیاتش با نام دیگری در rooms/ch1/hires/ — پس مسیرش صریح نوشته شد، نه حدسی.",
+  "pickups": [
+    {
+      "id": "coin_sofa",
+      "kind": "coin",
+      "amount": 5,
+      "at": [
+        470,
+        600
+      ],
+      "height": 26
+    },
+    {
+      "id": "note_family",
+      "kind": "note",
+      "amount": 1,
+      "at": [
+        240,
+        620
+      ],
+      "img": "icons/notebook.png",
+      "height": 30,
+      "note": "یادداشت خانواده (سند ۰۹ ناحیهٔ ۱: «یادداشت‌های خانواده را می‌خوانند»)"
+    }
+  ]
 }

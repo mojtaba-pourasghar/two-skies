@@ -16,10 +16,12 @@
         {
           "key": "v1_end_01",
           "speaker": "kairo",
-          "blip": "kairo"
+          "blip": "kairo",
+          "portrait": "crying"
         }
       ],
-      "choice": null
+      "choice": null,
+      "bg": "scenes/ch1/launch_platform_1280x720.png"
     },
     {
       "code": "ج",
@@ -34,7 +36,8 @@
           "blip": ""
         }
       ],
-      "choice": null
+      "choice": null,
+      "bg": "scenes/ch1/launch_road_1280x720.png"
     }
   ]
 }

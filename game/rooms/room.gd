@@ -47,6 +47,8 @@ var _cuts: Array[Polygon2D] = []
 var hackables: Array[Dictionary] = []
 ## چک‌پوینت‌های اتاق چالش (M5-ب)
 var checkpoints: Array[Dictionary] = []
+## اقلام زمینی و صندوق‌ها (M5-ج)
+var pickups: Array[Dictionary] = []
 var _off_hazards: Dictionary = {}
 var _img_occ: Array[Dictionary] = []
 
@@ -66,6 +68,7 @@ func build(room: Dictionary) -> void:
 	_build_enemies()
 	_build_hackables()
 	_build_checkpoints()
+	_build_pickups()
 	_build_effects()
 	_reapply_offline()
 	_build_occluders()
@@ -246,6 +249,81 @@ func remove_enemy(m: MapEnemy) -> void:
 
 
 
+
+
+## ------------------------------------------------------------------
+## اقلام و صندوق (M5-ج، سند ۰۹ §۱۱ بند ۳)
+## ------------------------------------------------------------------
+##
+## دو جور: `kind` معمولی که با رد شدن برداشته می‌شود، و صندوق که
+## `needs_action` دارد و باید دکمه زد. هر دو با پرچم در `GameState`
+## می‌مانند، پس برگشت به اتاق سکه را دوباره نمی‌رویاند.
+func _build_pickups() -> void:
+	pickups.clear()
+	for raw in data.get("pickups", []):
+		var pk: Dictionary = raw
+		var pid := String(pk.get("id", ""))
+		if bool(GameState.get_flag(pickup_flag(String(data.get("id", "")), pid), false)):
+			continue
+		var at: Array = pk.get("at", [0, 0])
+		var pos := Vector2(float(at[0]), float(at[1]))
+		var rel := String(pk.get("img", "icons/%s.png" % String(pk.get("kind", "coin"))))
+		var tex := _load_tex(rel)
+		var node: Sprite2D = null
+		if tex != null:
+			node = Sprite2D.new()
+			node.name = "Pick_%s" % pid
+			node.texture = tex
+			node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			node.centered = false
+			var h := float(pk.get("height", 30.0))
+			var sc := h / float(tex.get_height())
+			node.scale = Vector2(sc, sc)
+			node.position = pos - Vector2(float(tex.get_width()) * sc * 0.5, h)
+			_props.add_child(node)
+		pickups.append({
+			"id": pid, "at": pos, "node": node,
+			"kind": String(pk.get("kind", "coin")),
+			"amount": int(pk.get("amount", 1)),
+			"radius": float(pk.get("radius", 34.0)),
+			"needs_action": bool(pk.get("needs_action", false)),
+			"contains": pk.get("contains", {}),
+		})
+
+
+static func pickup_flag(room_id: String, pid: String) -> String:
+	return "got_%s_%s" % [room_id, pid]
+
+
+## قلمی که پا رویش است. `want_action` تعیین می‌کند کدام دسته.
+func pickup_at(foot: Vector2, want_action: bool) -> Dictionary:
+	for pk in pickups:
+		if bool(pk["needs_action"]) != want_action:
+			continue
+		if foot.distance_to(pk["at"] as Vector2) <= float(pk["radius"]):
+			return pk
+	return {}
+
+
+## برداشتن: گره حذف، پرچم ثبت. **چه چیزی اضافه شد** را برمی‌گرداند تا
+## رابط بتواند نشانش بدهد.
+func take_pickup(pid: String) -> Dictionary:
+	for i in pickups.size():
+		var pk: Dictionary = pickups[i]
+		if String(pk["id"]) != pid:
+			continue
+		var node = pk["node"]
+		if node != null and is_instance_valid(node):
+			node.queue_free()
+		pickups.remove_at(i)
+		GameState.set_flag(pickup_flag(String(data.get("id", "")), pid), true)
+		var gained: Dictionary = {}
+		if bool(pk["needs_action"]):
+			gained = (pk["contains"] as Dictionary).duplicate()
+		else:
+			gained[String(pk["kind"])] = int(pk["amount"])
+		return gained
+	return {}
 
 ## ------------------------------------------------------------------
 ## چک‌پوینت اتاق چالش (M5-ب)

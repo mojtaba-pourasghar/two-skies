@@ -1,0 +1,191 @@
+{
+  "_note": "رشتهٔ داستان فصل ۱ (M5-ج، سند ۰۹). هر «بیت» یک بار اجرا می‌شود و پرچمش در GameState می‌ماند. `enter` = اولین ورود به اتاق؛ `after_battle` = پس از برد همان نبرد.",
+  "beats": [
+    {
+      "id": "b_intro",
+      "enter": "r1a_living",
+      "cutscene": "c1_intro"
+    },
+    {
+      "id": "b_r1a",
+      "enter": "r1a_living",
+      "after": "b_intro",
+      "say": [
+        {
+          "key": "c1_r1a_01",
+          "speaker": "kairo",
+          "portrait": "sad"
+        },
+        {
+          "key": "c1_r1a_02",
+          "speaker": "ilara",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_r1b",
+      "enter": "r1b_corridor",
+      "say": [
+        {
+          "key": "c1_r1b_01",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        },
+        {
+          "key": "c1_r1b_02",
+          "speaker": "ilara",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_r1c",
+      "enter": "r1c_kitchen",
+      "say": [
+        {
+          "key": "c1_r1c_01",
+          "speaker": "ilara",
+          "portrait": "shocked"
+        },
+        {
+          "key": "c1_r1c_02",
+          "speaker": "kairo",
+          "portrait": "shocked"
+        }
+      ]
+    },
+    {
+      "id": "b_r1d",
+      "enter": "r1d_bedroom",
+      "say": [
+        {
+          "key": "c1_r1d_01",
+          "speaker": "ilara",
+          "portrait": "sad"
+        }
+      ]
+    },
+    {
+      "id": "b_r1e",
+      "enter": "r1e_basement",
+      "say": [
+        {
+          "key": "c1_r1e_01",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_c1",
+      "enter": "c1_balcony",
+      "say": [
+        {
+          "key": "c1_c1_01",
+          "speaker": "kairo",
+          "portrait": "sad"
+        },
+        {
+          "key": "c1_c1_02",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_s2a",
+      "enter": "s2a_street",
+      "say": [
+        {
+          "key": "c1_s2a_01",
+          "speaker": "ilara",
+          "portrait": "sad"
+        },
+        {
+          "key": "c1_s2a_02",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_s2b",
+      "enter": "s2b_street",
+      "say": [
+        {
+          "key": "c1_s2b_01",
+          "speaker": "ilara",
+          "portrait": "happy"
+        }
+      ]
+    },
+    {
+      "id": "b_c2",
+      "enter": "c2_laser_alley",
+      "say": [
+        {
+          "key": "c1_c2_01",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        },
+        {
+          "key": "c1_c2_02",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_s3a",
+      "enter": "s3a_plaza",
+      "say": [
+        {
+          "key": "c1_s3a_01",
+          "speaker": "ilara",
+          "portrait": "shocked"
+        },
+        {
+          "key": "c1_s3a_02",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_c3",
+      "enter": "c3_electric_hall",
+      "say": [
+        {
+          "key": "c1_c3_01",
+          "speaker": "kairo",
+          "portrait": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "b_boss",
+      "enter": "s3a_plaza",
+      "needs_flag": "battle_won_ch1_a3_guard_crawler",
+      "say": [
+        {
+          "key": "c1_boss_01",
+          "speaker": "kairo",
+          "portrait": "angry"
+        }
+      ]
+    },
+    {
+      "id": "b_upgrade",
+      "after_battle": "ch1_a3_commander",
+      "upgrade": true
+    },
+    {
+      "id": "b_end",
+      "after_battle": "ch1_a3_commander",
+      "after": "b_upgrade",
+      "cutscene": "v1_end",
+      "chapter_end": true
+    }
+  ]
+}
