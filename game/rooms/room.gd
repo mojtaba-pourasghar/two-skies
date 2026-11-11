@@ -260,22 +260,88 @@ func _build_occluders() -> void:
 		if (o.get("cut", []) as Array).size() >= 6:
 			_add_cut_occluder(o)
 			continue
-		var tex := _load_tex(String(o.get("img", "")))
-		if tex == null:
-			continue
-		var at: Array = o.get("at", [0, 0])
-		var s := Sprite2D.new()
-		s.texture = tex
-		s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		s.centered = false
-		s.position = Vector2(float(at[0]), float(at[1]))
+		_add_img_occluder(o)
+
+
+## occluder تصویری — یک تکه هنر مستقل روی اتاق.
+##
+## دو حالت دارد و تفاوتشان **کجا کشیده می‌شود** است:
+##
+##   بی `base_y` → لایهٔ ۴. همیشه روی بازیگر. برای چیزی که بازیکن هرگز
+##                  جلویش نمی‌ایستد: لبهٔ قاب، شاخهٔ آویزان، کابل.
+##   با `base_y` → لایهٔ بازیگران با Y-sort. برای چیزی که **روی کف
+##                  می‌ایستد** (قفسه، ستون): اگر بازیکن جلوتر از پای آن
+##                  باشد باید جلویش دیده شود، نه پشتش. بدون این، ستون
+##                  وسط اتاق بازیکنِ جلویش را هم می‌پوشاند و غلط است.
+##
+## `mod` رنگ را با نقاشی هماهنگ می‌کند (دستهٔ ۱۶ سردتر و پرکنتراست‌تر از
+## اتاق‌های ناحیهٔ ۱ است) و `shadow` سایهٔ تماس با کف می‌دهد؛ بی سایه،
+## هر تکه روی کف **شناور** دیده می‌شود. هر دو تصمیم کاربر در گام ۵۵‌اند.
+func _add_img_occluder(o: Dictionary) -> void:
+	var tex := _load_tex(String(o.get("img", "")))
+	if tex == null:
+		return
+	var at: Array = o.get("at", [0, 0])
+	var pos := Vector2(float(at[0]), float(at[1]))
+	var base_y := float(o.get("base_y", 0.0))
+	var s := Sprite2D.new()
+	s.name = "Occ_%s" % String(o.get("id", "x"))
+	s.texture = tex
+	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	s.centered = false
+	s.flip_h = bool(o.get("flip", false))
+	var m: Array = o.get("mod", [])
+	if m.size() >= 3:
+		s.modulate = Color(float(m[0]), float(m[1]), float(m[2]),
+				float(m[3]) if m.size() > 3 else 1.0)
+
+	var shadow: Node2D = null
+	var sh: Array = o.get("shadow", [])
+	if sh.size() >= 3:
+		shadow = _contact_shadow(Vector2(float(sh[0]), float(sh[1])),
+				float(sh[2]), float(sh[3]) if sh.size() > 3 else 0.35)
+
+	if base_y > 0.0:
+		# گره روی `base_y` می‌نشیند و تصویر به همان اندازه بالا می‌رود —
+		# همان ترفند بریده‌ها، چون Y-sort گودو از موقعیت گره می‌چیند.
+		var holder := Node2D.new()
+		holder.name = "OccStand_%s" % String(o.get("id", "x"))
+		holder.position = Vector2(0, base_y)
+		s.position = pos - Vector2(0, base_y)
+		if shadow != null:
+			shadow.position -= Vector2(0, base_y)
+			holder.add_child(shadow)
+		holder.add_child(s)
+		s.set_meta("occ_base_y", base_y)
+		actors.add_child(holder)
+	else:
+		s.position = pos
+		if shadow != null:
+			_occluders.add_child(shadow)
 		_occluders.add_child(s)
-		# برای سنجش پوشش، آلفای خود تصویر لازم است. یک بار خوانده و
-		# نگه داشته می‌شود؛ `get_image` هر فریم گران است.
-		_img_occ.append({
-			"rect": Rect2(s.position, tex.get_size()),
-			"img": tex.get_image(),
-		})
+
+	# برای سنجش پوشش، آلفای خود تصویر لازم است. یک بار خوانده و
+	# نگه داشته می‌شود؛ `get_image` هر فریم گران است.
+	_img_occ.append({
+		"rect": Rect2(pos, tex.get_size()),
+		"img": tex.get_image(),
+		"flip": s.flip_h,
+		"base_y": base_y,
+	})
+
+
+## بیضی تیرهٔ نرم زیر پای یک شیء ایستاده.
+func _contact_shadow(center: Vector2, rx: float, alpha: float) -> Node2D:
+	var n := Polygon2D.new()
+	n.name = "Shadow"
+	var pts := PackedVector2Array()
+	var ry := rx * 0.36
+	for i in range(20):
+		var a := TAU * float(i) / 20.0
+		pts.append(center + Vector2(cos(a) * rx, sin(a) * ry))
+	n.polygon = pts
+	n.color = Color(0.0, 0.0, 0.0, alpha)
+	return n
 
 
 ## بریده‌ای از نقاشی که در Y-sort با بازیگران می‌نشیند.
@@ -472,10 +538,17 @@ func _covered(p: Vector2, foot: Vector2) -> bool:
 		var r: Rect2 = o["rect"]
 		if not r.has_point(p):
 			continue
+		# ورق ایستاده مثل بریده در Y-sort است: فقط کسی را می‌پوشاند که
+		# پایش عقب‌تر از پای خودش باشد.
+		var oby := float(o.get("base_y", 0.0))
+		if oby > 0.0 and oby <= foot.y:
+			continue
 		var img: Image = o["img"]
 		if img == null:
 			continue
 		var q := Vector2i(p - r.position)
+		if bool(o.get("flip", false)):
+			q.x = img.get_width() - 1 - q.x
 		if q.x < 0 or q.y < 0 or q.x >= img.get_width() or q.y >= img.get_height():
 			continue
 		if img.get_pixelv(q).a > 0.5:

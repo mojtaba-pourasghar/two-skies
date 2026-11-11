@@ -14,18 +14,56 @@ const OUT := "user://occ/"
 const EVERY: int = 2
 
 ## مسیر هر اتاق: از جلو، به پشت شیء، و برگشت.
+## مسیر هر اتاق: از جلوی شیء، به پشتش، و برگشت. **همه از BFS روی ماسک
+## آمده‌اند، نه از حدس** — و نقطهٔ «پشت» همان نقطه‌ای است که آزمون
+## ثابت کرده هم رفتنی است و هم پوششش از ۶۰٪ می‌گذرد. کلید یا نام اتاق
+## است یا «اتاق#شناسهٔ occluder» وقتی اتاق بیش از یکی دارد.
 const ROUTES := {
-	"r1c_kitchen": [
+	# R1c: میز با صندلی وارونه (REQ-010، گام ۵۴)
+	"r1c_kitchen#table": [
 		Vector2(560, 620), Vector2(700, 560), Vector2(860, 430),
 		Vector2(1000, 330), Vector2(1120, 320), Vector2(1000, 330),
 		Vector2(820, 440), Vector2(620, 600),
 	],
-	# R1a: از نشیمن به زیر ستون سنگی کنار طاق. تنها جای ناحیهٔ ۱ که
-	# occluder واقعاً شخصیت را می‌پوشاند (جیب ۴۰×۲۰ زیر ستون).
 	"r1a_living": [
-		Vector2(420, 640), Vector2(640, 600), Vector2(800, 530),
-		Vector2(880, 478), Vector2(918, 460), Vector2(880, 478),
-		Vector2(700, 570), Vector2(450, 640),
+		Vector2(248, 640), Vector2(284, 640), Vector2(320, 640), Vector2(356, 640),
+		Vector2(392, 640), Vector2(428, 640), Vector2(464, 640), Vector2(500, 640),
+		Vector2(536, 640), Vector2(572, 640), Vector2(608, 640), Vector2(644, 640),
+		Vector2(680, 640), Vector2(716, 640), Vector2(752, 664), Vector2(768, 680),
+		Vector2(732, 652), Vector2(720, 616), Vector2(744, 600), Vector2(768, 600),
+		Vector2(744, 600), Vector2(720, 616), Vector2(732, 652), Vector2(768, 680),
+		Vector2(752, 664), Vector2(716, 640), Vector2(680, 640), Vector2(644, 640),
+		Vector2(608, 640), Vector2(572, 640), Vector2(536, 640), Vector2(500, 640),
+		Vector2(464, 640), Vector2(428, 640), Vector2(392, 640), Vector2(356, 640),
+		Vector2(320, 640), Vector2(284, 640), Vector2(248, 640),
+	],
+	"r1b_corridor": [
+		Vector2(600, 640), Vector2(564, 640), Vector2(528, 640), Vector2(492, 640),
+		Vector2(456, 640), Vector2(420, 640), Vector2(384, 640), Vector2(348, 640),
+		Vector2(312, 664), Vector2(296, 680), Vector2(332, 656), Vector2(348, 620),
+		Vector2(332, 596), Vector2(296, 596), Vector2(332, 596), Vector2(348, 620),
+		Vector2(332, 656), Vector2(296, 680), Vector2(312, 664), Vector2(348, 640),
+		Vector2(384, 640), Vector2(420, 640), Vector2(456, 640), Vector2(492, 640),
+		Vector2(528, 640), Vector2(564, 640), Vector2(600, 640),
+	],
+	"r1c_kitchen": [
+		Vector2(560, 560), Vector2(560, 524), Vector2(560, 488), Vector2(576, 452),
+		Vector2(612, 416), Vector2(648, 380), Vector2(684, 356), Vector2(700, 320),
+		Vector2(680, 300), Vector2(648, 300), Vector2(680, 300), Vector2(700, 320),
+		Vector2(684, 356), Vector2(648, 380), Vector2(612, 416), Vector2(576, 452),
+		Vector2(560, 488), Vector2(560, 524), Vector2(560, 560),
+	],
+	"c1_balcony#pillar_west": [
+		Vector2(260, 580), Vector2(296, 600), Vector2(332, 636), Vector2(304, 600),
+		Vector2(300, 564), Vector2(332, 556), Vector2(300, 564), Vector2(304, 600),
+		Vector2(332, 636), Vector2(296, 600), Vector2(260, 580),
+	],
+	"c1_balcony#pillar_east": [
+		Vector2(1016, 328), Vector2(1052, 324), Vector2(1088, 316),
+		Vector2(1104, 300), Vector2(1076, 264), Vector2(1080, 228),
+		Vector2(1108, 228),
+		Vector2(1080, 228), Vector2(1076, 264), Vector2(1104, 300),
+		Vector2(1088, 316), Vector2(1052, 324), Vector2(1016, 328),
 	],
 }
 
@@ -66,7 +104,7 @@ func _run() -> void:
 
 	# مسیر: از جلوی شیء، دور می‌زند به پشتش، می‌ماند، و برمی‌گردد.
 	# نقاط از BFS روی ماسک آمدند، نه از حدس (همان درس D-ART-48).
-	var route: Array = ROUTES.get(room_id, [])
+	var route: Array = ROUTES.get("%s#%s" % [room_id, occ_id], ROUTES.get(room_id, []))
 	if route.is_empty():
 		push_error("مسیری برای «%s» نیست" % room_id)
 		get_tree().quit(1)
@@ -140,24 +178,19 @@ func _hold(frames: int) -> void:
 		await _grab(kairo)
 
 
-## آیا این نقطه داخل شکل همان occluder است؟
+## «پشت شیء» یعنی چه؟ تا گام ۵۴ یعنی «داخل چندضلعی بریده»، که برای
+## occluder تصویری اصلاً چندضلعی ندارد. تعریف تازه همان چیزی است که
+## بازیکن می‌بیند: پوشش بدن از آستانهٔ سیلوئت گذشته باشد.
 func _in_occ(p: Vector2) -> bool:
 	var rm = _game.get("room")
 	if rm == null or not is_instance_valid(rm):
 		return false
-	for raw in rm.data.get("occluders", []):
-		var o: Dictionary = raw
-		if String(o.get("id", "")) != occ_id:
-			continue
-		return Geometry2D.is_point_in_polygon(p, RoomData.to_polygon(o["cut"]))
-	return false
+	return rm.coverage_at(p) >= ActorVisual.GHOST_ON
 
 
 func _grab(actor) -> void:
 	_n += 1
 	if actor != null and is_instance_valid(actor):
-		# ۵۱۲ همان `base_y` مبل است
-		# «پشت» یعنی داخل خود شکل، نه فقط بالای خط
 		if _in_occ(actor.foot_position()):
 			_hidden_frames += 1
 		else:

@@ -25,6 +25,7 @@ func _ready() -> void:
 	_t_mask_queries()
 	_t_layers()
 	await _t_living()
+	_t_stand_occluders()
 	_t_all_rooms()
 	_report()
 
@@ -83,9 +84,14 @@ func _t_real_room() -> void:
 	_check("پراپ‌ها کشیده شدند",
 		node.get_node("World/Props").get_child_count() >= 1,
 		"= %d" % node.get_node("World/Props").get_child_count())
-	_check("occluderها کشیده شدند",
-		node.get_node("World/Occluders").get_child_count() >= 2,
-		"= %d" % node.get_node("World/Occluders").get_child_count())
+	# occluderهای R1a حالا همه **ایستاده**اند (گام ۵۵): در لایهٔ بازیگران
+	# با Y-sort، نه در لایهٔ ۴. مکان‌نگهدارهای بی‌base_y برداشته شدند چون
+	# بازیکنِ جلوشان را هم می‌پوشاندند.
+	var occ_total := node.get_node("World/Occluders").get_child_count()
+	for ch in node.actors.get_children():
+		if String(ch.name).begins_with("Cut_") or String(ch.name).begins_with("OccStand_"):
+			occ_total += 1
+	_check("occluderها کشیده شدند", occ_total >= 3, "= %d" % occ_total)
 	_check("لایهٔ نور کشیده شد",
 		node.get_node("World/Light").get_child_count() >= 1,
 		"= %d" % node.get_node("World/Light").get_child_count())
@@ -349,11 +355,15 @@ func _t_coverage(node: PaintedRoom) -> void:
 		_check("  پشت «%s» پوشش بالاست" % c.name, cov >= 0.5,
 			"= %.0f٪" % (cov * 100.0))
 
-		# **جلوی** همان بریده نباید پوششی باشد
+		# **جلوی** همان بریده پوشش باید بیفتد. «صفر» دیگر ادعای درستی
+		# نیست: از گام ۵۵ ممکن است occluder ایستادهٔ دیگری نزدیک همین
+		# نقطه باشد و سهم خودش را بگذارد (قفسهٔ R1a کنار بوفه). ادعای
+		# واقعی Y-sort این است: جلو کمتر از پشت، و زیر آستانهٔ سیلوئت.
 		var front := Vector2(mid.x, base + 40.0)
-		_check("  ولی جلویش صفر است",
-			is_equal_approx(node.coverage_at(front), 0.0),
-			"= %.0f٪" % (node.coverage_at(front) * 100.0))
+		var fcov: float = node.coverage_at(front)
+		_check("  ولی جلویش کمتر و زیر آستانه است",
+			fcov < cov and fcov < ActorVisual.GHOST_ON,
+			"= %.0f٪ در برابر %.0f٪" % [fcov * 100.0, cov * 100.0])
 
 	# آستانهٔ روشن شدن سیلوئت همان ۶۰٪ است که کاربر خواست
 	_check("آستانهٔ سیلوئت ۶۰٪ است",
@@ -363,6 +373,85 @@ func _t_coverage(node: PaintedRoom) -> void:
 		ActorVisual.GHOST_FADE_S >= 0.1 and ActorVisual.GHOST_FADE_S <= 0.2,
 		"= %.2fث" % ActorVisual.GHOST_FADE_S)
 
+
+
+## occluderهای ایستادهٔ دستهٔ ۱۶ (گام ۵۵، REQ-032).
+##
+## قاعده‌های کاربر عدد دارند، پس سنجیدنی‌اند: قد مفید ≥۹۰px، کف جلو
+## ≥۴۰px، روی هیچ دری نیفتد، و **سیلوئت واقعاً روشن شود** — یعنی پشتش
+## پوشش از آستانهٔ ۶۰٪ بگذرد. تا پیش از این، همین ادعا را نوشته بودم
+## بی آنکه سنجیده باشم و غلط از آب درآمد (نوار پشت مبل).
+const STAND_ROOMS := ["r1a_living", "r1b_corridor", "r1c_kitchen", "c1_balcony"]
+const MIN_USEFUL_H := 90.0
+const MIN_FRONT_FLOOR := 40.0
+
+func _t_stand_occluders() -> void:
+	print("— occluder ایستادهٔ دستهٔ ۱۶ —")
+	var total := 0
+	for rid in STAND_ROOMS:
+		var l := RoomData.new()
+		var room := l.load_room(rid)
+		if room.is_empty():
+			_check("«%s» بار شد" % rid, false, "= %s" % str(l.errors))
+			continue
+		_check("«%s» بی‌خطا بار شد" % rid, l.errors.is_empty(), "= %s" % str(l.errors))
+		var node := PaintedRoom.new()
+		add_child(node)
+		node.build(room)
+		var found := 0
+		for raw in room["occluders"]:
+			var o: Dictionary = raw
+			if not o.has("img") or not o.has("base_y"):
+				continue
+			found += 1
+			total += 1
+			var oid := String(o.get("id", "?"))
+			var at: Array = o["at"]
+			var pos := Vector2(float(at[0]), float(at[1]))
+			var base_y := float(o["base_y"])
+			var cx := pos.x + float(o.get("w", 0.0)) * 0.5
+
+			_check("  «%s»: قد مفید ≥۹۰px" % oid, base_y - pos.y >= MIN_USEFUL_H,
+				"= %.0f" % (base_y - pos.y))
+			# کف جلو: چند نقطه در نوار ۴۰ پیکسلی زیر پای شیء
+			var front_ok := true
+			for dy in [10.0, 25.0, MIN_FRONT_FLOOR]:
+				if not RoomData.point_walkable(room, Vector2(cx, base_y + dy)):
+					front_ok = false
+			_check("  «%s»: کف جلویش ≥۴۰px است" % oid, front_ok)
+			# گره‌اش در لایهٔ بازیگران است، نه لایهٔ ۴ — وگرنه Y-sort ندارد
+			var holder := node.actors.get_node_or_null("OccStand_%s" % oid)
+			_check("  «%s»: در لایهٔ بازیگران با Y-sort است" % oid, holder != null)
+			if holder != null:
+				_check("  «%s»: گره روی خط پایه نشسته" % oid,
+					is_equal_approx(holder.position.y, base_y),
+					"= %.0f" % holder.position.y)
+			# سیلوئت: پشتش باید از آستانه بگذرد، جلویش نه.
+			#
+			# **نقطهٔ پشت باید رفتنی باشد.** درس گران گام ۵۴: تنها جیب
+			# ۱۰۰٪ پوشش R1a داخل مستطیل یک در بود، پس بازیکن هرگز آنجا
+			# نمی‌ایستاد و سیلوئت در ضبط روشن نمی‌شد. پای خود شیء هم
+			# مانع است، پس از بالای ردپایش اولین خانهٔ راه‌رفتنی را
+			# می‌گیریم، نه نقطه‌ای که فقط روی کاغذ پوشیده است.
+			var behind := Vector2(cx, base_y - 10.0)
+			var reach := false
+			for d in range(6, 96, 4):
+				behind = Vector2(cx, base_y - float(d))
+				if RoomData.point_walkable(room, behind):
+					reach = true
+					break
+			_check("  «%s»: پشتش جای ایستادن دارد" % oid, reach,
+				"= %s" % str(behind.round()))
+			var ahead := Vector2(cx, base_y + 36.0)
+			var cb: float = node.coverage_at(behind)
+			var ca: float = node.coverage_at(ahead)
+			_check("  «%s»: پشتش سیلوئت روشن می‌شود" % oid, cb >= ActorVisual.GHOST_ON,
+				"= %.0f٪" % (cb * 100.0))
+			_check("  «%s»: جلویش نه" % oid, ca < ActorVisual.GHOST_ON,
+				"= %.0f٪" % (ca * 100.0))
+		_check("«%s» دست‌کم یک occluder ایستاده دارد" % rid, found >= 1, "= %d" % found)
+		node.queue_free()
+	_check("چهار اتاق روی هم ≥۵ نقطه دارند", total >= 5, "= %d" % total)
 
 ## **سینوس خالص ممنوع است** (سند ۱۴ بند ۲). این را نمی‌شود با نگاه کردن
 ## به کد ثابت کرد، پس سیگنال واقعی ۳۰۰ فریم نمونه‌برداری و با بهترین

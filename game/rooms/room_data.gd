@@ -135,6 +135,8 @@ func _validate(room: Dictionary) -> void:
 		elif not walk.is_empty() and not point_walkable(room, Vector2(float(at[0]), float(at[1]))):
 			errors.append("اتاق «%s»: دشمن «%s» بیرون ناحیهٔ قابل‌راه‌رفتن است." % [rid, eid])
 
+	_validate_occluders(room, rid)
+
 	_validate_living(room, rid)
 
 	# نقطهٔ شروع باید **داخل** ناحیهٔ قابل‌راه‌رفتن باشد، وگرنه بازیکن در
@@ -144,6 +146,55 @@ func _validate(room: Dictionary) -> void:
 		errors.append("اتاق «%s»: نقطهٔ شروع (%d,%d) بیرون ناحیهٔ قابل‌راه‌رفتن است."
 			% [rid, int(spawn.x), int(spawn.y)])
 
+
+
+## occluder — قاعده‌های کاربر در گام ۵۵ (REQ-032).
+##
+## هر شکایت اینجا یک نقصی است که **فقط در ضبط** دیده می‌شد:
+## تکه‌ای که روی در افتاده، تکه‌ای که پای ایستادنش را ننوشته‌ایم و
+## بازیکنِ جلویش را هم می‌پوشاند، و تکه‌ای که هنرش اصلاً نیامده.
+func _validate_occluders(room: Dictionary, rid: String) -> void:
+	var oseen: Dictionary = {}
+	for raw in room["occluders"]:
+		var o: Dictionary = raw
+		var oid := String(o.get("id", ""))
+		if oid != "":
+			if oseen.has(oid):
+				errors.append("اتاق «%s»: شناسهٔ occluder تکراری «%s»." % [rid, oid])
+			oseen[oid] = true
+		if (o.get("cut", []) as Array).size() >= 6:
+			if float(o.get("base_y", 0.0)) <= 0.0:
+				errors.append("اتاق «%s»: بریدهٔ «%s» base_y ندارد؛ بی آن هرگز کسی را نمی‌پوشاند."
+					% [rid, oid])
+			continue
+		var img := String(o.get("img", ""))
+		if img == "":
+			errors.append("اتاق «%s»: occluder «%s» نه بریده است نه تصویر." % [rid, oid])
+			continue
+		if not AssetPath.exists(img):
+			warnings.append("اتاق «%s»: تصویر occluder «%s» هنوز در assets نیست." % [rid, img])
+		var at: Array = o.get("at", [])
+		if at.size() != 2:
+			errors.append("اتاق «%s»: occluder «%s» جا ندارد." % [rid, oid])
+			continue
+		var pos := Vector2(float(at[0]), float(at[1]))
+		var base_y := float(o.get("base_y", 0.0))
+		if base_y > 0.0 and base_y < pos.y:
+			errors.append("اتاق «%s»: occluder «%s» base_y (%d) بالاتر از خود تصویر (%d) است."
+				% [rid, oid, int(base_y), int(pos.y)])
+		# روی در نیفتد: دری که پشت یک ستون پنهان شود، راه بسته است.
+		for raw_d in room["doors"]:
+			var d: Dictionary = raw_d
+			var r: Array = d.get("rect", [])
+			if r.size() != 4:
+				continue
+			var dr := Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
+			var orect := Rect2(pos, Vector2(float(o.get("w", 0.0)), float(o.get("h", 0.0))))
+			if orect.size.x <= 0.0 or orect.size.y <= 0.0:
+				continue
+			if orect.intersects(dr):
+				errors.append("اتاق «%s»: occluder «%s» روی در «%s» افتاده است."
+					% [rid, oid, String(d.get("id", "?"))])
 
 ## بودجهٔ زندگی (سند ۱۳). **هشدار است نه خطا**: هنر زندهٔ اتاق‌ها هنوز نرسیده
 ## (REQ-019) و بازی نباید به‌خاطر نیامدن هنر بوت نشود. ولی هشدار سر جایش
