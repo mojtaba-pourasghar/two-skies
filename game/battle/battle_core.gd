@@ -121,7 +121,12 @@ func _validate() -> void:
 
 
 ## نبرد را می‌چیند. `seed` ثابت = نبرد تکرارپذیر (هدف‌گیری دشمن تصادفی است).
-func start(id: String, seed: int = 1, inventory: Dictionary = {}) -> bool:
+## `ambush` = حملهٔ از پشت روی نقشه (سند ۰۹ §۲: «حمله از پشت با دش/هک =
+## شروع با امتیاز، دشمن اول شکننده»). همان پرچم `fragile` قطع‌کردن است،
+## پس ضریبش هم همان `fragile_mult` می‌ماند و عدد تازه‌ای وارد تعادل
+## نمی‌شود.
+func start(id: String, seed: int = 1, inventory: Dictionary = {},
+		ambush: bool = false) -> bool:
 	if data.is_empty() and not load_data():
 		return false
 	if not data["encounters"].has(id):
@@ -145,6 +150,10 @@ func start(id: String, seed: int = 1, inventory: Dictionary = {}) -> bool:
 	for eid in encounter["enemies"]:
 		n += 1
 		_add_enemy(String(eid), "%s_%d" % [eid, n])
+	if ambush:
+		for u in units:
+			if u["side"] == "enemy":
+				u["fragile"] = true
 	_start_snapshot = _snapshot()
 	_advance()
 	return true

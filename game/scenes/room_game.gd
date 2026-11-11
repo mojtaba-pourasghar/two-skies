@@ -44,6 +44,8 @@ var _battle_enemy: MapEnemy = null
 var _clear_at := Vector2.ZERO
 ## بعد از فرار، دشمن تا وقتی کایرو از بردش بیرون نرفته دوباره نبرد نمی‌سازد
 var _flee_from: MapEnemy = null
+## آخرین نبرد با حملهٔ از پشت شروع شد؟ برای آزمون و HUD.
+var last_ambush: bool = false
 ## جان صفر در اکتشاف (D-ART-51 مدیر): پردهٔ ۰٫۶ث و برگشت به مجسمه.
 const STATUE_FADE_FRAMES: int = 36
 const STATUE_RADIUS: float = 56.0
@@ -232,6 +234,9 @@ func _physics_process(_delta: float) -> void:
 	room.react_to(kairo.foot_position(), kairo.velocity.length())
 	# زوم که از حد بی‌هایرز گذشت، تصویر پرجزئیات بیاید
 	room.use_hires(camera.zoom.x > PaintedRoom.ZOOM_WITHOUT_HIRES)
+	# گشت و مخروط دید پیش از سنجش برخورد: جهت نگاه همین فریم تصمیم
+	# می‌گیرد که برخورد «از پشت» حساب شود یا نه.
+	room.tick_enemies(get_physics_process_delta_time(), kairo.foot_position())
 	if _check_enemy():
 		return
 	_check_statue()
@@ -324,16 +329,20 @@ func _check_enemy() -> bool:
 		return false
 	if m == _flee_from:
 		return false
-	_start_battle(m)
+	# حملهٔ از پشت (سند ۰۹ §۲): اگر دشمن هنوز خبردار نشده و بازیکن از
+	# پشتش رسیده، نبرد با امتیاز شروع می‌شود — دشمن‌ها نوبت اول شکننده‌اند.
+	_start_battle(m, m.is_behind(foot) and not m.alerted)
 	return true
 
 
-func _start_battle(m: MapEnemy) -> void:
+func _start_battle(m: MapEnemy, ambush: bool = false) -> void:
 	_battle_enemy = m
+	last_ambush = ambush
 	kairo.velocity = Vector2.ZERO
 	room.process_mode = Node.PROCESS_MODE_DISABLED
 	battle = load("res://battle/battle_scene.tscn").instantiate()
 	battle.encounter_id = m.encounter
+	battle.ambush = ambush
 	battle.battle_seed = hash(m.enemy_id) & 0xFFFF
 	battle.finished.connect(_on_battle_finished)
 	add_child(battle)

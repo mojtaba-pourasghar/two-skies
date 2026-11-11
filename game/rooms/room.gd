@@ -207,6 +207,22 @@ func enemy_touching(foot: Vector2) -> MapEnemy:
 	return null
 
 
+## یک گام گشت برای همهٔ دشمن‌های اتاق (M5-ت). اتاق صدایش می‌زند، نه خود
+## دشمن، چون جای بازیکن و ماسک را اتاق دارد.
+func tick_enemies(delta: float, foot: Vector2) -> void:
+	for m in enemies:
+		if is_instance_valid(m):
+			m.tick(delta, foot, self)
+
+
+## دشمنی که همین حالا بازیکن را می‌بیند، یا null.
+func enemy_seeing(foot: Vector2) -> MapEnemy:
+	for m in enemies:
+		if is_instance_valid(m) and m.sees(foot, self):
+			return m
+	return null
+
+
 func remove_enemy(m: MapEnemy) -> void:
 	enemies.erase(m)
 	if is_instance_valid(m):

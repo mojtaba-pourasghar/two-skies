@@ -134,6 +134,29 @@ func _validate(room: Dictionary) -> void:
 			errors.append("اتاق «%s»: دشمن «%s» جا ندارد." % [rid, eid])
 		elif not walk.is_empty() and not point_walkable(room, Vector2(float(at[0]), float(at[1]))):
 			errors.append("اتاق «%s»: دشمن «%s» بیرون ناحیهٔ قابل‌راه‌رفتن است." % [rid, eid])
+		# گشت (M5-ت): نقطه‌ای که روی ماسک نباشد یعنی دشمن تا ابد در دیوار
+		# فشار می‌دهد و هرگز به نقطهٔ بعدی نمی‌رسد — گشت بی‌صدا می‌ایستد.
+		var pat: Array = e.get("patrol", [])
+		if not pat.is_empty() and pat.size() < 2:
+			errors.append("اتاق «%s»: گشت دشمن «%s» کمتر از دو نقطه دارد." % [rid, eid])
+		for i in pat.size():
+			var pt: Array = pat[i]
+			if pt.size() != 2:
+				errors.append("اتاق «%s»: نقطهٔ گشت %d دشمن «%s» دو عدد نیست." % [rid, i, eid])
+			elif not walk.is_empty() \
+					and not point_walkable(room, Vector2(float(pt[0]), float(pt[1]))):
+				errors.append("اتاق «%s»: نقطهٔ گشت %d دشمن «%s» (%d,%d) بیرون ماسک است."
+					% [rid, i, eid, int(pt[0]), int(pt[1])])
+		if not pat.is_empty() and float(e.get("speed", MapEnemy.DEF_SPEED)) <= 0.0:
+			errors.append("اتاق «%s»: دشمن «%s» گشت دارد ولی سرعتش صفر است." % [rid, eid])
+		var vis: Dictionary = e.get("vision", {})
+		if not vis.is_empty():
+			var ang := float(vis.get("angle", MapEnemy.DEF_ANGLE))
+			if ang <= 0.0 or ang > 180.0:
+				errors.append("اتاق «%s»: زاویهٔ دید دشمن «%s» باید بین ۰ و ۱۸۰ باشد (%d)."
+					% [rid, eid, int(ang)])
+			if float(vis.get("range", MapEnemy.DEF_RANGE)) < 0.0:
+				errors.append("اتاق «%s»: برد دید دشمن «%s» منفی است." % [rid, eid])
 
 	_validate_occluders(room, rid)
 

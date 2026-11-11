@@ -44,6 +44,8 @@ enum Phase { INTRO, MENU, TARGET, RING, RESOLVE, TELEGRAPH, DEFENSE, BANNER, RES
 
 @export var encounter_id: String = "ch1_a2_crawlers"
 @export var battle_seed: int = 1
+## نبرد با حملهٔ از پشت شروع شد (M5-ت)
+@export var ambush: bool = false
 ## روبات به‌جای بازیکن، برای آزمون و ضبط: "" خاموش، "skilled" همیشه عالی
 ## و قطع‌کن، "idle" فقط سپر و بی‌دفاع.
 @export var autoplay: String = ""
@@ -87,7 +89,7 @@ var _frame: int = 0
 func _ready() -> void:
 	layer = 20
 	core = BattleCore.new()
-	if not core.load_data() or not core.start(encounter_id, battle_seed, _inventory()):
+	if not core.load_data() or not core.start(encounter_id, battle_seed, _inventory(), ambush):
 		push_error("BattleScene: %s" % str(core.errors))
 		return
 	core.flags = GameState.run.get("flags", {})
