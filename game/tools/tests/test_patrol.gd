@@ -21,6 +21,7 @@ func _ready() -> void:
 	await _t_cone()
 	await _t_blocked_sight()
 	await _t_states()
+	await _t_cone_look()
 	_t_ambush()
 	_t_data()
 	_report()
@@ -186,6 +187,61 @@ func _t_states() -> void:
 			break
 	_check("به گشت برگشت", g.state == MapEnemy.State.PATROL)
 	_check("و دوباره بی‌خبر شد", not g.alerted)
+	node.queue_free()
+	await get_tree().process_frame
+
+
+## ۴ب — ظاهر مخروط (گام ۵۷ بند ۱): لبهٔ نرم، محوشدن با فاصله، رنگ از
+## نور اتاق، و شدتی که فقط نزدیک بازیکن بالا می‌رود.
+func _t_cone_look() -> void:
+	print("— ظاهر مخروط —")
+	var node := _room("s3a_plaza")
+	if node == null:
+		return
+	var g := _enemy(node, "guard_patrol")
+	if g == null:
+		return
+	var poly: Polygon2D = g.get_node("Cone").get_child(0)
+	var cols: PackedColorArray = poly.vertex_colors
+	_check("مخروط رنگ رأس دارد", cols.size() == poly.polygon.size(),
+		"= %d رأس" % cols.size())
+	if cols.size() < 4:
+		return
+	_check("نوک پررنگ‌تر از لبهٔ دور است", cols[0].a > cols[cols.size() / 2].a,
+		"= %.3f در برابر %.3f" % [cols[0].a, cols[cols.size() / 2].a])
+	_check("گوشه‌های لبه کاملاً محوند",
+		is_zero_approx(cols[1].a) and is_zero_approx(cols[cols.size() - 1].a),
+		"= %.3f و %.3f" % [cols[1].a, cols[cols.size() - 1].a])
+	_check("زرد یکدست نیست (رنگ از نور اتاق آمده)",
+		not g.room_tint.is_equal_approx(Color(1.0, 0.86, 0.45)),
+		"= %s" % str(g.room_tint))
+
+	# شدت: دور کم، نزدیک زیاد، و گذارش نرم
+	var far := Vector2(-9000, -9000)
+	for i in 60:
+		g.tick(1.0 / 60.0, far, node)
+	var dim: float = g.get("_intensity")
+	var near := g.position + g.facing * 60.0
+	var jump := 0.0
+	var prev := dim
+	for i in 60:
+		g.tick(1.0 / 60.0, near, node)
+		jump = maxf(jump, absf(float(g.get("_intensity")) - prev))
+		prev = g.get("_intensity")
+	var bright: float = g.get("_intensity")
+	_check("دور از برد کم‌رنگ است", dim < 0.5, "= %.2f" % dim)
+	_check("در برد پررنگ می‌شود", bright > dim + 0.3, "= %.2f" % bright)
+	_check("گذار شدت پرشی نیست", jump < 0.12, "= بیشینهٔ گام %.3f" % jump)
+
+	# اتاق دیگر با نور دیگر → رنگ دیگر
+	var m := MapEnemy.new()
+	node.actors.add_child(m)
+	m.setup({"id": "probe2", "encounter": "x", "at": [700, 700],
+		"vision": {"range": 120, "angle": 60}})
+	m.set_room_light(Color(0.07, 0.04, 0.03))      # نور گرم R1a
+	_check("رنگ مخروط با نور اتاق عوض می‌شود",
+		not m.room_tint.is_equal_approx(g.room_tint),
+		"= %s در برابر %s" % [str(m.room_tint), str(g.room_tint)])
 	node.queue_free()
 	await get_tree().process_frame
 

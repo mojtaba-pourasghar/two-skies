@@ -194,6 +194,8 @@ func _build_enemies() -> void:
 		var m := MapEnemy.new()
 		actors.add_child(m)
 		m.setup(e)
+		# رنگ مخروط دید از نور همین اتاق می‌آید (گام ۵۷)
+		m.set_room_light(light_tint())
 		for miss in m.missing:
 			_note_missing(miss)
 		enemies.append(m)

@@ -48,6 +48,15 @@ const ALERT_S: float = 0.45
 const CHASE_MULT: float = 1.45
 ## نمای سه‌چهارم عمق را فشرده می‌کند؛ همان ۲ به ۱ برد برخورد.
 const DEPTH: float = 2.0
+## پره‌های لبهٔ مخروط؛ بیشتر از ۱۲ تا در این اندازه دیده نمی‌شود.
+const RIM: int = 16
+## آلفای لبهٔ دور نسبت به نوک. صفر یعنی کاملاً محو.
+const EDGE_ALPHA: float = 0.42
+## شدت وقتی بازیکن دور است و وقتی نزدیک/در برد است.
+const DIM: float = 0.45
+const BRIGHT: float = 1.0
+## گذار شدت — کلیدی نباشد (قاعدهٔ ۹ CLAUDE.md: هرگز پرشی)
+const FADE_S: float = 0.35
 
 var state: State = State.PATROL
 var facing: Vector2 = Vector2.RIGHT
@@ -68,7 +77,12 @@ var _unseen: float = 0.0
 var _state_t: float = 0.0
 var _cone: Node2D = null
 var _cone_poly: Polygon2D = null
-var _cone_edge: Line2D = null
+## رنگ نور اتاق؛ اتاق هنگام ساخت می‌دهدش.
+var room_tint: Color = Color(1.0, 0.95, 0.85)
+var _intensity: float = 0.0
+## نیم‌رخ آلفا برای هر رأس (۱ در نوک، صفر در گوشه‌های لبه). رنگ نهایی
+## هر فریم روی همین ضرب می‌شود.
+var _profile: PackedFloat32Array = PackedFloat32Array()
 var _bang: Node2D = null
 
 
@@ -165,14 +179,26 @@ func _setup_patrol(e: Dictionary) -> void:
 
 
 ## مخروط دید **دیده می‌شود**: بدون آن بازیکن نمی‌فهمد چرا گرفتار شد.
-## چندضلعی بادبزنی با ۱۲ پره، نیمه‌شفاف، در عمقِ فشردهٔ همان نما.
+##
+## چهار چیز که کاربر در گام ۵۷ خواست و هر کدام یک تصمیم است:
+##
+##   لبهٔ نرم    — با `vertex_colors` ساخته می‌شود، نه با شیدر: نوک
+##                 مخروط آلفای کامل دارد، لبهٔ دور صفر، و دو رأس کناری
+##                 هم صفر. پس هم با فاصله محو می‌شود هم در عرض.
+##   رنگ صحنه   — از `light.tint` خود اتاق می‌آید (جهت رنگش، نه
+##                 روشنایی‌اش)، نصفه‌نصفه با یک خاکستری گرم. زردِ یکدست
+##                 در میدان بنفش S3a مثل برچسب دیده می‌شد.
+##   شدت پویا   — پایه کم است و فقط وقتی بازیکن در برد است (یا نزدیک)
+##                 بالا می‌رود؛ گذارش نرم است، نه کلیدی.
+##   بی‌خط      — لبهٔ خط‌کشی‌شده برداشته شد؛ با گرادیان، خودِ مخروط
+##                 روی کف روشن هم خوانا می‌ماند.
+##
+## **ترتیب تبدیل مهم است:** مخروط در فضای «تخت» ساخته و چرخانده می‌شود
+## و بعد گرهٔ بیرونی عمق را فشرده می‌کند. اگر اول فشرده و بعد چرخانده
+## شود، بادبزن در جهت‌های مورب کج و باریک درمی‌آید.
 func _build_cone() -> void:
 	if see_range <= 0.0:
 		return
-	# **ترتیب مهم است:** مخروط در فضای «تخت» ساخته و چرخانده می‌شود و
-	# بعد گرهٔ بیرونی عمق را فشرده می‌کند. اگر اول فشرده و بعد چرخانده
-	# شود، بادبزن در جهت‌های مورب کج و باریک درمی‌آید — همان چیزی که
-	# در نگاه اول درست به نظر می‌رسد و در بازی غلط دیده می‌شود.
 	_cone = Node2D.new()
 	_cone.name = "Cone"
 	_cone.z_index = -1          # زیر خود دشمن، روی کف
@@ -181,21 +207,17 @@ func _build_cone() -> void:
 	_cone_poly = Polygon2D.new()
 	var pts := PackedVector2Array()
 	pts.append(Vector2.ZERO)
+	_profile.append(1.0)
 	var half := deg_to_rad(see_angle) * 0.5
-	for i in 13:
-		var a := -half + deg_to_rad(see_angle) * float(i) / 12.0
+	for i in RIM + 1:
+		var f := float(i) / float(RIM)
+		var a := -half + deg_to_rad(see_angle) * f
 		pts.append(Vector2(cos(a), sin(a)) * see_range)
+		# محوشدن در عرض: وسط لبه پررنگ‌تر از دو گوشه، گوشه‌ها صفر
+		var side := 1.0 - absf(f * 2.0 - 1.0)
+		_profile.append(EDGE_ALPHA * smoothstep(0.0, 0.5, side))
 	_cone_poly.polygon = pts
-	_cone_poly.color = Color(1.0, 0.86, 0.45, 0.16)
 	_cone.add_child(_cone_poly)
-	# لبهٔ نازک: روی کف روشنِ میدان، فقط پُرکردنِ نیمه‌شفاف دیده نمی‌شد
-	# (در فریم ضبط گم بود). خط لبه مخروط را روی هر زمینه‌ای خوانا می‌کند.
-	_cone_edge = Line2D.new()
-	_cone_edge.width = 2.0
-	_cone_edge.closed = true
-	_cone_edge.points = pts
-	_cone_edge.default_color = Color(1.0, 0.86, 0.45, 0.30)
-	_cone_poly.add_child(_cone_edge)
 
 
 ## علامت «!» — سه خط کوتاه، بدون هنر تازه.
@@ -292,7 +314,7 @@ func tick(delta: float, foot: Vector2, room: Node) -> void:
 			if _move_toward(goal, speed, delta, room):
 				_set_state(State.PATROL)
 				alerted = false
-	_paint_cone()
+	_paint_cone(delta, foot)
 
 
 func _set_state(s: State) -> void:
@@ -339,17 +361,50 @@ func _move_toward(goal: Vector2, sp: float, delta: float, room: Node) -> bool:
 	return false
 
 
-func _paint_cone() -> void:
+func _paint_cone(delta: float = 0.0, foot: Vector2 = Vector2.INF) -> void:
 	if _cone_poly == null:
 		return
 	_cone_poly.rotation = Vector2(facing.x, facing.y * DEPTH).angle()
+	# شدت: فقط وقتی بازیکن در برد است یا دشمن نزدیک شده بالا می‌رود
+	var want := DIM
+	if foot != Vector2.INF:
+		var flat := Vector2(foot.x - position.x, (foot.y - position.y) * DEPTH)
+		if flat.length() <= see_range * 1.15:
+			want = BRIGHT
+	if state != State.PATROL:
+		want = BRIGHT
+	if delta <= 0.0:
+		_intensity = want
+	else:
+		_intensity = move_toward(_intensity, want, delta / FADE_S)
+	# رنگ: جهتِ رنگِ نور اتاق، نصفه‌نصفه با خاکستری گرم — نه زرد یکدست
+	var base := room_tint
 	match state:
 		State.ALERT:
-			_cone_poly.color = Color(1.0, 0.55, 0.25, 0.24)
+			base = base.lerp(Color(1.0, 0.55, 0.25), 0.75)
 		State.CHASE:
-			_cone_poly.color = Color(1.0, 0.3, 0.25, 0.22)
-		_:
-			_cone_poly.color = Color(1.0, 0.86, 0.45, 0.16)
-	if _cone_edge != null:
-		_cone_edge.default_color = Color(_cone_poly.color.r, _cone_poly.color.g,
-			_cone_poly.color.b, _cone_poly.color.a + 0.16)
+			base = base.lerp(Color(1.0, 0.28, 0.22), 0.85)
+	var a := lerpf(0.15, 0.38, _intensity)
+	if state == State.CHASE:
+		a = lerpf(0.24, 0.46, _intensity)
+	# **`vertex_colors` جای `color` را می‌گیرد، ضرب نمی‌شود.** اولین بار
+	# رنگ را در `color` گذاشتم و نیم‌رخ را سفید؛ نتیجه یک نورافکن سفیدِ
+	# یکدست شد، دقیقاً همان چیزی که قرار بود نباشد. پس رنگ نهایی هر
+	# فریم روی نیم‌رخ ضرب و در خود رأس‌ها نوشته می‌شود.
+	var cols := PackedColorArray()
+	for v in _profile:
+		cols.append(Color(base.r, base.g, base.b, a * v))
+	_cone_poly.vertex_colors = cols
+
+
+## رنگ نور اتاق را می‌گیرد. فقط **جهت** رنگ برداشته می‌شود، نه
+## روشنایی‌اش: `light.tint` اتاق‌ها عددهای تیره‌اند (پردهٔ گذار در به در)
+## و اگر مستقیم استفاده شوند مخروط عملاً سیاه می‌شود.
+func set_room_light(c: Color) -> void:
+	var m := maxf(0.001, maxf(c.r, maxf(c.g, c.b)))
+	var dir := Color(c.r / m, c.g / m, c.b / m)
+	# نیمی جهتِ رنگ اتاق، نیمی کهربای کم‌رنگ. هم‌رنگِ **خودِ** کف، مخروط
+	# را نامرئی می‌کند (در میدان بنفش S3a امتحان شد و گم شد)؛ کهربا در
+	# همان کلید رنگی صحنه می‌ماند ولی روی کف خوانا است.
+	room_tint = dir.lerp(Color(1.0, 0.82, 0.55), 0.55)
+	_paint_cone()
