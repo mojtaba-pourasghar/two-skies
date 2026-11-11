@@ -57,7 +57,8 @@ func _normalize(room: Dictionary) -> void:
 	room["camera"] = String(room.get("camera", CameraDirector.BEHAVIOR_ROOM))
 	var size: Array = room.get("size", [1280, 720])
 	room["size"] = [int(size[0]), int(size[1])] if size.size() == 2 else [1280, 720]
-	for key in ["walkable", "blocked", "hazard", "doors", "props", "occluders", "enemies"]:
+	for key in ["walkable", "blocked", "hazard", "doors", "props", "occluders", "enemies",
+			"hackables", "checkpoints"]:
 		if not room.has(key):
 			room[key] = []
 	if not room.has("light"):
@@ -159,6 +160,7 @@ func _validate(room: Dictionary) -> void:
 				errors.append("اتاق «%s»: برد دید دشمن «%s» منفی است." % [rid, eid])
 
 	_validate_occluders(room, rid)
+	_validate_gear(room, rid)
 
 	_validate_living(room, rid)
 
@@ -170,6 +172,59 @@ func _validate(room: Dictionary) -> void:
 			% [rid, int(spawn.x), int(spawn.y)])
 
 
+
+
+## پایانهٔ هک و چک‌پوینت (M5-ب). هر سه خطای اینجا یعنی اتاق چالش
+## **غیرقابل‌تمام‌کردن** می‌شود، و هیچ‌کدام در بازی صدا نمی‌دهند:
+## پایانه‌ای بیرون ماسک هرگز لمس نمی‌شود، نام خطرِ ناموجود یعنی هک
+## هیچ‌کاری نمی‌کند، و چک‌پوینت روی کاشی برق‌دار یعنی حلقهٔ مرگ.
+func _validate_gear(room: Dictionary, rid: String) -> void:
+	var walk: Array = room["walkable"]
+	var hz: Dictionary = {}
+	for raw in room["hazard"]:
+		hz[String((raw as Dictionary).get("id", ""))] = true
+	var seen: Dictionary = {}
+	for raw in room.get("hackables", []):
+		var hk: Dictionary = raw
+		var hid := String(hk.get("id", ""))
+		if hid == "" or seen.has(hid):
+			errors.append("اتاق «%s»: شناسهٔ پایانه خالی یا تکراری «%s»." % [rid, hid])
+			continue
+		seen[hid] = true
+		var at: Array = hk.get("at", [])
+		if at.size() != 2:
+			errors.append("اتاق «%s»: پایانهٔ «%s» جا ندارد." % [rid, hid])
+			continue
+		var p := Vector2(float(at[0]), float(at[1]))
+		if not walk.is_empty() and not point_walkable(room, p):
+			errors.append("اتاق «%s»: پایانهٔ «%s» (%d,%d) بیرون ماسک است؛ هرگز لمس نمی‌شود."
+				% [rid, hid, int(p.x), int(p.y)])
+		var dis: Array = hk.get("disables", [])
+		if dis.is_empty():
+			warnings.append("اتاق «%s»: پایانهٔ «%s» هیچ خطری را خاموش نمی‌کند." % [rid, hid])
+		for d in dis:
+			if not hz.has(String(d)):
+				errors.append("اتاق «%s»: پایانهٔ «%s» خطر ناموجود «%s» را صدا می‌زند."
+					% [rid, hid, String(d)])
+
+	var cseen: Dictionary = {}
+	for raw in room.get("checkpoints", []):
+		var cp: Dictionary = raw
+		var cid := String(cp.get("id", ""))
+		if cid == "" or cseen.has(cid):
+			errors.append("اتاق «%s»: شناسهٔ چک‌پوینت خالی یا تکراری «%s»." % [rid, cid])
+			continue
+		cseen[cid] = true
+		var cat: Array = cp.get("at", [])
+		if cat.size() != 2:
+			errors.append("اتاق «%s»: چک‌پوینت «%s» جا ندارد." % [rid, cid])
+			continue
+		var q := Vector2(float(cat[0]), float(cat[1]))
+		if not walk.is_empty() and not point_walkable(room, q):
+			errors.append("اتاق «%s»: چک‌پوینت «%s» بیرون ماسک است." % [rid, cid])
+		elif not hazard_at(room, q).is_empty():
+			errors.append("اتاق «%s»: چک‌پوینت «%s» روی خطر است؛ حلقهٔ مرگ می‌سازد."
+				% [rid, cid])
 
 ## occluder — قاعده‌های کاربر در گام ۵۵ (REQ-032).
 ##

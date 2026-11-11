@@ -589,7 +589,8 @@ func _make_laser(e: Dictionary) -> Node2D:
 		return null
 	_laser_nodes.append({
 		"node": holder, "amp": float(e.get("amp", 0.05)),
-		"id": String(e.get("id", "laser")),
+		"id": String(e.get("id", "laser")), "off": {},
+		"lines": holder.get_child_count(),
 	})
 	return holder
 
@@ -703,8 +704,64 @@ func _tick_lasers() -> void:
 	for l in _laser_nodes:
 		var v: float = 1.0 + float(l["amp"]) * _noise(String(l["id"]))
 		var a: float = clampf(0.55 * v, 0.44, 0.66)
-		for c in (l["node"] as Node2D).get_children():
-			(c as Sprite2D).modulate.a = a
+		var off: Dictionary = l["off"]
+		var kids: Array = (l["node"] as Node2D).get_children()
+		for i in kids.size():
+			# نوار تیره و خط فیروزهٔ پرتوهای خاموش بعد از خطوط اصلی
+			# اضافه شده‌اند؛ نبض فقط به خطوط اصلی می‌خورد.
+			if i >= _laser_line_count(l) or off.has(i):
+				continue
+			(kids[i] as Sprite2D).modulate.a = a
+
+
+## پرتوی خاموش‌شده با هک. **محو نمی‌شود** — نقشهٔ افکت می‌گوید خطر بصری
+## ثابت می‌ماند — ولی کم‌رنگ و فیروزه‌ای می‌شود تا بازیکن ببیند دیگر
+## نمی‌زند. نگاشت نام به خط از ترتیب است: `beam_N` یعنی N اُمین عدد در
+## `lines_y`، و همان ترتیب در `hazard`های اتاق هم هست.
+## چند خط **اصلی** این افکت است (بدون نوارهای خاموشی که بعداً اضافه شده‌اند).
+func _laser_line_count(l: Dictionary) -> int:
+	return int(l.get("lines", (l["node"] as Node2D).get_child_count()))
+
+
+func set_offline(ids: Array) -> void:
+	for l in _laser_nodes:
+		var kids: Array = (l["node"] as Node2D).get_children()
+		for raw in ids:
+			var name := String(raw)
+			if not name.begins_with("beam_"):
+				continue
+			var idx := int(name.substr(5)) - 1
+			if idx < 0 or idx >= kids.size():
+				continue
+			if (l["off"] as Dictionary).has(idx):
+				continue
+			(l["off"] as Dictionary)[idx] = true
+			var sp := kids[idx] as Sprite2D
+			sp.modulate.a = 0.0
+			# **خود پرتو در نقاشی است، نه در این لایه.** کم کردن آلفای
+			# خط افکت هیچ تغییری نمی‌دهد — در عکس گام ۵۷ دیده شد: پرتو
+			# قرمز ماند و بازیکن جلوی چیزی می‌ایستاد که دیگر نمی‌زد.
+			# پس یک نوار تیره روی پیکسل‌های نقاشی کشیده می‌شود تا قرمز
+			# خاموش دیده شود، و یک خط نازک فیروزه‌ای رویش: «بود، و حالا
+			# قطع است». محو نمی‌شود، رنگ عوض می‌کند.
+			var holder := l["node"] as Node2D
+			var dark := Sprite2D.new()
+			dark.texture = _white()
+			dark.centered = false
+			dark.position = Vector2(sp.position.x, sp.position.y - 4.0)
+			dark.scale = Vector2(sp.scale.x, 11.0)
+			dark.modulate = Color(0.06, 0.07, 0.10, 0.58)
+			dark.z_index = 6
+			holder.add_child(dark)
+			var teal := Sprite2D.new()
+			teal.texture = _white()
+			teal.centered = false
+			teal.position = Vector2(sp.position.x, sp.position.y)
+			teal.scale = Vector2(sp.scale.x, 2.0)
+			teal.modulate = Color(0.35, 1.0, 0.85, 0.5)
+			teal.material = _additive()
+			teal.z_index = 7
+			holder.add_child(teal)
 
 
 func _tick_leds(_delta: float) -> void:

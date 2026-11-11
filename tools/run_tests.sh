@@ -21,6 +21,7 @@ TESTS=(
   "res://tools/tests/test_rooms.tscn"
   "res://tools/tests/test_topdown.tscn"
   "res://tools/tests/test_patrol.tscn"
+  "res://tools/tests/test_challenge.tscn"
   "res://tools/tests/test_area1.tscn"
   "res://tools/tests/test_hazards.tscn"
   "res://tools/tests/test_battle.tscn"

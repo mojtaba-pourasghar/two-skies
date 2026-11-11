@@ -43,6 +43,11 @@ var _last_react := Vector2.ZERO
 ## ضریب نسخهٔ پرجزئیات: ۱ برای ۱۲۸۰×۷۲۰، ۱٫۳۱۲۵ برای hires.
 var _bg_scale: float = 1.0
 var _cuts: Array[Polygon2D] = []
+## پایانه‌های هک‌شدنی و خطرهایی که خاموش شده‌اند (M5-ب)
+var hackables: Array[Dictionary] = []
+## چک‌پوینت‌های اتاق چالش (M5-ب)
+var checkpoints: Array[Dictionary] = []
+var _off_hazards: Dictionary = {}
 var _img_occ: Array[Dictionary] = []
 
 
@@ -59,7 +64,10 @@ func build(room: Dictionary) -> void:
 	actors = _layer("Actors", 3)
 	actors.y_sort_enabled = true
 	_build_enemies()
+	_build_hackables()
+	_build_checkpoints()
 	_build_effects()
+	_reapply_offline()
 	_build_occluders()
 	_build_light()
 	_build_dust_puff()
@@ -174,9 +182,15 @@ func _build_props() -> void:
 		s.texture = tex
 		s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		s.centered = false
+		# `height` قد روی صفحه است، نه ضریب: هنر تحویلی بوم‌های متفاوت
+		# دارد و ضریب ثابت یکی را غول و دیگری را کوتوله می‌کند (همان درس
+		# دشمن‌های روی نقشه). نبودنش یعنی اندازهٔ خود تصویر.
+		var ph := float(p.get("height", tex.get_height()))
+		var psc := ph / float(tex.get_height())
+		s.scale = Vector2(psc, psc)
 		# پراپ از **پایش** می‌نشیند تا Y-sort درست کار کند
-		s.position = Vector2(float(at[0]) - tex.get_width() * 0.5,
-			float(at[1]) - tex.get_height())
+		s.position = Vector2(float(at[0]) - tex.get_width() * psc * 0.5,
+			float(at[1]) - ph)
 		_props.add_child(s)
 
 
@@ -230,6 +244,168 @@ func remove_enemy(m: MapEnemy) -> void:
 	if is_instance_valid(m):
 		m.queue_free()
 
+
+
+
+## ------------------------------------------------------------------
+## چک‌پوینت اتاق چالش (M5-ب)
+## ------------------------------------------------------------------
+##
+## در اتاق چالش یک تماس = مرگ و شروع دوباره (سند ۰۹ §۱ قاعدهٔ ۱). بی
+## چک‌پوینت، هر مرگ در C3 یعنی از اول تالار؛ با ۲۴ خطر، این یعنی رها
+## کردن بازی. چک‌پوینت فقط **جای شروع دوباره** را جابه‌جا می‌کند، نه
+## چیز دیگری: نه جان پر می‌کند (اتاق چالش جان ندارد) و نه ذخیره است.
+func _build_checkpoints() -> void:
+	checkpoints.clear()
+	for raw in data.get("checkpoints", []):
+		var cp: Dictionary = raw
+		var at: Array = cp.get("at", [0, 0])
+		var pos := Vector2(float(at[0]), float(at[1]))
+		var off := _load_tex(String(cp.get("img", "checkpoint_exit/checkpoint_off.png")))
+		var on := _load_tex(String(cp.get("img_on", "checkpoint_exit/checkpoint_on.png")))
+		var node: Sprite2D = null
+		if off != null:
+			node = Sprite2D.new()
+			node.name = "Cp_%s" % String(cp.get("id", "x"))
+			node.texture = off
+			node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			node.centered = false
+			var h := float(cp.get("height", 52.0))
+			var sc := h / float(off.get_height())
+			node.scale = Vector2(sc, sc)
+			node.position = pos - Vector2(float(off.get_width()) * sc * 0.5, h)
+			var m: Array = cp.get("mod", [])
+			if m.size() >= 3:
+				node.modulate = Color(float(m[0]), float(m[1]), float(m[2]))
+			_props.add_child(node)
+		checkpoints.append({
+			"id": String(cp.get("id", "")), "at": pos, "node": node,
+			"radius": float(cp.get("radius", 52.0)),
+			"off": off, "on": on, "lit": false,
+		})
+
+
+## چک‌پوینتی که پا رویش است و هنوز روشن نشده، یا تهی.
+func checkpoint_at(foot: Vector2) -> Dictionary:
+	for cp in checkpoints:
+		if bool(cp["lit"]):
+			continue
+		if foot.distance_to(cp["at"] as Vector2) <= float(cp["radius"]):
+			return cp
+	return {}
+
+
+func light_checkpoint(cid: String) -> void:
+	for cp in checkpoints:
+		if String(cp["id"]) != cid:
+			continue
+		cp["lit"] = true
+		var node = cp["node"]
+		if node != null and is_instance_valid(node) and cp["on"] != null:
+			node.texture = cp["on"]
+
+## ------------------------------------------------------------------
+## پایانهٔ هک‌شدنی (M5-ب)
+## ------------------------------------------------------------------
+##
+## چرا لازم شد: کوچهٔ لیزری C2 در نقاشی یک **دیوار کامل** از هفت پرتو
+## است؛ اندازه‌گیری روی ماسک نشان داد هیچ راه بی‌خطری از شروع به در
+## بالا نیست و شکاف‌های بین پرتوها فقط سایهٔ پایه‌هایند (۱۰ تا ۵۰
+## پیکسل). پس راه باید از یک **سازوکار** بیاید، نه از دور زدن.
+## قاعدهٔ ۸ CLAUDE.md می‌گوید تناقض را به نفع تصویر حل کن: پرتو
+## **کشیده می‌ماند** (نقشهٔ افکت هم همین را می‌خواهد: «خطر بصری ثابت
+## می‌ماند»)، ولی پس از هک کم‌رنگ و فیروزه‌ای می‌شود و دیگر نمی‌زند.
+## تأیید مدیر هنر با REQ-033 خواسته شد.
+func _build_hackables() -> void:
+	hackables.clear()
+	_off_hazards.clear()
+	for raw in data.get("hackables", []):
+		var hk: Dictionary = raw
+		var hid := String(hk.get("id", ""))
+		var at: Array = hk.get("at", [0, 0])
+		var pos := Vector2(float(at[0]), float(at[1]))
+		var done := bool(GameState.get_flag(_hack_flag(hid), false))
+		var tex := _load_tex(String(hk.get("img", "hackables/terminal.png")))
+		var node: Node2D = null
+		if tex != null:
+			var s := Sprite2D.new()
+			s.name = "Hack_%s" % hid
+			s.texture = tex
+			s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			s.centered = false
+			var h := float(hk.get("height", 64.0))
+			var sc := h / float(tex.get_height())
+			s.scale = Vector2(sc, sc)
+			# `at` پای پایانه است، نه گوشه‌اش
+			s.position = pos - Vector2(float(tex.get_width()) * sc * 0.5, h)
+			var m: Array = hk.get("mod", [])
+			if m.size() >= 3:
+				s.modulate = Color(float(m[0]), float(m[1]), float(m[2]))
+			_props.add_child(s)
+			node = s
+		var rec := {
+			"id": hid, "at": pos, "node": node,
+			"radius": float(hk.get("radius", 64.0)),
+			"disables": hk.get("disables", []),
+			"done": done,
+		}
+		hackables.append(rec)
+		if done:
+			_apply_hack(rec)
+
+
+static func _hack_flag(hid: String) -> String:
+	return "hacked_%s" % hid
+
+
+## نزدیک‌ترین پایانهٔ هک‌نشده در برد، یا تهی.
+func hackable_at(foot: Vector2) -> Dictionary:
+	var best: Dictionary = {}
+	var bd := INF
+	for hk in hackables:
+		if bool(hk["done"]):
+			continue
+		var d: float = foot.distance_to(hk["at"] as Vector2)
+		if d <= float(hk["radius"]) and d < bd:
+			bd = d
+			best = hk
+	return best
+
+
+func hack(hid: String) -> bool:
+	for hk in hackables:
+		if String(hk["id"]) != hid or bool(hk["done"]):
+			continue
+		hk["done"] = true
+		GameState.set_flag(_hack_flag(hid), true)
+		_apply_hack(hk)
+		return true
+	return false
+
+
+## پایانه‌هایی که از ذخیره «هک‌شده» آمده‌اند، هنگام ساخت اتاق پیش از
+## لایهٔ افکت پردازش می‌شوند و آن موقع `_fx` هنوز نیست. اگر اینجا دوباره
+## اعمال نشود، خطر خاموش است ولی **پرتو همچنان قرمز کشیده می‌شود** —
+## بازیکن جلوی پرتوی قرمزی می‌ایستد که نمی‌زند. در عکس گام ۵۷ دیده شد.
+func _reapply_offline() -> void:
+	if _fx == null:
+		return
+	var ids: Array = []
+	for hk in hackables:
+		if bool(hk["done"]):
+			ids.append_array(hk["disables"])
+	if not ids.is_empty():
+		_fx.set_offline(ids)
+
+
+func _apply_hack(hk: Dictionary) -> void:
+	for raw in hk["disables"]:
+		_off_hazards[String(raw)] = true
+	var node = hk["node"]
+	if node != null and is_instance_valid(node):
+		node.modulate = Color(0.45, 1.0, 0.9)
+	if _fx != null:
+		_fx.set_offline(hk["disables"])
 
 ## افکت‌های اتاق از نقشهٔ تصویر (سند ۱۴، D-ART-46).
 ##
@@ -648,8 +824,18 @@ func is_walkable(p: Vector2) -> bool:
 	return RoomData.point_walkable(data, p)
 
 
+## خطری که **خاموش شده** دیگر نمی‌زند. پایانهٔ هک‌شده همین کار را
+## می‌کند، و چون از همین‌جا می‌گذرد، هم بازیگر و هم ربات و هم آزمون
+## یک حقیقت را می‌بینند.
 func hazard_at(p: Vector2) -> Dictionary:
-	return RoomData.hazard_at(data, p)
+	var h := RoomData.hazard_at(data, p)
+	if not h.is_empty() and _off_hazards.has(String(h.get("id", ""))):
+		return {}
+	return h
+
+
+func hazard_is_off(hid: String) -> bool:
+	return _off_hazards.has(hid)
 
 
 func door_at(p: Vector2) -> Dictionary:

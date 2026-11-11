@@ -239,6 +239,8 @@ func _physics_process(_delta: float) -> void:
 	room.tick_enemies(get_physics_process_delta_time(), kairo.foot_position())
 	if _check_enemy():
 		return
+	_check_hack(get_physics_process_delta_time())
+	_check_checkpoint()
 	_check_statue()
 	_check_door()
 
@@ -369,6 +371,71 @@ func _on_battle_finished(outcome: int, encounter: String) -> void:
 		kairo.velocity = Vector2.ZERO
 		_flee_from = m
 	battle_ended.emit(encounter, outcome)
+
+
+## پایانهٔ هک — شروع، پیشرفت و پایان، تا رابط بتواند حلقه را نشان دهد.
+signal hack_started(id: String)
+signal hack_progress(id: String, pct: float)
+signal hack_done(id: String)
+
+## چند ثانیه نگه داشتن دکمه تا هک تمام شود. کوتاه‌تر از این، فشار
+## تصادفی دکمه هم هکش می‌کند؛ بلندتر، کار حوصله‌سر‌بر می‌شود.
+const HACK_SECONDS: float = 0.9
+
+var _hack_id: String = ""
+var _hack_t: float = 0.0
+
+
+## هک در اکتشاف (M5-ب): نزدیک پایانه، دکمهٔ «action» را نگه دار.
+## رها کردن دکمه پیشرفت را صفر می‌کند — عمدی است: هک باید یک **تصمیم**
+## باشد، نه یک برخورد اتفاقی، چون در C2 راهِ عبور را باز می‌کند.
+func _check_hack(delta: float) -> void:
+	if kairo == null or room == null:
+		return
+	var hk := room.hackable_at(kairo.foot_position())
+	if hk.is_empty():
+		if _hack_id != "":
+			_hack_id = ""
+			_hack_t = 0.0
+			hack_progress.emit("", 0.0)
+		return
+	var hid := String(hk["id"])
+	if not GameMode.is_pressed("action"):
+		if _hack_t > 0.0:
+			_hack_t = 0.0
+			hack_progress.emit(hid, 0.0)
+		return
+	if _hack_id != hid:
+		_hack_id = hid
+		_hack_t = 0.0
+		hack_started.emit(hid)
+	_hack_t += delta
+	hack_progress.emit(hid, clampf(_hack_t / HACK_SECONDS, 0.0, 1.0))
+	if _hack_t >= HACK_SECONDS:
+		room.hack(hid)
+		_hack_id = ""
+		_hack_t = 0.0
+		hack_done.emit(hid)
+		GameState.save_explore(String(room.data.get("id", "")), kairo.global_position)
+
+
+## چک‌پوینت روشن شد — جای شروع دوباره عوض شد.
+signal checkpoint_lit(id: String, at: Vector2)
+
+
+## چک‌پوینت اتاق چالش: فقط جای شروع دوباره را جابه‌جا می‌کند. **جان پر
+## نمی‌کند و ذخیره نیست** — ذخیره کار مجسمه است (سند ۰۹ §۱۱).
+func _check_checkpoint() -> void:
+	if kairo == null or room == null:
+		return
+	var cp := room.checkpoint_at(kairo.foot_position())
+	if cp.is_empty():
+		return
+	room.light_checkpoint(String(cp["id"]))
+	var at: Vector2 = cp["at"]
+	_restart_at = at
+	kairo.spawn_point = at
+	checkpoint_lit.emit(String(cp["id"]), at)
 
 
 signal door_refused(door: Dictionary, flag: String)

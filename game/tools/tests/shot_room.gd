@@ -1,7 +1,7 @@
-## اسکرین‌شات M1 — اتاق R1a کنار تصویر مرجع
+## عکس یک اتاق با بازیکن در جای دلخواه — ابزار عمومی اسکرین‌شات
 ##
-## بازی را واقعاً اجرا می‌کند و در چند جای اتاق عکس می‌گیرد، یک بار با
-## ماسک نمایان تا بشود دید ماسک با تصویر می‌خواند یا نه.
+##   godot --path game --fixed-fps 60 --resolution 1280x720 \
+##     res://tools/tests/shot_room.tscn -- --room=c2_laser_alley --at=640,560 --name=c2
 extends Node2D
 
 const OUT := "res://docs_screens/"
@@ -10,61 +10,37 @@ var _game: Node2D
 
 
 func _ready() -> void:
+	var rid := "r1a_living"
+	var at := Vector2.ZERO
+	var nm := ""
+	var hacks: Array[String] = []
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--room="):
+			rid = a.substr(7)
+		elif a.begins_with("--at="):
+			var p := a.substr(5).split(",")
+			at = Vector2(float(p[0]), float(p[1]))
+		elif a.begins_with("--name="):
+			nm = a.substr(7)
+		elif a.begins_with("--hack="):
+			for h in a.substr(7).split(","):
+				hacks.append(h)
+	for h in hacks:
+		GameState.set_flag("hacked_%s" % h, true)
+	DirAccess.make_dir_recursive_absolute(OUT)
 	_game = load("res://scenes/room_game.tscn").instantiate()
+	_game.set("start_room", rid)
 	add_child(_game)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	await _run()
-
-
-func _run() -> void:
 	var kairo = _game.get("kairo")
-	if kairo == null:
-		push_error("کایرو ساخته نشد")
-		get_tree().quit(1)
-		return
-	kairo.use_scripted = true
-
-	await _settle(40)
-	await _shot("m1_r1a_01_spawn")
-
-	await _walk(kairo, Vector2(1, -1), 90)
-	await _shot("m1_r1a_02_center")
-
-	await _walk(kairo, Vector2(1, 0), 90)
-	await _shot("m1_r1a_03_east")
-
-	# با ماسک نمایان: سبز = قابل‌راه‌رفتن، قرمز = خطر، آبی = در
-	var room = _game.get("room")
-	room.show_mask(true)
-	await _settle(5)
-	await _shot("m1_r1a_04_mask")
-	room.show_mask(false)
-
-	print("جای کایرو: %s | روی ماسک: %s"
-		% [str(kairo.global_position.round()),
-		str(room.is_walkable(kairo.foot_position()))])
-	print("هنر گم‌شده: %d" % room.missing_art.size())
-	for m in room.missing_art:
-		print("  ! %s" % m)
-	get_tree().quit(0)
-
-
-func _walk(actor, dir: Vector2, frames: int) -> void:
-	actor.scripted_dir = dir
-	for i in frames:
+	if kairo != null and at != Vector2.ZERO:
+		kairo.set("use_scripted", true)
+		kairo.global_position = at
+	for i in 40:
 		await get_tree().physics_frame
-	actor.scripted_dir = Vector2.ZERO
-	await _settle(10)
-
-
-func _settle(frames: int) -> void:
-	for i in frames:
-		await get_tree().physics_frame
-
-
-func _shot(name: String) -> void:
 	await RenderingServer.frame_post_draw
-	var img := get_viewport().get_texture().get_image()
-	var err := img.save_png(OUT + name + ".png")
-	print("%s → %s" % [name, "ok" if err == OK else "خطا %d" % err])
+	var file := "shot_%s.png" % (nm if nm != "" else rid)
+	get_viewport().get_texture().get_image().save_png(OUT + file)
+	print("عکس: %s" % file)
+	get_tree().quit(0)
