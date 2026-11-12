@@ -20,6 +20,9 @@ const SCENES := {
 	"letters": "res://ui/letters/letters.tscn",
 	"about": "res://ui/about/about.tscn",
 	"sandbox": "res://scenes/sandbox.tscn",
+	"save_select": "res://ui/save_select/save_select.tscn",
+	"status": "res://ui/status/status.tscn",
+	"inventory": "res://ui/inventory/inventory.tscn",
 }
 
 ## پشتهٔ صفحه‌ها، برای هماهنگی با دکمهٔ بازگشت اندروید (§۱۳)

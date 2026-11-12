@@ -37,6 +37,11 @@ static func num(value: int) -> String:
 	return digits(str(value))
 
 
+## عدد با صفرِ پُرکننده، **پیش از** تبدیل به رقم فارسی.
+static func num_padded(value: int, width: int) -> String:
+	return digits(str(value).pad_zeros(width))
+
+
 static func num_f(value: float, decimals: int = 1) -> String:
 	return digits(String.num(value, decimals))
 

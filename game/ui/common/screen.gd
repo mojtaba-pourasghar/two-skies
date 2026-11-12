@@ -9,6 +9,11 @@ extends Control
 var confirm_exit_on_back: bool = false
 
 var _root: VBoxContainer
+var _frame: Control
+## کدام پنل قاب صفحه باشد (سند ۱۷). صفحه‌های شلوغ `panel_xl`.
+var panel_kind: String = "panel_xl"
+## حاشیهٔ قاب از لبهٔ صفحه.
+var frame_margin: Vector2 = Vector2(96, 40)
 
 
 func _ready() -> void:
@@ -16,11 +21,50 @@ func _ready() -> void:
 	anchor_right = 1.0
 	anchor_bottom = 1.0
 	layout_direction = Control.LAYOUT_DIRECTION_RTL
-	UIKit.make_backdrop(self)
+	_build_backdrop()
 	_root = build()
 	if _root != null:
-		add_child(_root)
+		# **محتوا داخل پنل نقاشی‌شده می‌نشیند، نه روی خود نقاشی.**
+		# بی آن، متن روی پس‌زمینهٔ پرجزئیات منو خوانده نمی‌شود و صفحه
+		# همان «مستطیل تخت»ی می‌ماند که کاربر گفت نباشد (سند ۱۷).
+		_frame = UiKit.panel(panel_kind)
+		_frame.anchor_left = 0.0
+		_frame.anchor_right = 1.0
+		_frame.anchor_top = 0.0
+		_frame.anchor_bottom = 1.0
+		_frame.offset_left = frame_margin.x
+		_frame.offset_right = -frame_margin.x
+		_frame.offset_top = frame_margin.y
+		_frame.offset_bottom = -frame_margin.y
+		_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_frame)
+		# **محتوا اسکرول می‌شود.** صفحهٔ تنظیمات با شش ردیف از قاب
+		# بیرون می‌زد؛ کوتاه کردن ردیف‌ها جواب موقتی است، چون هر صفحهٔ
+		# تازه‌ای دوباره همان مشکل را می‌سازد.
+		var scroll := ScrollContainer.new()
+		scroll.anchor_right = 1.0
+		scroll.anchor_bottom = 1.0
+		scroll.offset_left = 64
+		scroll.offset_right = -64
+		scroll.offset_top = 56
+		scroll.offset_bottom = -52
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_frame.add_child(scroll)
+		_root.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_root.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_root.set_anchors_preset(Control.PRESET_TOP_WIDE)
+		_root.offset_left = 0
+		_root.offset_right = 0
+		_root.offset_top = 0
+		_root.offset_bottom = 0
+		scroll.add_child(_root)
 	_slide_in()
+
+
+## پس‌زمینهٔ صفحه. پیش‌فرض نقاشی منو با تیرگی؛ صفحه‌هایی که روی بازی
+## باز می‌شوند (مکث) این را جای دیگری می‌برند.
+func _build_backdrop() -> void:
+	UIKit.make_backdrop(self)
 
 
 ## زیرکلاس محتوای صفحه را می‌سازد.
@@ -31,11 +75,10 @@ func build() -> VBoxContainer:
 func _slide_in() -> void:
 	if _root == null:
 		return
-	var from := Vector2(-get_viewport_rect().size.x, 0.0)
-	_root.position = from
-	var tw := create_tween()
-	tw.tween_property(_root, "position", Vector2.ZERO, SceneRouter.TRANSITION_TIME)\
-		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	# گذار ۰٫۲ ثانیه‌ای، محو + جابه‌جایی کم (سند ۱۷ بند «انیمیشن»).
+	# اسلاید عرضِ کاملِ قبلی در ۱۲۸۰ پهنا پرشی دیده می‌شد.
+	var target: Control = _frame if _frame != null else _root
+	UiKit.slide_in(target, Vector2(0, 28))
 
 
 func _unhandled_input(event: InputEvent) -> void:

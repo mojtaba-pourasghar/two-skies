@@ -51,7 +51,7 @@ var _layer: CanvasLayer
 var _root: Control
 var _bg: TextureRect
 var _portrait: TextureRect
-var _box: ColorRect
+var _box: NinePatchRect
 var _fade: ColorRect
 var _bars_top: ColorRect
 var _bars_bottom: ColorRect
@@ -78,7 +78,7 @@ func _build_ui() -> void:
 	# جعبه هر دو «visible=true» بودند و هیچ‌کدام دیده نمی‌شدند — فقط با
 	# چاپ `get_global_rect()` معلوم شد. مختصات‌ها اینجا LTR می‌مانند؛
 	# راست‌به‌چپ بودن **متن** کار خود Labelهاست.
-	_root = Control.new()
+	_root = UiKit.themed_root()
 	_root.name = "Ui"
 	_root.layout_direction = Control.LAYOUT_DIRECTION_LTR
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -121,8 +121,14 @@ func _build_ui() -> void:
 	_root.add_child(_portrait)
 
 	# جعبهٔ متن: پس‌زمینهٔ نیمه‌شفاف تا متن روی هر تصویری خوانا بماند
-	_box = ColorRect.new()
-	_box.color = Color(0.03, 0.04, 0.06, 0.78)
+	# **کادر نقاشی‌شده، نه مستطیل.** تا گام ۵۹ یک ColorRect تیره بود.
+	_box = NinePatchRect.new()
+	_box.texture = UiKit.tex("ui/kit/panels/panel_wide_np.png")
+	_box.patch_margin_left = 48
+	_box.patch_margin_right = 48
+	_box.patch_margin_top = 44
+	_box.patch_margin_bottom = 44
+	_box.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_anchor_box(_box, 200, 68)
 	_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_box.visible = false
@@ -150,25 +156,24 @@ func _build_ui() -> void:
 	_root.add_child(_bars_bottom)
 
 	_speaker = Label.new()
-	_speaker.add_theme_font_size_override("font_size", 20)
-	_speaker.add_theme_color_override("font_color", Color(0.78, 0.88, 1.0))
+	_speaker.theme_type_variation = "Name"
 	_speaker.layout_direction = Control.LAYOUT_DIRECTION_RTL
 	_speaker.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_anchor_box(_speaker, 190, 160, 80)
+	_anchor_box(_speaker, 186, 156, 110)
 	_speaker.visible = false
 	_root.add_child(_speaker)
 
 	_text = Label.new()
-	_text.add_theme_font_size_override("font_size", 26)
+	_text.theme_type_variation = "Dialog"
 	_text.layout_direction = Control.LAYOUT_DIRECTION_RTL
 	_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_anchor_box(_text, 156, 80, 80)
+	_anchor_box(_text, 150, 86, 110)
 	_text.visible = false
 	_root.add_child(_text)
 
 	_skip_hint = Label.new()
-	_skip_hint.add_theme_font_size_override("font_size", 18)
+	_skip_hint.theme_type_variation = "Small"
 	_skip_hint.text = "⏭"
 	_skip_hint.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	_skip_hint.anchor_right = 1.0

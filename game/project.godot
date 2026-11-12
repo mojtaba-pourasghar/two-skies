@@ -26,6 +26,7 @@ GameMode="*res://autoload/game_mode.gd"
 SceneRouter="*res://autoload/scene_router.gd"
 EventBus="*res://autoload/event_bus.gd"
 Cutscene="*res://autoload/cutscene.gd"
+Ui="*res://autoload/ui.gd"
 
 [display]
 

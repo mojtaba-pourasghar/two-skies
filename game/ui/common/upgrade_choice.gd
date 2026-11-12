@@ -26,10 +26,7 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	var root := Control.new()
-	root.set_anchors_preset(Control.PRESET_FULL_RECT)
-	root.anchor_right = 1.0
-	root.anchor_bottom = 1.0
+	var root := UiKit.themed_root()
 	add_child(root)
 
 	var dim := ColorRect.new()
