@@ -1,0 +1,70 @@
+{
+ "status": "draft-until-user-approval",
+ "frames": {
+  "emblem_large": [
+   414,
+   418
+  ],
+  "emblem_small": [
+   207,
+   212
+  ],
+  "divider_ornate": [
+   1024,
+   119
+  ],
+  "wreath_arc": [
+   833,
+   180
+  ],
+  "corner_tl": [
+   115,
+   115
+  ],
+  "corner_tr": [
+   114,
+   115
+  ],
+  "corner_bl": [
+   115,
+   114
+  ],
+  "corner_br": [
+   114,
+   114
+  ],
+  "sparkle_star": [
+   159,
+   156
+  ],
+  "heart_gem": [
+   189,
+   194
+  ],
+  "lock_closed": [
+   124,
+   210
+  ],
+  "lock_open": [
+   125,
+   209
+  ],
+  "ring_0": [
+   98,
+   98
+  ],
+  "ring_1": [
+   97,
+   97
+  ],
+  "ring_2": [
+   97,
+   97
+  ],
+  "ring_3": [
+   97,
+   98
+  ]
+ },
+ "note": "ring_0..3 = چهار فریم قاب انتخاب (۴ fps حلقه)"
+}
