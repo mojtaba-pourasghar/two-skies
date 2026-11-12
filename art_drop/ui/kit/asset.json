@@ -1,0 +1,156 @@
+{
+ "status": "draft-until-user-approval",
+ "design_space": [
+  1600,
+  899
+ ],
+ "note": "اندازهٔ اصلی Canva؛ برای پایهٔ ۱۲۸۰×۷۲۰ حدود ×۰٫۸ کوچک شود. *_np.png = گوهر وسط لبه حذف‌شده برای NinePatch؛ گوهر را جدا روی لبه بگذار.",
+ "panels": {
+  "panel_xl": [
+   736,
+   419
+  ],
+  "panel_l": [
+   402,
+   328
+  ],
+  "panel_m": [
+   291,
+   231
+  ],
+  "panel_sq": [
+   240,
+   238
+  ],
+  "panel_wide": [
+   1018,
+   237
+  ],
+  "panel_s": [
+   224,
+   135
+  ],
+  "banner_ribbon": [
+   528,
+   121
+  ],
+  "divider_vine": [
+   498,
+   76
+  ],
+  "corner_ornament": [
+   142,
+   141
+  ],
+  "slot_normal": [
+   109,
+   107
+  ],
+  "slot_selected": [
+   115,
+   116
+  ]
+ },
+ "controls": {
+  "btn_normal": [
+   363,
+   99
+  ],
+  "btn_hover": [
+   363,
+   101
+  ],
+  "btn_pressed": [
+   364,
+   99
+  ],
+  "btn_disabled": [
+   363,
+   99
+  ],
+  "btn_sq_normal": [
+   103,
+   105
+  ],
+  "btn_sq_hover": [
+   106,
+   105
+  ],
+  "btn_sq_pressed": [
+   103,
+   105
+  ],
+  "btn_sq_disabled": [
+   104,
+   105
+  ],
+  "tab_active": [
+   353,
+   94
+  ],
+  "tab_inactive": [
+   356,
+   94
+  ],
+  "toggle_off": [
+   184,
+   61
+  ],
+  "toggle_on": [
+   185,
+   61
+  ],
+  "checkbox_off": [
+   70,
+   70
+  ],
+  "checkbox_on": [
+   70,
+   71
+  ],
+  "radio_off": [
+   78,
+   77
+  ],
+  "radio_on": [
+   79,
+   77
+  ],
+  "slider_track": [
+   468,
+   47
+  ],
+  "slider_fill": [
+   457,
+   46
+  ],
+  "slider_with_knob": [
+   523,
+   63
+  ],
+  "bar_empty": [
+   705,
+   54
+  ],
+  "bar_fill": [
+   736,
+   53
+  ],
+  "divider_vertical": [
+   40,
+   201
+  ],
+  "ability_slot_fire": [
+   489,
+   156
+  ],
+  "cursor_hand": [
+   116,
+   136
+  ],
+  "btn_highlight_gold": [
+   467,
+   83
+  ]
+ }
+}
